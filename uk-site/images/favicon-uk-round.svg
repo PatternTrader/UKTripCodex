@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Round UK flag favicon">
+  <defs>
+    <clipPath id="circle">
+      <circle cx="32" cy="32" r="31"/>
+    </clipPath>
+    <radialGradient id="gloss" cx="35%" cy="24%" r="55%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.62"/>
+      <stop offset="55%" stop-color="#ffffff" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <g clip-path="url(#circle)">
+    <rect width="64" height="64" fill="#012169"/>
+    <path d="M0 0 L14 0 L64 50 L64 64 L50 64 L0 14 Z" fill="#fff"/>
+    <path d="M64 0 L64 14 L14 64 L0 64 L0 50 L50 0 Z" fill="#fff"/>
+    <path d="M0 0 L8 0 L64 56 L64 64 L56 64 L0 8 Z" fill="#c8102e"/>
+    <path d="M64 0 L64 8 L8 64 L0 64 L0 56 L56 0 Z" fill="#c8102e"/>
+    <rect x="0" y="24" width="64" height="16" fill="#fff"/>
+    <rect x="24" y="0" width="16" height="64" fill="#fff"/>
+    <rect x="0" y="27" width="64" height="10" fill="#c8102e"/>
+    <rect x="27" y="0" width="10" height="64" fill="#c8102e"/>
+    <circle cx="32" cy="32" r="31" fill="url(#gloss)"/>
+  </g>
+  <circle cx="32" cy="32" r="31" fill="none" stroke="#0e1b3f" stroke-width="2"/>
+</svg>

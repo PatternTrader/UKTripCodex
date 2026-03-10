@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UK Trip Photo Gallery</title>
+  <style>
+    :root {
+      --bg: #f4efe5;
+      --panel: rgba(255, 252, 245, 0.94);
+      --ink: #201c16;
+      --muted: #685f54;
+      --line: #d8cfbf;
+      --used: #1d9c45;
+      --used-glow: rgba(29, 156, 69, 0.22);
+      --accent: #9f6a24;
+      --shadow: 0 18px 40px rgba(40, 28, 11, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.85), transparent 30%),
+        linear-gradient(180deg, #efe7d7 0%, var(--bg) 100%);
+    }
+
+    .page {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 28px 18px 56px;
+    }
+
+    .hero,
+    .day-section {
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: 24px;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 4vw, 3.6rem);
+      line-height: 0.94;
+      letter-spacing: -0.035em;
+    }
+
+    .subtitle,
+    .summary,
+    .day-subtitle,
+    .day-title {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .subtitle,
+    .summary,
+    .day-subtitle {
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .summary {
+      margin-top: 12px;
+    }
+
+    .legend {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 18px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(32, 28, 22, 0.08);
+      border: 1px solid rgba(32, 28, 22, 0.15);
+      color: #3f382f;
+      font-weight: 700;
+    }
+
+    .legend::before {
+      content: "";
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+      background: linear-gradient(90deg, rgba(32, 28, 22, 0.92) 0 50%, rgba(159, 106, 36, 0.94) 50% 100%);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+      align-items: center;
+    }
+
+    .action-button {
+      appearance: none;
+      border: 1px solid rgba(32, 28, 22, 0.18);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--ink);
+      padding: 10px 14px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .action-button.primary {
+      background: #1f5f3a;
+      border-color: #1f5f3a;
+      color: #fff;
+    }
+
+    .action-status {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.45;
+    }
+
+    .sections {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .day-section {
+      padding: 18px;
+    }
+
+    .day-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .day-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 0.98rem;
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .day-kicker .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .day-title {
+      font-size: 1.1rem;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .poi-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .poi-row {
+      border-top: 1px solid var(--line);
+      padding-top: 16px;
+    }
+
+    .poi-row:first-of-type {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .poi-row-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .poi-row-title {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .poi-row-meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .row-note {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+
+    .picker-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin: 0 0 14px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 250, 241, 0.9);
+    }
+
+    .picker-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .picker-group label,
+    .picker-status {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .picker-group select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: white;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    .picker-group select[multiple] {
+      min-height: 180px;
+    }
+
+    .picker-status {
+      align-self: end;
+      text-transform: none;
+      color: #0b5d24;
+    }
+
+    .card {
+      background: #fffdf8;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 14px 28px rgba(56, 43, 20, 0.08);
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .frame {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      background: #e8dfd0;
+    }
+
+    .frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(17, 104, 43, 0.94);
+      color: white;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .badge.candidate {
+      background: rgba(159, 106, 36, 0.94);
+    }
+
+    .badge.imported {
+      left: auto;
+      right: 12px;
+      background: rgba(33, 84, 166, 0.94);
+    }
+
+    .badge.selected-left,
+    .badge.selected-right {
+      top: auto;
+      bottom: 12px;
+      background: rgba(32, 28, 22, 0.92);
+    }
+
+    .badge.selected-right {
+      left: auto;
+      right: 12px;
+    }
+
+    .meta {
+      padding: 14px 14px 16px;
+    }
+
+    .poi {
+      margin: 0;
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .caption,
+    .filename,
+    .empty {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+    }
+
+    .empty {
+      margin-top: 4px;
+      font-style: italic;
+    }
+
+    @media (max-width: 700px) {
+      .page {
+        padding: 16px 12px 36px;
+      }
+
+      .hero,
+      .day-section {
+        border-radius: 18px;
+      }
+
+      .hero,
+      .day-section {
+        padding: 16px;
+      }
+
+      .photo-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <h1>UK Trip Photo Gallery</h1>
+      <p class="subtitle">Chronological gallery organized to match the UK itinerary.</p>
+      <p class="summary" id="summary"></p>
+      <div class="legend">Use the Left Carousel and Right Carousel badges to see what will rotate on the UK site</div>
+      <div class="actions">
+        <button class="action-button primary" id="save-project-state" type="button">Save project file</button>
+        <button class="action-button" id="download-project-state" type="button">Download project file</button>
+        <p class="action-status" id="action-status">Save to `project-state.js` before moving to another machine or pushing to GitHub.</p>
+      </div>
+    </section>
+    <div class="sections" id="sections"></div>
+  </main>
+
+  <script src="project-state.js"></script>
+  <script>
+    const allPhotos = [
+      "big-ben-2.jpg",
+      "big-ben.jpg",
+      "british-museum-2.jpg",
+      "british-museum-3.jpg",
+      "british-museum-4.jpg",
+      "british-museum-5.jpg",
+      "british-museum-6.jpg",
+      "british-museum.jpg",
+      "buckingham-2.jpg",
+      "buckingham-3.jpg",
+      "buckingham-4.jpg",
+      "buckingham-aerial.jpg",
+      "buckingham-throne.png",
+      "buckingham.jpg",
+      "buckingham.webp",
+      "cotswolds1.jpg",
+      "cotswolds2.jpg",
+      "eilean donan highlands.jpg",
+      "eilean-donan-castle-scotland-highlands.jpg",
+      "fairy-pools-skye-dusk.jpg",
+      "free-photo-of-dramatic-landscape-of-old-man-of-storr-in-scotland.jpeg",
+      "globe-theatre-2.jpg",
+      "globe-theatre-3.jpg",
+      "globe-theatre-4.jpg",
+      "globe-theatre.jpg",
+      "quiraing-sunset.jpg",
+      "quiraing-view.png",
+      "heathrow-t5.jpg",
+      "heathrow.jpg",
+      "london-2.jpg",
+      "london-3.jpg",
+      "london-4.jpg",
+      "london-5.jpg",
+      "london-6.jpg",
+      "london-7.jpg",
+      "flight home.jpg",
+      "london-eye-2.jpg",
+      "london-eye-3.jpg",
+      "london-eye-4.jpg",
+      "london-eye-5.jpg",
+      "westminster-abbey-front.jpg",
+      "national-gallery-2.jpg",
+      "national-gallery-3.jpg",
+      "national-gallery-4.jpg",
+      "national-gallery.jpg",
+      "neist-point-lighthouse-skye.jpg",
+      "newark-airport-2.jpg",
+      "newark-airport-3.jpg",
+      "newark-airport.jpg",
+      "washington-dulles-2.jpg",
+      "washington-dulles.jpg",
+      "nyc-apt-2.webp",
+      "303 E. 83rd lobby.webp",
+      "nyc-apt.webp",
+      "old-man-of-storr-stormy.jpg",
+      "Old-Town.webp",
+      "oldmanofstorr.jpg",
+      "quiraing-skye.jpg",
+      "quiraing.jpg",
+      "Royal-Mile.webp",
+      "royal-observatory-2.webp",
+      "royal-observatory.webp",
+      "Screenshot 2026-03-10 104326.png",
+      "south-bank-2.jpg",
+      "south-bank-3.jpg",
+      "south-bank.jpg",
+      "south-bank.png",
+      "stonehenge1.jpg",
+      "stonehenge2.jpg",
+      "tate-modern-2.jpg",
+      "tate-modern-3.jpg",
+      "tate-modern-4.jpg",
+      "tate-modern-5.jpg",
+      "tate-modern-6.jpg",
+      "tate-modern.jpg",
+      "tate-modern.webp",
+      "tower-bridge-2.jpg",
+      "tower-bridge-3.jpg",
+      "tower-bridge-4.jpg",
+      "tower-bridge-5.jpg",
+      "tower-bridge-6.jpg",
+      "tower-bridge-7.jpg",
+      "tower-bridge.jpg",
+      "tower-london-beefeater.jpg",
+      "tower-london.jpg",
+      "trafalgar-sq-2.jpg",
+      "trafalgar-sq-3.jpg",
+      "trafalgar-sq-4.jpg",
+      "trafalgar-sq-5.jpg",
+      "trafalgar-sq.jpg",
+      "trafalgar-sq.png",
+      "trafalgar-sq.webp",
+      "westminster-abbey-2.jpg",
+      "westminster-abbey-3.jpg",
+      "westminster-abbey-4.jpg",
+      "westminster-abbey-5.jpg",
+      "westminster-abbey-6.jpg",
+      "westminster-abbey.jpg"
+    ];
+
+    const usedPhotos = new Set([
+      "nyc-apt.webp",
+      "nyc-apt-2.webp",
+      "newark-airport.jpg",
+      "newark-airport-2.jpg",
+      "newark-airport-3.jpg",
+      "flight home.jpg",
+      "heathrow-t5.jpg",
+      "heathrow.jpg",
+      "south-bank.png",
+      "south-bank.jpg",
+      "tower-bridge.jpg",
+      "tower-bridge-3.jpg",
+      "tower-london.jpg",
+      "tower-london-beefeater.jpg",
+      "buckingham.jpg",
+      "buckingham-3.jpg",
+      "buckingham-aerial.jpg",
+      "big-ben.jpg",
+      "big-ben-2.jpg",
+      "westminster-abbey.jpg",
+      "westminster-abbey-4.jpg",
+      "westminster-abbey-front.jpg",
+      "london-eye-2.jpg",
+      "london-eye-3.jpg",
+      "british-museum.jpg",
+      "british-museum-4.jpg",
+      "national-gallery.jpg",
+      "national-gallery-3.jpg",
+      "trafalgar-sq.jpg",
+      "trafalgar-sq-4.jpg",
+      "tate-modern.jpg",
+      "tate-modern-3.jpg",
+      "globe-theatre.jpg",
+      "globe-theatre-3.jpg",
+      "london-2.jpg",
+      "london-3.jpg",
+      "london-4.jpg",
+      "london-5.jpg",
+      "london-6.jpg",
+      "london-7.jpg",
+      "royal-observatory.webp",
+      "royal-observatory-2.webp",
+      "cotswolds1.jpg",
+      "cotswolds2.jpg",
+      "Royal-Mile.webp",
+      "Old-Town.webp",
+      "quiraing.jpg",
+      "quiraing-skye.jpg",
+      "eilean donan highlands.jpg",
+      "eilean-donan-castle-scotland-highlands.jpg",
+      "oldmanofstorr.jpg",
+      "old-man-of-storr-stormy.jpg",
+      "stonehenge1.jpg",
+      "stonehenge2.jpg"
+    ]);
+
+    const photoAssignments = {
+      "303_E_83rd_St_NYC": [
+        { file: "nyc-apt.webp", caption: "Depart from 303 E. 83rd St", poi: "303 E. 83rd St, NYC" },
+        { file: "nyc-apt-2.webp", caption: "Depart from 303 E. 83rd St", poi: "303 E. 83rd St, NYC alternate view" }
+      ],
+      Newark_Liberty_International_Airport: [
+        { file: "newark-airport.jpg", caption: "Newark to London flight", poi: "Newark Liberty Airport" },
+        { file: "newark-airport-2.jpg", caption: "Newark to London flight", poi: "Newark Liberty Airport alternate view" }
+      ],
+      Washington_Dulles_International_Airport: [
+        { file: "newark-airport-3.jpg", caption: "IAD connection", poi: "Washington Dulles connection" },
+        { file: "newark-airport.jpg", caption: "IAD connection", poi: "Connection travel image" }
+      ],
+      London_Heathrow_Arrival: [
+        { file: "heathrow-t5.jpg", caption: "Arrive London Heathrow", poi: "Heathrow arrival" },
+        { file: "heathrow.jpg", caption: "Arrive London Heathrow", poi: "Heathrow arrival alternate view" }
+      ],
+      South_Bank: [
+        { file: "south-bank.png", caption: "London arrival morning", poi: "South Bank" },
+        { file: "south-bank.jpg", caption: "London arrival morning", poi: "South Bank alternate view" }
+      ],
+      Buckingham_Palace: [
+        { file: "buckingham.jpg", caption: "Buckingham Palace", poi: "Buckingham Palace" },
+        { file: "buckingham-aerial.jpg", caption: "Buckingham Palace", poi: "Buckingham Palace aerial view" }
+      ],
+      "St_James's_Park": [
+        { file: "buckingham-3.jpg", caption: "St James's Park", poi: "St James's Park" },
+        { file: "buckingham.jpg", caption: "St James's Park", poi: "St James's Park / palace edge" }
+      ],
+      Westminster_Abbey: [
+        { file: "westminster-abbey-front.jpg", caption: "Westminster Abbey", poi: "Westminster Abbey" },
+        { file: "westminster-abbey-4.jpg", caption: "Westminster Abbey", poi: "Westminster Abbey alternate view" }
+      ],
+      Big_Ben: [
+        { file: "big-ben.jpg", caption: "Big Ben", poi: "Big Ben" },
+        { file: "big-ben-2.jpg", caption: "Big Ben", poi: "Big Ben alternate view" }
+      ],
+      London_Eye: [
+        { file: "london-eye-2.jpg", caption: "London Eye", poi: "London Eye" },
+        { file: "london-eye-3.jpg", caption: "London Eye", poi: "London Eye alternate view" }
+      ],
+      Tate_Modern: [
+        { file: "tate-modern.jpg", caption: "Tate Modern", poi: "Tate Modern" },
+        { file: "tate-modern-3.jpg", caption: "Tate Modern", poi: "Tate Modern alternate view" }
+      ],
+      "Shakespeare's_Globe": [
+        { file: "globe-theatre.jpg", caption: "Shakespeare's Globe", poi: "Shakespeare's Globe" },
+        { file: "globe-theatre-3.jpg", caption: "Shakespeare's Globe", poi: "Shakespeare's Globe alternate view" }
+      ],
+      Tower_Bridge: [
+        { file: "tower-bridge.jpg", caption: "Tower Bridge", poi: "Tower Bridge" },
+        { file: "tower-bridge-3.jpg", caption: "Tower Bridge", poi: "Tower Bridge alternate view" }
+      ],
+      Tower_of_London: [
+        { file: "tower-london.jpg", caption: "Tower of London", poi: "Tower of London" },
+        { file: "tower-london-beefeater.jpg", caption: "Tower of London", poi: "Tower of London beefeater view" }
+      ],
+      British_Museum: [
+        { file: "british-museum.jpg", caption: "British Museum", poi: "British Museum" },
+        { file: "british-museum-4.jpg", caption: "British Museum", poi: "British Museum alternate view" }
+      ],
+      National_Gallery: [
+        { file: "national-gallery.jpg", caption: "The National Gallery", poi: "National Gallery" },
+        { file: "national-gallery-3.jpg", caption: "The National Gallery", poi: "National Gallery alternate view" }
+      ],
+      Trafalgar_Square: [
+        { file: "trafalgar-sq.jpg", caption: "Trafalgar Square", poi: "Trafalgar Square" },
+        { file: "trafalgar-sq-4.jpg", caption: "Trafalgar Square", poi: "Trafalgar Square alternate view" }
+      ],
+      Leicester_Square: [
+        { file: "london-6.jpg", caption: "Leicester Square", poi: "Leicester Square" },
+        { file: "london-7.jpg", caption: "Leicester Square", poi: "Leicester Square alternate view" }
+      ],
+      Piccadilly_Circus: [
+        { file: "london-5.jpg", caption: "Piccadilly Circus", poi: "Piccadilly Circus" },
+        { file: "london-6.jpg", caption: "Piccadilly Circus", poi: "Piccadilly Circus alternate view" }
+      ],
+      Forbidden_Planet_London_Megastore: [
+        { file: "london-6.jpg", caption: "Forbidden Planet London", poi: "Forbidden Planet London Megastore" },
+        { file: "london-7.jpg", caption: "Forbidden Planet London", poi: "Forbidden Planet area alternate view" }
+      ],
+      John_Snow_cholera_pump: [
+        { file: "london-3.jpg", caption: "John Snow cholera pump", poi: "Broadwick Street / Soho" },
+        { file: "london-4.jpg", caption: "John Snow cholera pump", poi: "Soho alternate street view" }
+      ],
+      Soho: [
+        { file: "london-4.jpg", caption: "Soho dinner walk", poi: "Soho" },
+        { file: "london-5.jpg", caption: "Soho dinner walk", poi: "Soho alternate view" }
+      ],
+      Oxford_Street: [
+        { file: "london-2.jpg", caption: "Oxford Street shopping walk", poi: "Oxford Street" },
+        { file: "london-3.jpg", caption: "Oxford Street shopping walk", poi: "Oxford Street alternate view" }
+      ],
+      Ye_Olde_Cheshire_Cheese: [
+        { file: "london-2.jpg", caption: "Ye Olde Cheshire Cheese dinner", poi: "Ye Olde Cheshire Cheese area" }
+      ],
+      Dishoom_Covent_Garden: [
+        { file: "london-3.jpg", caption: "Dishoom dinner", poi: "Covent Garden / Dishoom" },
+        { file: "london-4.jpg", caption: "Dishoom dinner", poi: "Covent Garden alternate view" }
+      ],
+      Rock_and_Sole_Plaice: [
+        { file: "london-2.jpg", caption: "Rock & Sole Plaice dinner", poi: "Covent Garden / London" }
+      ],
+      Royal_Observatory_Greenwich: [
+        { file: "royal-observatory.webp", caption: "Royal Observatory Greenwich", poi: "Royal Observatory Greenwich" },
+        { file: "royal-observatory-2.webp", caption: "Royal Observatory Greenwich", poi: "Royal Observatory alternate view" }
+      ],
+      Stonehenge: [
+        { file: "stonehenge1.jpg", caption: "Stonehenge day trip", poi: "Stonehenge" },
+        { file: "stonehenge2.jpg", caption: "Stonehenge day trip", poi: "Stonehenge alternate view" }
+      ],
+      Bletchley_Park: [
+        { file: "cotswolds1.jpg", caption: "Bletchley Park", poi: "Bletchley / day trip placeholder" },
+        { file: "cotswolds2.jpg", caption: "Bletchley Park", poi: "Bletchley / day trip alternate view" }
+      ],
+      "Shakespeare's_Birthplace": [
+        { file: "cotswolds1.jpg", caption: "Shakespeare's Birthplace", poi: "Stratford-upon-Avon" },
+        { file: "cotswolds2.jpg", caption: "Shakespeare's Birthplace", poi: "Stratford-upon-Avon alternate view" }
+      ],
+      Royal_Shakespeare_Theatre: [
+        { file: "cotswolds2.jpg", caption: "Royal Shakespeare Theatre", poi: "Stratford-upon-Avon theatre" },
+        { file: "cotswolds1.jpg", caption: "Royal Shakespeare Theatre", poi: "Stratford-upon-Avon street view" }
+      ],
+      "Anne_Hathaway's_Cottage": [
+        { file: "cotswolds1.jpg", caption: "Anne Hathaway's Cottage", poi: "Anne Hathaway's Cottage / Stratford area" },
+        { file: "cotswolds2.jpg", caption: "Anne Hathaway's Cottage", poi: "Stratford area alternate view" }
+      ],
+      "River_Avon,_Warwickshire": [
+        { file: "cotswolds2.jpg", caption: "River Avon", poi: "River Avon / Stratford area" },
+        { file: "cotswolds1.jpg", caption: "River Avon", poi: "River Avon alternate view" }
+      ],
+      London: [
+        { file: "london-3.jpg", caption: "London evening return", poi: "London return / city night" }
+      ],
+      Royal_Mile: [
+        { file: "Royal-Mile.webp", caption: "Royal Mile", poi: "Royal Mile" },
+        { file: "Old-Town.webp", caption: "Royal Mile", poi: "Old Town alternate view" }
+      ],
+      Grassmarket: [
+        { file: "Old-Town.webp", caption: "Grassmarket", poi: "Grassmarket / Victoria Street" },
+        { file: "Royal-Mile.webp", caption: "Grassmarket", poi: "Grassmarket alternate view" }
+      ],
+      Edinburgh: [
+        { file: "Old-Town.webp", caption: "Edinburgh night", poi: "Edinburgh evening" },
+        { file: "Royal-Mile.webp", caption: "Edinburgh night", poi: "Edinburgh alternate view" }
+      ],
+      Edinburgh_Castle: [
+        { file: "Old-Town.webp", caption: "Edinburgh Castle", poi: "Edinburgh Castle area" },
+        { file: "Royal-Mile.webp", caption: "Edinburgh Castle", poi: "Castle / Old Town view" }
+      ],
+      Holyrood_Palace: [
+        { file: "Royal-Mile.webp", caption: "Royal Mile to Holyrood", poi: "Royal Mile to Holyrood" },
+        { file: "Old-Town.webp", caption: "Royal Mile to Holyrood", poi: "Holyrood route alternate view" }
+      ],
+      "Arthur's_Seat": [
+        { file: "Old-Town.webp", caption: "Arthur's Seat", poi: "Arthur's Seat / Edinburgh overlook" },
+        { file: "Royal-Mile.webp", caption: "Arthur's Seat", poi: "Edinburgh skyline alternate view" }
+      ],
+      "Old_Town,_Edinburgh": [
+        { file: "Old-Town.webp", caption: "Old Town", poi: "Old Town" },
+        { file: "Royal-Mile.webp", caption: "Old Town", poi: "Old Town alternate view" }
+      ],
+      Stirling_Castle: [
+        { file: "Royal-Mile.webp", caption: "Stirling Castle", poi: "Stirling day trip placeholder" },
+        { file: "Old-Town.webp", caption: "Stirling Castle", poi: "Stirling alternate placeholder" }
+      ],
+      National_Wallace_Monument: [
+        { file: "Old-Town.webp", caption: "Wallace Monument", poi: "Wallace Monument placeholder" },
+        { file: "Royal-Mile.webp", caption: "Wallace Monument", poi: "Stirling area alternate placeholder" }
+      ],
+      Battle_of_Bannockburn: [
+        { file: "Royal-Mile.webp", caption: "Bannockburn", poi: "Bannockburn placeholder" },
+        { file: "Old-Town.webp", caption: "Bannockburn", poi: "Bannockburn alternate placeholder" }
+      ],
+      Scottish_Highlands: [
+        { file: "quiraing-skye.jpg", caption: "Road into the Highlands", poi: "Scottish Highlands" },
+        { file: "quiraing.jpg", caption: "Road into the Highlands", poi: "Highlands alternate view" }
+      ],
+      Urquhart_Castle: [
+        { file: "eilean-donan-castle-scotland-highlands.jpg", caption: "Urquhart Castle", poi: "Urquhart / Loch Ness placeholder" },
+        { file: "quiraing-skye.jpg", caption: "Urquhart Castle", poi: "Loch Ness trip alternate placeholder" }
+      ],
+      "Glencoe,_Highland": [
+        { file: "quiraing.jpg", caption: "Glencoe", poi: "Glencoe / Highlands placeholder" },
+        { file: "quiraing-skye.jpg", caption: "Glencoe", poi: "Glencoe alternate placeholder" }
+      ],
+      Inverness: [
+        { file: "quiraing-skye.jpg", caption: "Inverness base", poi: "Inverness / Highlands base" },
+        { file: "quiraing.jpg", caption: "Inverness base", poi: "Inverness alternate view" }
+      ],
+      Eilean_Donan: [
+        { file: "eilean-donan-castle-scotland-highlands.jpg", caption: "Eilean Donan", poi: "Eilean Donan" },
+        { file: "eilean donan highlands.jpg", caption: "Eilean Donan", poi: "Eilean Donan alternate view" }
+      ],
+      Old_Man_of_Storr: [
+        { file: "oldmanofstorr.jpg", caption: "Old Man of Storr", poi: "Old Man of Storr" },
+        { file: "old-man-of-storr-stormy.jpg", caption: "Old Man of Storr", poi: "Old Man of Storr alternate view" }
+      ],
+      "A9_road_(Scotland)": [
+        { file: "quiraing-skye.jpg", caption: "Drive south to Edinburgh", poi: "A9 southbound / Highlands road" }
+      ],
+      Edinburgh_Waverley_railway_station: [
+        { file: "Old-Town.webp", caption: "Edinburgh to London train", poi: "Edinburgh Waverley area" }
+      ],
+      London_Heathrow_Departure: [
+        { file: "heathrow.jpg", caption: "Early transfer to Heathrow", poi: "Heathrow departure" },
+        { file: "heathrow-t5.jpg", caption: "Heathrow departure terminal", poi: "Heathrow departure terminal" }
+      ],
+      Airplane: [
+        { file: "flight home.jpg", caption: "London to New York flight", poi: "Return flight" },
+        { file: "heathrow.jpg", caption: "London to New York flight", poi: "Return flight alternate view" }
+      ]
+    };
+
+    const candidatePhotosByPage = {
+      "303_E_83rd_St_NYC": [
+        { file: "303 E. 83rd lobby.webp", caption: "Candidate for 303 E. 83rd St", poi: "303 E. 83rd lobby" }
+      ],
+      South_Bank: [
+        { file: "south-bank-2.jpg", caption: "Candidate for South Bank", poi: "Possible South Bank alternate" },
+        { file: "south-bank-3.jpg", caption: "Candidate for South Bank", poi: "Possible South Bank alternate" }
+      ],
+      Buckingham_Palace: [
+        { file: "buckingham-2.jpg", caption: "Candidate for Buckingham Palace", poi: "Possible Buckingham Palace alternate" },
+        { file: "buckingham-4.jpg", caption: "Candidate for Buckingham Palace", poi: "Possible Buckingham Palace alternate" },
+        { file: "buckingham.webp", caption: "Candidate for Buckingham Palace", poi: "Possible Buckingham Palace alternate" },
+        { file: "buckingham-throne.png", caption: "Candidate for Buckingham Palace", poi: "Buckingham interior / throne room candidate" }
+      ],
+      Westminster_Abbey: [
+        { file: "westminster-abbey.jpg", caption: "Candidate for Westminster Abbey", poi: "Possible Westminster Abbey alternate" },
+        { file: "westminster-abbey-2.jpg", caption: "Candidate for Westminster Abbey", poi: "Possible Westminster Abbey alternate" },
+        { file: "westminster-abbey-3.jpg", caption: "Candidate for Westminster Abbey", poi: "Possible Westminster Abbey alternate" },
+        { file: "westminster-abbey-5.jpg", caption: "Candidate for Westminster Abbey", poi: "Possible Westminster Abbey alternate" },
+        { file: "westminster-abbey-6.jpg", caption: "Candidate for Westminster Abbey", poi: "Possible Westminster Abbey alternate" }
+      ],
+      London_Eye: [
+        { file: "london-eye-4.jpg", caption: "Candidate for London Eye", poi: "Possible London Eye alternate" },
+        { file: "london-eye-5.jpg", caption: "Candidate for London Eye", poi: "Possible London Eye alternate" }
+      ],
+      Tate_Modern: [
+        { file: "tate-modern-2.jpg", caption: "Candidate for Tate Modern", poi: "Possible Tate Modern alternate" },
+        { file: "tate-modern-4.jpg", caption: "Candidate for Tate Modern", poi: "Possible Tate Modern alternate" },
+        { file: "tate-modern-5.jpg", caption: "Candidate for Tate Modern", poi: "Possible Tate Modern alternate" },
+        { file: "tate-modern-6.jpg", caption: "Candidate for Tate Modern", poi: "Possible Tate Modern alternate" },
+        { file: "tate-modern.webp", caption: "Candidate for Tate Modern", poi: "Possible Tate Modern alternate" }
+      ],
+      "Shakespeare's_Globe": [
+        { file: "globe-theatre-2.jpg", caption: "Candidate for Shakespeare's Globe", poi: "Possible Globe Theatre alternate" },
+        { file: "globe-theatre-4.jpg", caption: "Candidate for Shakespeare's Globe", poi: "Possible Globe Theatre alternate" }
+      ],
+      Tower_Bridge: [
+        { file: "tower-bridge-2.jpg", caption: "Candidate for Tower Bridge", poi: "Possible Tower Bridge alternate" },
+        { file: "tower-bridge-4.jpg", caption: "Candidate for Tower Bridge", poi: "Possible Tower Bridge alternate" },
+        { file: "tower-bridge-5.jpg", caption: "Candidate for Tower Bridge", poi: "Possible Tower Bridge alternate" },
+        { file: "tower-bridge-6.jpg", caption: "Candidate for Tower Bridge", poi: "Possible Tower Bridge alternate" },
+        { file: "tower-bridge-7.jpg", caption: "Candidate for Tower Bridge", poi: "Possible Tower Bridge alternate" }
+      ],
+      British_Museum: [
+        { file: "british-museum-2.jpg", caption: "Candidate for British Museum", poi: "Possible British Museum alternate" },
+        { file: "british-museum-3.jpg", caption: "Candidate for British Museum", poi: "Possible British Museum alternate" },
+        { file: "british-museum-5.jpg", caption: "Candidate for British Museum", poi: "Possible British Museum alternate" },
+        { file: "british-museum-6.jpg", caption: "Candidate for British Museum", poi: "Possible British Museum alternate" }
+      ],
+      National_Gallery: [
+        { file: "national-gallery-2.jpg", caption: "Candidate for National Gallery", poi: "Possible National Gallery alternate" },
+        { file: "national-gallery-4.jpg", caption: "Candidate for National Gallery", poi: "Possible National Gallery alternate" }
+      ],
+      Trafalgar_Square: [
+        { file: "trafalgar-sq-2.jpg", caption: "Candidate for Trafalgar Square", poi: "Possible Trafalgar Square alternate" },
+        { file: "trafalgar-sq-3.jpg", caption: "Candidate for Trafalgar Square", poi: "Possible Trafalgar Square alternate" },
+        { file: "trafalgar-sq-5.jpg", caption: "Candidate for Trafalgar Square", poi: "Possible Trafalgar Square alternate" },
+        { file: "trafalgar-sq.png", caption: "Candidate for Trafalgar Square", poi: "Possible Trafalgar Square alternate" },
+        { file: "trafalgar-sq.webp", caption: "Candidate for Trafalgar Square", poi: "Possible Trafalgar Square alternate" }
+      ],
+      Washington_Dulles_International_Airport: [
+        { file: "washington-dulles.jpg", caption: "Candidate for Washington Dulles connection", poi: "Washington Dulles candidate" },
+        { file: "washington-dulles-2.jpg", caption: "Candidate for Washington Dulles connection", poi: "Washington Dulles candidate" }
+      ],
+      Scottish_Highlands: [
+        { file: "quiraing-sunset.jpg", caption: "Candidate for Quiraing / Highlands", poi: "Quiraing scenic candidate" },
+        { file: "quiraing-view.png", caption: "Candidate for Quiraing / Highlands", poi: "Quiraing scenic candidate" }
+      ],
+      Eilean_Donan: [
+        { file: "fairy-pools-skye-dusk.jpg", caption: "Skye-area candidate near Eilean Donan", poi: "Skye / Eilean Donan day candidate" }
+      ],
+      Old_Man_of_Storr: [
+        { file: "free-photo-of-dramatic-landscape-of-old-man-of-storr-in-scotland.jpeg", caption: "Candidate for Old Man of Storr", poi: "Possible Old Man of Storr alternate" }
+      ],
+      "A9_road_(Scotland)": [
+        { file: "neist-point-lighthouse-skye.jpg", caption: "Skye-area candidate for Day 10", poi: "Neist Point / Skye candidate" }
+      ],
+      LNER: [
+        { file: "Screenshot 2026-03-10 104326.png", caption: "Misc candidate kept near travel leg", poi: "Unsorted travel-related reference" }
+      ]
+    };
+
+    const pageLabels = {
+      "303_E_83rd_St_NYC": "303 E. 83rd St, NYC",
+      Newark_Liberty_International_Airport: "Newark Liberty Airport",
+      Washington_Dulles_International_Airport: "Washington Dulles connection",
+      London_Heathrow_Arrival: "Heathrow arrival",
+      South_Bank: "South Bank",
+      Buckingham_Palace: "Buckingham Palace",
+      "St_James's_Park": "St James's Park",
+      Westminster_Abbey: "Westminster Abbey",
+      Big_Ben: "Big Ben",
+      London_Eye: "London Eye",
+      Tate_Modern: "Tate Modern",
+      "Shakespeare's_Globe": "Shakespeare's Globe",
+      Tower_Bridge: "Tower Bridge",
+      Tower_of_London: "Tower of London",
+      British_Museum: "British Museum",
+      National_Gallery: "National Gallery",
+      Trafalgar_Square: "Trafalgar Square",
+      Leicester_Square: "Leicester Square",
+      Piccadilly_Circus: "Piccadilly Circus",
+      Forbidden_Planet_London_Megastore: "Forbidden Planet London",
+      John_Snow_cholera_pump: "John Snow cholera pump",
+      Soho: "Soho",
+      Oxford_Street: "Oxford Street",
+      Ye_Olde_Cheshire_Cheese: "Ye Olde Cheshire Cheese",
+      Dishoom_Covent_Garden: "Dishoom Covent Garden",
+      Rock_and_Sole_Plaice: "Rock & Sole Plaice",
+      Royal_Observatory_Greenwich: "Royal Observatory Greenwich",
+      Stonehenge: "Stonehenge",
+      Bletchley_Park: "Bletchley Park",
+      "Shakespeare's_Birthplace": "Shakespeare's Birthplace",
+      Royal_Shakespeare_Theatre: "Royal Shakespeare Theatre",
+      "Anne_Hathaway's_Cottage": "Anne Hathaway's Cottage",
+      "River_Avon,_Warwickshire": "River Avon",
+      London: "London return",
+      LNER: "LNER rail leg",
+      Royal_Mile: "Royal Mile",
+      Grassmarket: "Grassmarket",
+      Edinburgh: "Edinburgh",
+      Edinburgh_Castle: "Edinburgh Castle",
+      Holyrood_Palace: "Holyrood Palace",
+      "Arthur's_Seat": "Arthur's Seat",
+      "Old_Town,_Edinburgh": "Old Town",
+      Stirling_Castle: "Stirling Castle",
+      National_Wallace_Monument: "Wallace Monument",
+      Battle_of_Bannockburn: "Bannockburn",
+      Scottish_Highlands: "Scottish Highlands",
+      Urquhart_Castle: "Urquhart Castle",
+      "Glencoe,_Highland": "Glencoe",
+      Inverness: "Inverness",
+      Eilean_Donan: "Eilean Donan",
+      Old_Man_of_Storr: "Old Man of Storr",
+      "A9_road_(Scotland)": "Drive south to Edinburgh",
+      Edinburgh_Waverley_railway_station: "Edinburgh Waverley",
+      London_Heathrow_Departure: "Heathrow departure",
+      Airplane: "Return flight"
+    };
+
+    const itinerary = [
+      { day: 1, weekday: "Wed-Thu", date: "Apr 2-3, 2025", title: "New York to London Flight", pages: ["303_E_83rd_St_NYC", "Newark_Liberty_International_Airport", "Washington_Dulles_International_Airport", "London_Heathrow_Arrival", "South_Bank"] },
+      { day: 2, weekday: "Thu", date: "Apr 3, 2025", title: "Royal and Historic London", pages: ["Buckingham_Palace", "St_James's_Park", "Westminster_Abbey", "Big_Ben", "London_Eye", "Tate_Modern", "Shakespeare's_Globe", "Tower_Bridge", "Tower_of_London"] },
+      { day: 3, weekday: "Fri", date: "Apr 4, 2025", title: "Museum Day and West End Highlights", pages: ["British_Museum", "National_Gallery", "Trafalgar_Square", "Leicester_Square", "Piccadilly_Circus", "Forbidden_Planet_London_Megastore", "John_Snow_cholera_pump", "Soho", "Oxford_Street", "Ye_Olde_Cheshire_Cheese"] },
+      { day: 4, weekday: "Sat", date: "Apr 5, 2025", title: "Greenwich and Stonehenge Day Trip", pages: ["Royal_Observatory_Greenwich", "Stonehenge", "Dishoom_Covent_Garden"] },
+      { day: 5, weekday: "Sun", date: "Apr 6, 2025", title: "Stratford-upon-Avon", pages: ["Bletchley_Park", "Shakespeare's_Birthplace", "Royal_Shakespeare_Theatre", "Anne_Hathaway's_Cottage", "River_Avon,_Warwickshire", "London", "Rock_and_Sole_Plaice"] },
+      { day: 6, weekday: "Mon", date: "Apr 7, 2025", title: "Train to Edinburgh", pages: ["LNER", "Royal_Mile", "Grassmarket", "Edinburgh"] },
+      { day: 7, weekday: "Tue", date: "Apr 8, 2025", title: "Edinburgh Castle and Old Town", pages: ["Edinburgh_Castle", "Holyrood_Palace", "Arthur's_Seat", "Old_Town,_Edinburgh"] },
+      { day: 8, weekday: "Wed", date: "Apr 9, 2025", title: "Stirling Day Trip", pages: ["Stirling_Castle", "National_Wallace_Monument", "Battle_of_Bannockburn", "Edinburgh"] },
+      { day: 9, weekday: "Thu", date: "Apr 10, 2025", title: "Highlands Drive", pages: ["Scottish_Highlands", "Urquhart_Castle", "Glencoe,_Highland", "Inverness"] },
+      { day: 10, weekday: "Fri", date: "Apr 11, 2025", title: "Skye Morning and Return to London", pages: ["Eilean_Donan", "Old_Man_of_Storr", "A9_road_(Scotland)", "Edinburgh_Waverley_railway_station"] },
+      { day: 11, weekday: "Sat", date: "Apr 12, 2025", title: "London Departure to New York", pages: ["London_Heathrow_Departure", "Airplane"] }
+    ];
+
+    const sectionsEl = document.getElementById("sections");
+    const summaryEl = document.getElementById("summary");
+    const actionStatusEl = document.getElementById("action-status");
+    const saveProjectStateButton = document.getElementById("save-project-state");
+    const downloadProjectStateButton = document.getElementById("download-project-state");
+    const PHOTO_OVERRIDE_STORAGE_KEY = "ukTripPhotoOverridesV1";
+    const PREVIEW_IMPORT_STORAGE_KEY = "ukTripPreviewImportsV1";
+
+    const candidateFiles = new Set(
+      Object.values(candidatePhotosByPage).flat().map((entry) => entry.file)
+    );
+    const unassignedPhotos = allPhotos.filter((file) => !usedPhotos.has(file) && !candidateFiles.has(file));
+
+    function getProjectStateFromFile() {
+      const state = window.UK_TRIP_PROJECT_STATE || {};
+      return {
+        photoOverrides: state.photoOverrides && typeof state.photoOverrides === "object" ? state.photoOverrides : {},
+        previewImports: state.previewImports && typeof state.previewImports === "object" ? state.previewImports : {}
+      };
+    }
+
+    function getPhotoOverrides() {
+      const fileState = getProjectStateFromFile();
+      try {
+        const raw = localStorage.getItem(PHOTO_OVERRIDE_STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : {};
+        return { ...fileState.photoOverrides, ...(parsed && typeof parsed === "object" ? parsed : {}) };
+      } catch (error) {
+        return { ...fileState.photoOverrides };
+      }
+    }
+
+    function savePhotoOverrides(overrides) {
+      localStorage.setItem(PHOTO_OVERRIDE_STORAGE_KEY, JSON.stringify(overrides));
+    }
+
+    function getPreviewImportsByPage() {
+      const fileState = getProjectStateFromFile();
+      try {
+        const raw = localStorage.getItem(PREVIEW_IMPORT_STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : {};
+        const merged = { ...fileState.previewImports };
+        if (parsed && typeof parsed === "object") {
+          Object.entries(parsed).forEach(([page, entries]) => {
+            const existing = Array.isArray(merged[page]) ? merged[page].slice() : [];
+            const incoming = Array.isArray(entries) ? entries : [];
+            incoming.forEach((entry) => {
+              if (!entry || typeof entry.file !== "string") return;
+              if (existing.some((existingEntry) => existingEntry && existingEntry.file === entry.file)) return;
+              existing.push(entry);
+            });
+            merged[page] = existing;
+          });
+        }
+        return merged;
+      } catch (error) {
+        return { ...fileState.previewImports };
+      }
+    }
+
+    function getImportedEntriesForPage(page) {
+      const imports = getPreviewImportsByPage()[page];
+      if (!Array.isArray(imports)) return [];
+      return imports.filter((entry) => entry && typeof entry.file === "string" && entry.file.trim()).map((entry) => ({
+        file: entry.file,
+        caption: entry.caption || `Imported preview photo for ${pageLabels[page] || page}`,
+        poi: entry.poi || pageLabels[page] || page,
+        source: "preview"
+      }));
+    }
+
+    function getPhotoSource(fileOrUrl) {
+      return /^(https?:|data:image|file:\/\/\/)/i.test(fileOrUrl)
+        ? fileOrUrl
+        : `photos/${encodeURIComponent(fileOrUrl)}`;
+    }
+
+    function updateSummary() {
+      const importedCount = Object.values(getPreviewImportsByPage())
+        .flat()
+        .filter((entry) => entry && typeof entry.file === "string" && entry.file.trim())
+        .length;
+      summaryEl.textContent = `${allPhotos.length} total local photos. Pick which photos belong in the left carousel and which belong in the right carousel for each POI row, then reload the UK site in the same browser. ${importedCount} preview photos have been sent into the selector. ${unassignedPhotos.length} local photos still remain ungrouped.`;
+    }
+
+    function buildProjectStatePayload() {
+      return {
+        photoOverrides: getPhotoOverrides(),
+        previewImports: getPreviewImportsByPage()
+      };
+    }
+
+    function serializeProjectState() {
+      const payload = buildProjectStatePayload();
+      return `window.UK_TRIP_PROJECT_STATE = ${JSON.stringify(payload, null, 2)};\n`;
+    }
+
+    function downloadProjectStateFile() {
+      const blob = new Blob([serializeProjectState()], { type: "application/javascript;charset=utf-8" });
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = "project-state.js";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+    }
+
+    async function saveProjectStateFile() {
+      const content = serializeProjectState();
+      if (window.showSaveFilePicker) {
+        try {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: "project-state.js",
+            types: [
+              {
+                description: "JavaScript project state",
+                accept: { "application/javascript": [".js"] }
+              }
+            ]
+          });
+          const writable = await handle.createWritable();
+          await writable.write(content);
+          await writable.close();
+          actionStatusEl.textContent = "Saved project-state.js. Commit that file so another machine will load the same selections.";
+          return;
+        } catch (error) {
+          if (error && error.name === "AbortError") return;
+        }
+      }
+      downloadProjectStateFile();
+      actionStatusEl.textContent = "Downloaded project-state.js. Move it into the project folder and commit it to GitHub.";
+    }
+
+    function getPageOptions(page) {
+      const options = [];
+      [...(photoAssignments[page] || []), ...(candidatePhotosByPage[page] || []), ...getImportedEntriesForPage(page)].forEach((entry) => {
+        if (!entry || !entry.file) return;
+        if (options.some((option) => option.file === entry.file)) return;
+        options.push({
+          file: entry.file,
+          caption: entry.caption || entry.file,
+          poi: entry.poi || pageLabels[page] || page
+        });
+      });
+      return options;
+    }
+
+    function getDefaultSelection(page) {
+      const options = getPageOptions(page);
+      return {
+        leftCarousel: options[0] ? [options[0].file] : [],
+        rightCarousel: options[1] ? [options[1].file] : (options[0] ? [options[0].file] : [])
+      };
+    }
+
+    function getSelectionForPage(page) {
+      const overrides = getPhotoOverrides();
+      const options = getPageOptions(page).map((option) => option.file);
+      const defaults = getDefaultSelection(page);
+      const saved = overrides[page] || {};
+      const hasLeftCarousel = Object.prototype.hasOwnProperty.call(saved, "leftCarousel");
+      const hasRightCarousel = Object.prototype.hasOwnProperty.call(saved, "rightCarousel");
+      const selection = {
+        leftCarousel: hasLeftCarousel && Array.isArray(saved.leftCarousel)
+          ? saved.leftCarousel.filter((file) => options.includes(file))
+          : [saved.leftTop, saved.leftBottom, saved.left].filter((file) => options.includes(file)),
+        rightCarousel: hasRightCarousel && Array.isArray(saved.rightCarousel)
+          ? saved.rightCarousel.filter((file) => options.includes(file))
+          : [saved.rightTop, saved.rightBottom, saved.right].filter((file) => options.includes(file))
+      };
+      if (!hasLeftCarousel && !selection.leftCarousel.length) selection.leftCarousel = defaults.leftCarousel.slice();
+      if (!hasRightCarousel && !selection.rightCarousel.length) selection.rightCarousel = defaults.rightCarousel.slice();
+      return selection;
+    }
+
+    function getSelectionBadges(entryFile, selection) {
+      const badges = [];
+      if (selection.leftCarousel.includes(entryFile)) badges.push('<div class="badge selected-left">Left Carousel</div>');
+      if (selection.rightCarousel.includes(entryFile)) badges.push('<div class="badge selected-right">Right Carousel</div>');
+      return badges;
+    }
+
+    function cardMarkup(entry, state = "used", selection = { leftCarousel: [], rightCarousel: [] }) {
+      const badges = [];
+      if (state === "candidate") badges.push('<div class="badge candidate">Candidate</div>');
+      if (state === "imported") badges.push('<div class="badge imported">From Preview</div>');
+      badges.push(...getSelectionBadges(entry.file, selection));
+      return `
+        <article class="card">
+          <div class="frame">
+            <img src="${getPhotoSource(entry.file)}" alt="${entry.caption || entry.file}" loading="lazy">
+            ${badges.join("")}
+          </div>
+          <div class="meta">
+            <p class="poi">${entry.poi || "Unassigned photo"}</p>
+            <p class="caption">${entry.caption || "Not yet placed in the itinerary"}</p>
+            <p class="filename">${entry.file}</p>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderPoiRow(page) {
+      const assigned = photoAssignments[page] || [];
+      const candidates = candidatePhotosByPage[page] || [];
+      const imported = getImportedEntriesForPage(page).filter((entry) =>
+        !assigned.some((assignedEntry) => assignedEntry.file === entry.file) &&
+        !candidates.some((candidateEntry) => candidateEntry.file === entry.file)
+      );
+      const total = assigned.length + candidates.length + imported.length;
+      const selection = getSelectionForPage(page);
+      const options = getPageOptions(page);
+      if (!total) {
+        return `
+          <div class="poi-row">
+            <div class="poi-row-head">
+              <p class="poi-row-title">${pageLabels[page] || page}</p>
+              <p class="poi-row-meta">No photos grouped here yet</p>
+            </div>
+            <p class="empty">No assigned or candidate photos are connected to this stop yet.</p>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="poi-row" data-page="${page}">
+          <div class="poi-row-head">
+            <p class="poi-row-title">${pageLabels[page] || page}</p>
+            <p class="poi-row-meta">${assigned.length} assigned, ${candidates.length + imported.length} available</p>
+          </div>
+          <div class="picker-bar">
+            <div class="picker-group">
+              <label for="left-carousel-${page}">Left side carousel</label>
+              <select id="left-carousel-${page}" multiple data-photo-role="leftCarousel" data-page="${page}">
+                ${options.map((option) => `<option value="${option.file}"${selection.leftCarousel.includes(option.file) ? " selected" : ""}>${option.file}</option>`).join("")}
+              </select>
+            </div>
+            <div class="picker-group">
+              <label for="right-carousel-${page}">Right side carousel</label>
+              <select id="right-carousel-${page}" multiple data-photo-role="rightCarousel" data-page="${page}">
+                ${options.map((option) => `<option value="${option.file}"${selection.rightCarousel.includes(option.file) ? " selected" : ""}>${option.file}</option>`).join("")}
+              </select>
+            </div>
+            <div class="picker-status">Saved for the UK site on reload</div>
+          </div>
+          ${(candidates.length || imported.length) ? '<p class="row-note">Assigned photos appear first. Candidate photos follow in the same row. Photos marked From Preview were sent in from the discovery page. Select any number of photos for the left carousel and right carousel.</p>' : '<p class="row-note">Select any number of photos for the left carousel and right carousel.</p>'}
+          <div class="photo-grid">
+            ${assigned.map((entry) => cardMarkup(entry, "used", selection)).join("")}
+            ${candidates.map((entry) => cardMarkup(entry, "candidate", selection)).join("")}
+            ${imported.map((entry) => cardMarkup(entry, "imported", selection)).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderGallery() {
+      updateSummary();
+      const daySections = itinerary.map((day) => {
+        return `
+          <section class="day-section">
+            <div class="day-head">
+              <div>
+                <div class="day-kicker">
+                  <span>Day ${day.day}</span>
+                  <span class="dot"></span>
+                  <span>${day.weekday}</span>
+                  <span class="dot"></span>
+                  <span>${day.date}</span>
+                </div>
+                <p class="day-title">${day.title}</p>
+              </div>
+              <p class="day-subtitle">${day.pages.length} POI rows in this part of the trip</p>
+            </div>
+            <div class="poi-rows">
+              ${day.pages.map((page) => renderPoiRow(page)).join("")}
+            </div>
+          </section>
+        `;
+      }).join("");
+
+      const unassignedSection = `
+        <section class="day-section">
+          <div class="day-head">
+            <div>
+              <div class="day-kicker">
+                <span>Unassigned</span>
+                <span class="dot"></span>
+                <span>Not Yet Placed</span>
+              </div>
+              <p class="day-title">Photos still in the folder but not currently used by the UK website</p>
+            </div>
+            <p class="day-subtitle">${unassignedPhotos.length} photos waiting for placement</p>
+          </div>
+          <div class="photo-grid">
+            ${unassignedPhotos.map((file) => cardMarkup({ file }, "plain")).join("")}
+          </div>
+        </section>
+      `;
+
+      sectionsEl.innerHTML = daySections + unassignedSection;
+    }
+
+    function updateSelection(page, role, value) {
+      const overrides = getPhotoOverrides();
+      const next = { ...(overrides[page] || {}), [role]: value };
+      overrides[page] = next;
+      savePhotoOverrides(overrides);
+      renderGallery();
+    }
+
+    sectionsEl.addEventListener("change", (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLSelectElement)) return;
+      const page = target.getAttribute("data-page");
+      const role = target.getAttribute("data-photo-role");
+      if (!page || !role) return;
+      updateSelection(page, role, Array.from(target.selectedOptions).map((option) => option.value));
+    });
+
+    saveProjectStateButton.addEventListener("click", () => {
+      saveProjectStateFile();
+    });
+
+    downloadProjectStateButton.addEventListener("click", () => {
+      downloadProjectStateFile();
+      actionStatusEl.textContent = "Downloaded project-state.js. Keep that file with the project so another machine sees the same selections.";
+    });
+
+    window.addEventListener("storage", (event) => {
+      if (event.key === PHOTO_OVERRIDE_STORAGE_KEY || event.key === PREVIEW_IMPORT_STORAGE_KEY) {
+        renderGallery();
+      }
+    });
+
+    renderGallery();
+  </script>
+</body>
+</html>

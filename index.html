@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UK Trip Workspace</title>
+  <style>
+    :root {
+      --bg: #efe6d7;
+      --panel: rgba(255, 251, 245, 0.94);
+      --ink: #1f1b16;
+      --muted: #6a6055;
+      --line: rgba(89, 71, 45, 0.18);
+      --accent: #1f5f3a;
+      --accent-strong: #174b2e;
+      --shadow: 0 20px 40px rgba(43, 29, 10, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.88), transparent 28%),
+        linear-gradient(180deg, #f4eddf 0%, var(--bg) 100%);
+    }
+
+    .shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      padding: 18px;
+      gap: 14px;
+    }
+
+    .topbar {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--accent);
+      font-size: 0.84rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.8rem, 3vw, 3rem);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+    }
+
+    .sub {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.45;
+      max-width: 70rem;
+    }
+
+    .tabbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .tab {
+      appearance: none;
+      border: 1px solid rgba(31, 95, 58, 0.22);
+      background: rgba(31, 95, 58, 0.08);
+      color: var(--accent-strong);
+      border-radius: 999px;
+      padding: 11px 16px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .tab:hover {
+      transform: translateY(-1px);
+      background: rgba(31, 95, 58, 0.14);
+    }
+
+    .tab[aria-selected="true"] {
+      background: var(--accent);
+      color: #fffdf8;
+      border-color: var(--accent);
+    }
+
+    .workspace {
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.5);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-height: 0;
+      position: relative;
+    }
+
+    .panel {
+      width: 100%;
+      height: calc(100vh - 210px);
+      min-height: 620px;
+      border: 0;
+      display: none;
+      background: #fff;
+    }
+
+    .panel.is-active {
+      display: block;
+    }
+
+    .utility {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .utility a {
+      color: var(--accent-strong);
+    }
+
+    @media (max-width: 900px) {
+      .shell {
+        padding: 12px;
+      }
+
+      .panel {
+        height: calc(100vh - 250px);
+        min-height: 540px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <p class="eyebrow">UK Trip Workspace</p>
+      <h1>Preview, select, and verify from one place</h1>
+      <p class="sub">Use the tabs to move between the discovery gallery, the selector controls, and the final UK itinerary website. Your carousel choices still flow from selector to website the same way as before.</p>
+      <nav class="tabbar" aria-label="Site tabs">
+        <button class="tab" type="button" data-tab="preview" aria-selected="true">Preview</button>
+        <button class="tab" type="button" data-tab="selector" aria-selected="false">Selector</button>
+        <button class="tab" type="button" data-tab="website" aria-selected="false">UK Website</button>
+      </nav>
+      <p class="utility">Direct pages: <a href="browse.html" target="_blank" rel="noreferrer">Browse</a> · <a href="selector.html" target="_blank" rel="noreferrer">Selector</a> · <a href="uk-site/index.html" target="_blank" rel="noreferrer">UK Website</a></p>
+    </header>
+
+    <main class="workspace">
+      <iframe class="panel is-active" data-panel="preview" src="browse.html" title="Photo browse page"></iframe>
+      <iframe class="panel" data-panel="selector" src="selector.html" title="Photo selector"></iframe>
+      <iframe class="panel" data-panel="website" src="uk-site/index.html" title="UK itinerary website"></iframe>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const tabs = Array.from(document.querySelectorAll(".tab"));
+      const panels = Array.from(document.querySelectorAll(".panel"));
+
+      function activateTab(tabName) {
+        tabs.forEach((tab) => {
+          const isActive = tab.getAttribute("data-tab") === tabName;
+          tab.setAttribute("aria-selected", isActive ? "true" : "false");
+        });
+
+        panels.forEach((panel) => {
+          panel.classList.toggle("is-active", panel.getAttribute("data-panel") === tabName);
+        });
+
+        window.location.hash = tabName;
+      }
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => activateTab(tab.getAttribute("data-tab")));
+      });
+
+      const initialTab = window.location.hash.replace("#", "");
+      if (initialTab && tabs.some((tab) => tab.getAttribute("data-tab") === initialTab)) {
+        activateTab(initialTab);
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,2666 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UK Family Trip Itinerary | April 2-12, 2025</title>
+<link rel="icon" type="image/svg+xml" href="images/favicon-uk-round.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+  :root {
+    --bg: #f4f1ea;
+    --ink: #1d2530;
+    --ink-soft: #445061;
+    --line: #d7dde7;
+    --card: #ffffff;
+    --brand: #103860;
+    --brand-2: #1c5487;
+    --accent: #c58f2f;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "Manrope", sans-serif;
+    color: var(--ink);
+    background:
+      radial-gradient(circle at 8% 2%, rgba(197, 143, 47, 0.15), transparent 30%),
+      radial-gradient(circle at 95% 4%, rgba(28, 84, 135, 0.16), transparent 35%),
+      var(--bg);
+  }
+
+  .container {
+    width: min(1180px, 92vw);
+    margin: 0 auto;
+  }
+
+  .hero {
+    margin: 36px 0 26px;
+    padding: 34px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: linear-gradient(120deg, var(--brand) 0%, var(--brand-2) 100%);
+    color: #f2f7fb;
+    box-shadow: 0 20px 45px rgba(16, 56, 96, 0.25);
+  }
+
+  .hero h1 {
+    margin: 0;
+    font-family: "Libre Baskerville", serif;
+    font-size: clamp(2rem, 3.2vw, 3rem);
+    line-height: 1.2;
+  }
+
+  .hero p {
+    margin: 12px 0 0;
+    max-width: 820px;
+    color: #d5e3ef;
+    font-size: 1.03rem;
+  }
+
+  .meta {
+    margin-top: 16px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .meta span {
+    border: 1px solid rgba(255, 255, 255, 0.33);
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .section-title {
+    margin: 0 0 14px;
+    font-family: "Libre Baskerville", serif;
+    font-size: clamp(1.45rem, 2.2vw, 2rem);
+    color: var(--brand);
+  }
+
+  .stay-summary {
+    margin: 0 0 16px;
+  }
+
+  .stay-summary-card {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: #ffffff;
+    padding: 14px 16px;
+    box-shadow: 0 8px 18px rgba(14, 34, 56, 0.07);
+  }
+
+  .stay-summary-title {
+    margin: 0 0 8px;
+    font-family: "Libre Baskerville", serif;
+    font-size: 1.08rem;
+    color: #163f68;
+  }
+
+  .stay-summary-meta {
+    margin: 0 0 10px;
+    font-size: 0.86rem;
+    color: var(--ink-soft);
+    font-weight: 700;
+  }
+
+  .stay-summary-list {
+    margin: 0;
+    padding-left: 18px;
+    display: grid;
+    gap: 6px;
+    font-size: 0.9rem;
+    color: #2a384a;
+  }
+
+  .timeline {
+    display: grid;
+    gap: 18px;
+    padding-bottom: 36px;
+  }
+
+  .day-card {
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--card);
+    padding: 16px;
+    box-shadow: 0 10px 22px rgba(14, 34, 56, 0.08);
+  }
+
+  .day-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px 12px;
+    margin-bottom: 12px;
+  }
+
+  .day-pill {
+    border: 3px solid #082f55;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #2a71b2 0%, #103860 100%);
+    color: #ffffff;
+    padding: 14px 24px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 14px 28px rgba(16, 56, 96, 0.38), 0 0 0 4px rgba(42, 113, 178, 0.22);
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    min-width: 156px;
+  }
+
+  .day-pill-main {
+    font-weight: 900;
+    font-size: clamp(1.25rem, 2vw, 1.7rem);
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .day-pill-weekday {
+    font-weight: 700;
+    font-size: 0.8rem;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    opacity: 0.95;
+  }
+
+  .day-title {
+    margin: 0;
+    font-family: "Libre Baskerville", serif;
+    font-size: 1.25rem;
+  }
+
+  .day-date {
+    color: var(--ink-soft);
+    font-weight: 700;
+    font-size: 0.94rem;
+  }
+
+  .poi-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  .poi-item {
+    display: grid;
+    grid-template-columns: 250px 1fr 250px;
+    gap: 12px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    background: linear-gradient(180deg, #ffffff 0%, #f9fbfd 100%);
+  }
+
+  .poi-photo {
+    margin: 0;
+    min-height: 150px;
+    position: relative;
+    background: #dce7f2;
+  }
+
+  .poi-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .poi-carousel {
+    overflow: hidden;
+  }
+
+  .poi-carousel img {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+
+  .poi-carousel img.is-active {
+    opacity: 1;
+  }
+
+  .poi-photo.right img {
+    object-position: center center;
+  }
+
+  .poi-photo::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.3) 0%, transparent 55%);
+    pointer-events: none;
+  }
+
+  .poi-caption {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    z-index: 2;
+    color: #fff;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  }
+
+  .poi-text {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    padding: 12px 14px;
+    font-size: 1rem;
+    line-height: 1.45;
+    color: #1f2b39;
+  }
+
+  .poi-time {
+    display: inline-block;
+    margin-bottom: 6px;
+    border-radius: 999px;
+    border: 1px solid #ff8c00;
+    background: #ffd3a1;
+    color: #7a2d00;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    padding: 3px 9px;
+  }
+
+  .poi-window {
+    margin-top: 6px;
+    font-size: 0.8rem;
+    color: #3f4f64;
+  }
+
+  .poi-window strong {
+    color: #203a58;
+  }
+
+  .poi-desc {
+    font-size: 0.98rem;
+  }
+
+  .poi-why,
+  .poi-research {
+    margin-top: 6px;
+    font-size: 0.82rem;
+    color: #4a5666;
+  }
+
+  .poi-why strong,
+  .poi-research strong {
+    color: #24384f;
+  }
+
+  .poi-research.paid-warning {
+    color: #8f0f19;
+    font-weight: 700;
+    margin-top: 8px;
+    padding: 8px 10px;
+    border: 2px solid #c1121f;
+    border-radius: 8px;
+    background: #ffe9ec;
+    box-shadow: 0 0 0 2px rgba(193, 18, 31, 0.18);
+  }
+
+  .poi-research.paid-warning strong {
+    color: #8f0f19;
+  }
+
+  .poi-research.mixed-warning {
+    color: #6e5600;
+    font-weight: 700;
+    margin-top: 8px;
+    padding: 8px 10px;
+    border: 2px solid #c9a100;
+    border-radius: 8px;
+    background: #fff8d6;
+    box-shadow: 0 0 0 2px rgba(201, 161, 0, 0.18);
+  }
+
+  .poi-research.mixed-warning strong {
+    color: #6e5600;
+  }
+
+  .poi-research.free-warning {
+    color: #15652f;
+    font-weight: 700;
+    margin-top: 8px;
+    padding: 8px 10px;
+    border: 2px solid #238b45;
+    border-radius: 8px;
+    background: #e9f9ee;
+    box-shadow: 0 0 0 2px rgba(35, 139, 69, 0.18);
+  }
+
+  .poi-research.free-warning strong {
+    color: #15652f;
+  }
+
+  .paid-badge {
+    display: inline-block;
+    margin-bottom: 6px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: #c1121f;
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .free-badge {
+    display: inline-block;
+    margin-bottom: 6px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: #238b45;
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .mixed-badge {
+    display: inline-block;
+    margin-bottom: 6px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: #c9a100;
+    color: #1f1a00;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .poi-transport {
+    margin-top: 6px;
+    font-size: 0.82rem;
+    color: #425266;
+  }
+
+  .poi-transport strong {
+    color: #1d3550;
+  }
+
+  .day-logistics {
+    margin: 4px 0 12px;
+    border: 1px dashed #c7d6e8;
+    background: #f5f9ff;
+    color: #2d4666;
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 0.82rem;
+  }
+
+  .travel-block {
+    border: 2px solid #2f6ca7;
+    border-left: 6px solid #1b4e84;
+    border-radius: 10px;
+    background: linear-gradient(140deg, #eef5ff 0%, #dcecff 100%);
+    padding: 12px 14px;
+    margin: 8px 0 6px;
+    box-shadow: 0 8px 18px rgba(20, 71, 124, 0.2);
+  }
+
+  .travel-title {
+    font-size: 0.84rem;
+    font-weight: 800;
+    color: #113d6c;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .travel-desc {
+    margin-top: 6px;
+    font-size: 0.9rem;
+    color: #204972;
+    font-weight: 600;
+  }
+
+  .poi-cost {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    color: #4f5b6a;
+  }
+
+  .cost-input {
+    width: 110px;
+    border: 1px solid #c8d2de;
+    border-radius: 8px;
+    padding: 6px 8px;
+    font-size: 0.85rem;
+  }
+
+  .cost-panel {
+    margin: 8px 0 28px;
+  }
+
+  .cost-sheet-wrap {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: auto;
+    background: #fff;
+    box-shadow: 0 10px 22px rgba(14, 34, 56, 0.08);
+  }
+
+  .cost-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 860px;
+  }
+
+  .cost-table th,
+  .cost-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #e5ebf2;
+    text-align: left;
+    font-size: 0.86rem;
+    vertical-align: top;
+  }
+
+  .cost-table th {
+    background: #f4f8fc;
+    color: #2f3f52;
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .cost-summary {
+    margin-top: 10px;
+    padding: 12px 14px;
+    border: 1px solid #d7dde7;
+    border-radius: 10px;
+    background: #fff;
+    font-weight: 700;
+    color: #12395f;
+  }
+
+  .map-panel {
+    margin-top: 28px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 10px 22px rgba(14, 34, 56, 0.08);
+  }
+
+  .map-head {
+    padding: 14px 16px;
+    background: linear-gradient(120deg, #103860 0%, #1c5487 100%);
+    color: #eef6ff;
+  }
+
+  .map-head h2 {
+    margin: 0;
+    font-family: "Libre Baskerville", serif;
+    font-size: 1.15rem;
+  }
+
+  .map-head p {
+    margin: 6px 0 0;
+    font-size: 0.88rem;
+    color: #d6e8fa;
+  }
+
+  .map-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-bottom: 1px solid #e4eaf2;
+    background: linear-gradient(180deg, #f9fbfe 0%, #f2f6fb 100%);
+  }
+
+  .map-filter-actions,
+  .map-filter-days {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .map-filter-chip {
+    border: 1px solid #bfd0e2;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #284466;
+    padding: 7px 12px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+  }
+
+  .map-filter-chip:hover {
+    border-color: #5e88b0;
+    transform: translateY(-1px);
+  }
+
+  .map-filter-chip.is-active {
+    border-color: #103860;
+    background: #103860;
+    color: #ffffff;
+    box-shadow: 0 8px 18px rgba(16, 56, 96, 0.16);
+  }
+
+  .map-filter-chip.is-secondary {
+    background: #edf4fb;
+  }
+
+  .map-filter-chip.city-london {
+    border-color: #e0bf3f;
+    background: #fff6d6;
+    color: #6f5800;
+  }
+
+  .map-filter-chip.city-edinburgh {
+    border-color: #6ea8ff;
+    background: #e8f1ff;
+    color: #1f4f99;
+  }
+
+  .map-filter-chip.city-inverness {
+    border-color: #68c992;
+    background: #e7f8ee;
+    color: #17643a;
+  }
+
+  .map-filter-chip.is-active.city-london {
+    border-color: #d1a900;
+    background: #d1a900;
+    color: #ffffff;
+  }
+
+  .map-filter-chip.is-active.city-edinburgh {
+    border-color: #1f5cb5;
+    background: #1f5cb5;
+    color: #ffffff;
+  }
+
+  .map-filter-chip.is-active.city-inverness {
+    border-color: #1f8a4d;
+    background: #1f8a4d;
+    color: #ffffff;
+  }
+
+  .map-filter-status {
+    padding: 10px 16px 0;
+    font-size: 0.82rem;
+    color: #4f6174;
+  }
+
+  #route-map {
+    width: 100%;
+    height: 420px;
+  }
+
+  .map-label {
+    background: rgba(16, 56, 96, 0.9);
+    border: none;
+    border-radius: 999px;
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    box-shadow: none;
+  }
+
+  .map-label::before {
+    display: none;
+  }
+
+  .day-map-wrap {
+    margin-top: 12px;
+    border: 1px solid #dce3ec;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  .day-map-title {
+    margin: 0;
+    padding: 8px 10px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: #284466;
+    border-bottom: 1px solid #e4eaf2;
+    background: #f6f9fd;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .day-map {
+    width: 100%;
+    height: 240px;
+  }
+
+  .command-center {
+    margin: 8px 0 26px;
+  }
+
+  .cc-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .cc-card {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fff;
+    padding: 12px 13px;
+    box-shadow: 0 10px 22px rgba(14, 34, 56, 0.08);
+  }
+
+  .cc-card h3 {
+    margin: 0 0 8px;
+    font-size: 0.95rem;
+    color: #153e66;
+  }
+
+  .cc-list {
+    margin: 0;
+    padding-left: 18px;
+    display: grid;
+    gap: 5px;
+    font-size: 0.85rem;
+    color: #324559;
+  }
+
+  .cc-checklist {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 8px;
+  }
+
+  .cc-check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    cursor: pointer;
+    color: #324559;
+    line-height: 1.35;
+    font-size: 0.85rem;
+  }
+
+  .cc-check-btn {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 1px solid #8ea5bf;
+    background: #ffffff;
+    color: transparent;
+    font-weight: 900;
+    line-height: 1;
+    margin-top: 1px;
+    flex: 0 0 18px;
+    cursor: pointer;
+  }
+
+  .cc-check-item.is-done .cc-check-btn {
+    background: #1c5487;
+    border-color: #1c5487;
+    color: #ffffff;
+  }
+
+  .cc-check-text {
+    flex: 1;
+  }
+
+  .cc-check-item.is-done .cc-check-text {
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
+
+  .cc-check-text a {
+    color: #0f4e84;
+    text-decoration: none;
+  }
+
+  .cc-check-text a:hover {
+    text-decoration: underline;
+  }
+
+  footer {
+    text-align: center;
+    color: #5b6676;
+    font-size: 0.9rem;
+    padding-bottom: 26px;
+  }
+
+  @media (max-width: 920px) {
+    .poi-item { grid-template-columns: 1fr; }
+    .poi-photo { min-height: 210px; }
+    #route-map { height: 360px; }
+    .day-map { height: 220px; }
+    .cc-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Highlight Unsplash photos */
+  img[src*="unsplash"] {
+    outline: 4px solid orange;
+    outline-offset: -4px;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <section class="map-panel">
+      <div class="map-head">
+        <h2>Route Map of Itinerary Points of Interest</h2>
+        <p>Colored dots mark each stop, and the bold red line follows the travel order from London through Scotland.</p>
+      </div>
+      <div class="map-toolbar">
+        <div class="map-filter-actions" id="route-map-actions"></div>
+        <div class="map-filter-days" id="route-day-filters"></div>
+      </div>
+      <div class="map-filter-status" id="route-map-status" aria-live="polite"></div>
+      <div id="route-map"></div>
+    </section>
+
+    <section class="command-center">
+      <h2 class="section-title">Dad-Level Trip Command Center</h2>
+      <div class="cc-grid">
+        <article class="cc-card">
+          <h3>Flights Tracker</h3>
+          <ul class="cc-list">
+            <li>Outbound: Thu Apr 2, 3:07pm EWR -> Fri Apr 3, 6:55am LHR (1h 55m IAD connection)</li>
+            <li>Return: Sun Apr 12, 8:30am LHR -> 3:07pm JFK (2h 5m YYZ connection)</li>
+            <li>Total flight cost tracked: $3,069.00</li>
+          </ul>
+        </article>
+        <article class="cc-card">
+          <h3>Hotel Options (When Needed)</h3>
+          <ul class="cc-checklist">
+            <li class="cc-check-item js-cc-check-item" data-check-id="hotel-london">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text">London base (South Bank / Westminster): Apr 3-6 and Apr 11 night</span>
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="hotel-edinburgh">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text">Edinburgh base (Royal Mile / New Town): Apr 7-9</span>
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="hotel-highlands">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text">Highlands transit base (Inverness/Fort William): Apr 10</span>
+            </li>
+          </ul>
+        </article>
+        <article class="cc-card">
+          <h3>Ticket Purchases Tracker</h3>
+          <ul class="cc-checklist">
+            <li class="cc-check-item js-cc-check-item" data-check-id="ticket-priority">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text">Priority buys: Tower of London, Westminster Abbey, Edinburgh Castle, Stirling Castle, Bletchley Park</span>
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="ticket-rail">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text">Rail buys: LNER London -> Edinburgh and Edinburgh -> London</span>
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="ticket-reminder">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text">Reminder: update each paid POI cost in the itinerary and spreadsheet</span>
+            </li>
+          </ul>
+        </article>
+        <article class="cc-card">
+          <h3>Booking Links</h3>
+          <ul class="cc-checklist">
+            <li class="cc-check-item js-cc-check-item" data-check-id="link-tower-london">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text"><a href="https://www.historicroyalpalaces.com/tower-of-london/" target="_blank" rel="noopener noreferrer">Tower of London tickets</a></span>
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="link-westminster">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text"><a href="https://www.westminster-abbey.org/" target="_blank" rel="noopener noreferrer">Westminster Abbey</a></span>
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="link-london-eye">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text"><a href="https://www.londoneye.com/tickets-and-prices/" target="_blank" rel="noopener noreferrer">London Eye tickets</a></span>
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="link-edinburgh-castle">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text"><a href="https://www.edinburghcastle.scot/" target="_blank" rel="noopener noreferrer">Edinburgh Castle</a></span>
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="link-lner">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text"><a href="https://www.lner.co.uk/" target="_blank" rel="noopener noreferrer">LNER train bookings</a></span>
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="link-booking">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text"><a href="https://www.booking.com/" target="_blank" rel="noopener noreferrer">Hotel search (Booking.com)</a></span>
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="link-bletchley">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text"><a href="https://www.bletchleypark.org.uk/" target="_blank" rel="noopener noreferrer">Bletchley Park</a></span>
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="link-national-rail">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text"><a href="https://www.nationalrail.co.uk/destinations/trains-from-london-to-bletchley/" target="_blank" rel="noopener noreferrer">National Rail: London to Bletchley</a></span>
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="link-evan-evans">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text"><a href="https://evanevanstours.com/tours/day-tours-from-london/warwick-castle-shakespeares-birthplace-oxford-the-cotswolds/" target="_blank" rel="noopener noreferrer">Evan Evans: Stratford guided day tour</a></span>
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="link-timberbush">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text"><a href="https://www.timberbush-tours.co.uk/our-tours/from-edinburgh/2-day-tours/loch-ness-inverness-highlands" target="_blank" rel="noopener noreferrer">Timberbush: Highlands/Inverness 2-day tour</a></span>
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="link-rabbies">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text"><a href="https://www.rabbies.com/en-us/tour/the-isle-of-skye-3-day-tour-from-edinburgh" target="_blank" rel="noopener noreferrer">Rabbie's: Isle of Skye 3-day tour</a></span>
+            </li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <h2 class="section-title">Day-by-Day Plan With Photo Per Bullet</h2>
+    <section id="stay-summary" class="stay-summary"></section>
+    <main id="timeline" class="timeline"></main>
+
+    <section class="cost-panel">
+      <h2 class="section-title">Travel Cost Spreadsheet</h2>
+      <div class="cost-sheet-wrap" id="cost-sheet"></div>
+      <div class="cost-summary" id="cost-summary"></div>
+    </section>
+
+    <footer>Designed as a true chronological itinerary with two images per unique bullet item.</footer>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="../project-state.js"></script>
+  <script>
+    const itinerary = [
+      {
+        day: 1,
+        title: "New York to London Flight",
+        date: "April 2-3",
+        items: [
+          { text: "Leave from 303 E. 83rd St, NY, NY to Newark Liberty Airport (EWR). Typical transfer is about 70-95 min; plan around 80 min plus terminal buffer.", page: "303_E_83rd_St_NYC", caption: "Depart from 303 E. 83rd St" },
+          { text: "Depart New York (EWR) at 3:07pm on United, 1 stop via IAD.", page: "Newark_Liberty_International_Airport", caption: "Newark to London flight", defaultCost: 1534.5 },
+          { text: "Connection at Washington Dulles (IAD), about 1h 55m.", page: "Washington_Dulles_International_Airport", caption: "IAD connection" },
+          { text: "Arrive London Heathrow at 6:55am on April 3.", page: "London_Heathrow_Arrival", caption: "Arrive London Heathrow" },
+          { text: "Light arrival day near South Bank to reset after overnight travel.", page: "South_Bank", caption: "London arrival morning" }
+        ]
+      },
+      {
+        day: 2,
+        title: "Royal and Historic London",
+        date: "April 3",
+        items: [
+          { text: "Watch the Changing of the Guard at Buckingham Palace.", page: "Buckingham_Palace", caption: "Buckingham Palace" },
+          { text: "Stroll through St James's Park between palace and Westminster.", page: "St_James's_Park", caption: "St James's Park" },
+          { text: "Tour Westminster Abbey.", page: "Westminster_Abbey", caption: "Westminster Abbey" },
+          { text: "Photo stop at Big Ben and Parliament.", page: "Big_Ben", caption: "Big Ben" },
+          { text: "Ride the London Eye for skyline views over Westminster and the Thames.", page: "London_Eye", caption: "London Eye" },
+          { text: "Continue east along the South Bank to Tate Modern.", page: "Tate_Modern", caption: "Tate Modern" },
+          { text: "Stop at Shakespeare's Globe nearby.", page: "Shakespeare's_Globe", caption: "Shakespeare's Globe" },
+          { text: "Visit the Tower of London and Crown Jewels.", page: "Tower_of_London", caption: "Tower of London" },
+          { text: "Walk back toward the river for classic Tower Bridge skyline views.", page: "Tower_Bridge", caption: "Tower Bridge skyline" }
+        ]
+      },
+      {
+        day: 3,
+        title: "Museum Day and West End Highlights",
+        date: "April 4",
+        items: [
+          { text: "Start at the British Museum when galleries open.", page: "British_Museum", caption: "British Museum" },
+          { text: "Visit the National Gallery.", page: "National_Gallery", caption: "The National Gallery" },
+          { text: "Step into Trafalgar Square for iconic city views.", page: "Trafalgar_Square", caption: "Trafalgar Square" },
+          { text: "Walk through Leicester Square.", page: "Leicester_Square", caption: "Leicester Square" },
+          { text: "Take in the lights and screens at Piccadilly Circus.", page: "Piccadilly_Circus", caption: "Piccadilly Circus" },
+          { text: "Browse Forbidden Planet London Megastore for comics and collectibles.", page: "Forbidden_Planet_London_Megastore", caption: "Forbidden Planet London" },
+          { text: "See the John Snow cholera pump on Broadwick Street in Soho.", page: "John_Snow_cholera_pump", caption: "John Snow cholera pump" },
+          { text: "Explore Soho streets and food spots.", page: "Soho", caption: "Soho" },
+          { text: "Finish the West End sweep with an evening stroll down Oxford Street.", page: "Oxford_Street", caption: "Oxford Street" },
+          { text: "Dinner: eat classic pub food at Ye Olde Cheshire Cheese. <a href=\"https://ye-olde-cheshire-cheese.co.uk/\" target=\"_blank\" rel=\"noopener noreferrer\">Ye Olde Cheshire Cheese site</a>.", page: "Ye_Olde_Cheshire_Cheese", caption: "Ye Olde Cheshire Cheese dinner" }
+        ]
+      },
+      {
+        day: 4,
+        title: "Greenwich and Stonehenge Day Trip",
+        date: "April 5",
+        items: [
+          { text: "Visit the Royal Observatory Greenwich and stand on the Prime Meridian line.", page: "Royal_Observatory_Greenwich", caption: "Royal Observatory Greenwich" },
+          { text: "Take a no-car Stonehenge excursion from London (coach tour or rail + local tour) and spend the core afternoon at the stones.", page: "Stonehenge", caption: "Stonehenge day trip" },
+          { text: "Return to London for dinner at Dishoom Covent Garden. <a href=\"https://www.dishoom.com/menu/all-day-main/\" target=\"_blank\" rel=\"noopener noreferrer\">Dishoom all-day menu</a>.", page: "Dishoom_Covent_Garden", caption: "Dishoom dinner" }
+        ]
+      },
+      {
+        day: 5,
+        title: "Stratford-upon-Avon",
+        date: "April 6",
+        items: [
+          { text: "Travel no-car to Bletchley Park by train from London Euston. <a href=\"https://www.nationalrail.co.uk/destinations/trains-from-london-to-bletchley/\" target=\"_blank\" rel=\"noopener noreferrer\">National Rail London - Bletchley planning</a>.", page: "Bletchley_Park", caption: "Bletchley Park" },
+          { text: "Guided no-car option for Stratford: book coach + guide from London. <a href=\"https://evanevanstours.com/tours/day-tours-from-london/warwick-castle-shakespeares-birthplace-oxford-the-cotswolds/\" target=\"_blank\" rel=\"noopener noreferrer\">Evan Evans Stratford day tour</a>.", page: "Shakespeare's_Birthplace", caption: "Shakespeare's Birthplace" },
+          { text: "Tour the Royal Shakespeare Theatre.", page: "Royal_Shakespeare_Theatre", caption: "Royal Shakespeare Theatre" },
+          { text: "Stop by Anne Hathaway's Cottage.", page: "Anne_Hathaway's_Cottage", caption: "Anne Hathaway's Cottage" },
+          { text: "Take a River Avon walk.", page: "River_Avon,_Warwickshire", caption: "River Avon" },
+          { text: "Return to London by rail/coach for final night.", page: "London", caption: "London evening return" },
+          { text: "Dinner: try famous fish and chips at Rock & Sole Plaice.", page: "Rock_and_Sole_Plaice", caption: "Rock & Sole Plaice dinner" }
+        ]
+      },
+      {
+        day: 6,
+        title: "Train to Edinburgh",
+        date: "April 7",
+        items: [
+          { text: "Take the LNER train from London to Edinburgh.", page: "LNER", caption: "LNER northbound" },
+          { text: "Check into hotel near Royal Mile.", page: "Royal_Mile", caption: "Royal Mile" },
+          { text: "Explore Grassmarket and Victoria Street.", page: "Grassmarket", caption: "Grassmarket" },
+          { text: "Enjoy a relaxed pub dinner.", page: "Edinburgh", caption: "Edinburgh night" }
+        ]
+      },
+      {
+        day: 7,
+        title: "Edinburgh Castle and Old Town",
+        date: "April 8",
+        items: [
+          { text: "Visit Edinburgh Castle in the morning.", page: "Edinburgh_Castle", caption: "Edinburgh Castle" },
+          { text: "Walk the Royal Mile toward Holyrood Palace.", page: "Holyrood_Palace", caption: "Royal Mile to Holyrood" },
+          { text: "Optional hike up Arthur's Seat.", page: "Arthur's_Seat", caption: "Arthur's Seat" },
+          { text: "Dinner in Old Town.", page: "Old_Town,_Edinburgh", caption: "Old Town" }
+        ]
+      },
+      {
+        day: 8,
+        title: "Stirling Day Trip",
+        date: "April 9",
+        items: [
+          { text: "Take a day trip to Stirling Castle.", page: "Stirling_Castle", caption: "Stirling Castle" },
+          { text: "See the Wallace Monument area.", page: "National_Wallace_Monument", caption: "Wallace Monument" },
+          { text: "Visit the Bannockburn Heritage Centre.", page: "Battle_of_Bannockburn", caption: "Bannockburn" },
+          { text: "Return to Edinburgh for evening.", page: "Edinburgh", caption: "Return to Edinburgh" }
+        ]
+      },
+      {
+        day: 9,
+        title: "Highlands Drive",
+        date: "April 10",
+        items: [
+          { text: "No-car guided option: book a 2-day Highlands + Inverness tour with transport from Edinburgh. <a href=\"https://www.timberbush-tours.co.uk/our-tours/from-edinburgh/2-day-tours/loch-ness-inverness-highlands\" target=\"_blank\" rel=\"noopener noreferrer\">Timberbush 2-day Highlands/Inverness tour</a>.", page: "Scottish_Highlands", caption: "Road into the Highlands" },
+          { text: "Visit Loch Ness and Urquhart Castle.", page: "Urquhart_Castle", caption: "Urquhart Castle" },
+          { text: "Continue through Glencoe Valley.", page: "Glencoe,_Highland", caption: "Glencoe" },
+          { text: "Overnight in Inverness or Fort William area.", page: "Inverness", caption: "Inverness base" }
+        ]
+      },
+      {
+        day: 10,
+        title: "Skye Morning and Return to London",
+        date: "April 11",
+        items: [
+          { text: "No-car guided option for Skye + Eilean Donan from Edinburgh. <a href=\"https://www.rabbies.com/en-us/tour/the-isle-of-skye-3-day-tour-from-edinburgh\" target=\"_blank\" rel=\"noopener noreferrer\">Rabbie's 3-day Skye tour</a>.", page: "Eilean_Donan", caption: "Eilean Donan" },
+          { text: "Quick scenic stop at Old Man of Storr.", page: "Old_Man_of_Storr", caption: "Old Man of Storr" },
+          { text: "Return toward Edinburgh on guided tour transport, then connect by evening train.", page: "A9_road_(Scotland)", caption: "Drive south to Edinburgh" },
+          { text: "Take an evening LNER train from Edinburgh to London.", page: "Edinburgh_Waverley_railway_station", caption: "Edinburgh to London train" }
+        ]
+      },
+      {
+        day: 11,
+        title: "London Departure to New York",
+        date: "April 12",
+        items: [
+          { text: "Leave central London very early for Heathrow.", page: "London_Heathrow_Departure", caption: "Early transfer to Heathrow" },
+          { text: "Arrive by 5:30am for check-in and security.", page: "London_Heathrow_Departure", caption: "Heathrow departure terminal" },
+          { text: "Flight departs London at 8:30am, connects via Toronto (YYZ) for about 2h 5m, and arrives New York (JFK) at 3:07pm.", page: "Airplane", caption: "London to New York flight", defaultCost: 1534.5 }
+        ]
+      }
+    ];
+
+    const dayStayPlan = {
+      1: { town: "London", country: "England" },
+      2: { town: "London", country: "England" },
+      3: { town: "London", country: "England" },
+      4: { town: "London", country: "England" },
+      5: { town: "London", country: "England" },
+      6: { town: "Edinburgh", country: "Scotland" },
+      7: { town: "Edinburgh", country: "Scotland" },
+      8: { town: "Edinburgh", country: "Scotland" },
+      9: { town: "Inverness / Fort William area", country: "Scotland" },
+      10: { town: "London", country: "England" },
+      11: { town: "London", country: "England" }
+    };
+
+    const visitTimes = {
+      "303_E_83rd_St_NYC": "12:35",
+      Newark_Liberty_International_Airport: "15:07",
+      Washington_Dulles_International_Airport: "17:20",
+      London_Heathrow_Arrival: "06:55",
+      South_Bank: "15:30",
+      "County_Hall,_London": "16:30",
+      Borough_Market: "18:30",
+      Tower_Bridge: "20:15",
+      Buckingham_Palace: "09:30",
+      "St_James's_Park": "10:30",
+      Westminster_Abbey: "11:30",
+      Big_Ben: "13:00",
+      London_Eye: "13:45",
+      Tate_Modern: "15:15",
+      "Shakespeare's_Globe": "17:00",
+      Tower_of_London: "18:20",
+      British_Museum: "09:30",
+      National_Gallery: "12:15",
+      Trafalgar_Square: "14:00",
+      Leicester_Square: "14:50",
+      Piccadilly_Circus: "15:30",
+      Forbidden_Planet_London_Megastore: "16:15",
+      John_Snow_cholera_pump: "16:55",
+      Soho: "17:30",
+      Oxford_Street: "19:20",
+      Ye_Olde_Cheshire_Cheese: "21:10",
+      Dishoom_Covent_Garden: "19:45",
+      Rock_and_Sole_Plaice: "20:45",
+      Royal_Observatory_Greenwich: "09:15",
+      Stonehenge: "13:30",
+      Camden_Market: "13:30",
+      Kensington_Palace: "16:30",
+      Bletchley_Park: "09:30",
+      "Shakespeare's_Birthplace": "12:00",
+      Royal_Shakespeare_Theatre: "14:00",
+      "Anne_Hathaway's_Cottage": "15:30",
+      "River_Avon,_Warwickshire": "17:00",
+      London: "20:00",
+      LNER: "09:00",
+      Royal_Mile: "15:00",
+      Grassmarket: "16:30",
+      Edinburgh: "19:00",
+      Edinburgh_Castle: "09:00",
+      Holyrood_Palace: "12:00",
+      "Arthur's_Seat": "15:30",
+      "Old_Town,_Edinburgh": "19:00",
+      Stirling_Castle: "09:30",
+      National_Wallace_Monument: "11:30",
+      Battle_of_Bannockburn: "14:00",
+      Scottish_Highlands: "08:30",
+      Urquhart_Castle: "11:30",
+      "Glencoe,_Highland": "15:00",
+      Inverness: "18:30",
+      Eilean_Donan: "10:00",
+      Fairy_Pools: "13:00",
+      Old_Man_of_Storr: "11:30",
+      Neist_Point_Lighthouse: "19:30",
+      "A9_road_(Scotland)": "15:00",
+      Edinburgh_Waverley_railway_station: "20:00",
+      London_Heathrow_Departure: "05:30",
+      Edinburgh_Airport: "13:00",
+      Airplane: "08:30"
+    };
+
+    const visitDurationsMin = {
+      "303_E_83rd_St_NYC": 65,
+      Newark_Liberty_International_Airport: 80,
+      Washington_Dulles_International_Airport: 45,
+      London_Heathrow_Arrival: 60,
+      South_Bank: 90,
+      "County_Hall,_London": 60,
+      Tower_Bridge: 60,
+      Borough_Market: 90,
+      Buckingham_Palace: 75,
+      "St_James's_Park": 45,
+      Westminster_Abbey: 90,
+      Big_Ben: 35,
+      London_Eye: 60,
+      Tower_of_London: 150,
+      Tate_Modern: 90,
+      "Shakespeare's_Globe": 60,
+      National_Gallery: 90,
+      Trafalgar_Square: 40,
+      Piccadilly_Circus: 35,
+      Leicester_Square: 30,
+      Forbidden_Planet_London_Megastore: 30,
+      John_Snow_cholera_pump: 25,
+      Soho: 90,
+      Ye_Olde_Cheshire_Cheese: 75,
+      Dishoom_Covent_Garden: 70,
+      Rock_and_Sole_Plaice: 60,
+      Oxford_Street: 75,
+      Royal_Observatory_Greenwich: 90,
+      Stonehenge: 180,
+      British_Museum: 120,
+      Camden_Market: 90,
+      Kensington_Palace: 90,
+      Bletchley_Park: 120,
+      "Shakespeare's_Birthplace": 75,
+      Royal_Shakespeare_Theatre: 90,
+      "Anne_Hathaway's_Cottage": 60,
+      "River_Avon,_Warwickshire": 45,
+      London: 45,
+      LNER: 270,
+      Royal_Mile: 60,
+      Grassmarket: 60,
+      Edinburgh: 75,
+      Edinburgh_Castle: 120,
+      Holyrood_Palace: 90,
+      "Arthur's_Seat": 120,
+      "Old_Town,_Edinburgh": 90,
+      Stirling_Castle: 120,
+      National_Wallace_Monument: 60,
+      Battle_of_Bannockburn: 75,
+      Scottish_Highlands: 60,
+      Urquhart_Castle: 90,
+      "Glencoe,_Highland": 60,
+      Inverness: 60,
+      Eilean_Donan: 60,
+      Fairy_Pools: 90,
+      Old_Man_of_Storr: 90,
+      Neist_Point_Lighthouse: 75,
+      "A9_road_(Scotland)": 240,
+      Edinburgh_Waverley_railway_station: 60,
+      London_Heathrow_Departure: 180,
+      Airplane: 671
+    };
+
+    const dayTransportPlans = {
+      1: [
+        { mode: "NJ Transit / Amtrak / rideshare", bufferMin: 80, note: "Transfer from Upper East Side to EWR; typical total 70-95 min." },
+        { mode: "Airplane", bufferMin: 0, note: "Long-haul departure segment." },
+        { mode: "Airplane + terminal transfer", bufferMin: 115, note: "Connection window at IAD." },
+        { mode: "Heathrow Express + Tube/Taxi", bufferMin: 75, note: "Immigration + transfer into central London." },
+        { mode: "Walk", bufferMin: 20, note: "Short local movement on arrival day." }
+      ],
+      2: [
+        { mode: "Tube + walk", bufferMin: 35, note: "Morning transfer from hotel." },
+        { mode: "Walk", bufferMin: 15, note: "Nearby park segment." },
+        { mode: "Walk", bufferMin: 20, note: "Westminster cluster transfer." },
+        { mode: "Walk", bufferMin: 10, note: "Photo stop nearby." },
+        { mode: "Walk", bufferMin: 15, note: "Cross to South Bank for timed London Eye slot." },
+        { mode: "Walk", bufferMin: 20, note: "Continue east on the South Bank to Tate Modern." },
+        { mode: "Walk", bufferMin: 12, note: "Short riverside transfer to Globe area." },
+        { mode: "Walk + Tube", bufferMin: 25, note: "South Bank to Tower district." },
+        { mode: "Walk", bufferMin: 20, note: "Riverside skyline segment." }
+      ],
+      3: [
+        { mode: "Tube + walk", bufferMin: 30, note: "Hotel to Bloomsbury museum district." },
+        { mode: "Tube + walk", bufferMin: 25, note: "Bloomsbury to Trafalgar gallery district." },
+        { mode: "Walk", bufferMin: 10, note: "Adjacent square stop." },
+        { mode: "Walk", bufferMin: 10, note: "Very short West End transfer." },
+        { mode: "Walk", bufferMin: 10, note: "Short move to Piccadilly." },
+        { mode: "Walk", bufferMin: 10, note: "Piccadilly to Shaftesbury Avenue." },
+        { mode: "Walk", bufferMin: 10, note: "Shaftesbury Avenue to Broadwick Street." },
+        { mode: "Walk", bufferMin: 10, note: "Short Soho neighborhood transfer." },
+        { mode: "Walk + Tube", bufferMin: 20, note: "Soho to Oxford Street evening stroll." },
+        { mode: "Tube + walk", bufferMin: 20, note: "Oxford Street to Fleet Street pub dinner stop." }
+      ],
+      4: [
+        { mode: "DLR + walk", bufferMin: 40, note: "Central London to Greenwich Observatory." },
+        { mode: "Coach tour or rail + local transfer", bufferMin: 120, note: "Greenwich to Stonehenge area transfer; prebook tour/train timings." },
+        { mode: "Coach/rail return + Tube", bufferMin: 140, note: "Stonehenge return to central London for dinner." }
+      ],
+      5: [
+        { mode: "Train (Avanti/National Rail)", bufferMin: 55, note: "London Euston to Bletchley no-car transfer." },
+        { mode: "Guided coach tour", bufferMin: 90, note: "Coach transfer to Stratford stop cluster." },
+        { mode: "Walk", bufferMin: 12, note: "Town-center transfer." },
+        { mode: "Walk/short taxi", bufferMin: 20, note: "Local movement in Stratford." },
+        { mode: "Walk", bufferMin: 10, note: "Riverside segment." },
+        { mode: "Coach or rail return", bufferMin: 125, note: "Guided tour coach or train back to London." },
+        { mode: "Walk/Tube", bufferMin: 20, note: "Transfer to dinner stop near Covent Garden." }
+      ],
+      6: [
+        { mode: "Train (LNER)", bufferMin: 270, note: "London to Edinburgh rail journey." },
+        { mode: "Walk/taxi", bufferMin: 25, note: "Station to hotel transfer." },
+        { mode: "Walk", bufferMin: 15, note: "Compact Old Town area." },
+        { mode: "Walk", bufferMin: 20, note: "Evening local movement." }
+      ],
+      7: [
+        { mode: "Walk/taxi", bufferMin: 20, note: "Hotel to castle approach." },
+        { mode: "Walk", bufferMin: 25, note: "Royal Mile route." },
+        { mode: "Walk", bufferMin: 35, note: "Hike buffer for Arthur's Seat." },
+        { mode: "Walk", bufferMin: 20, note: "Dinner transfer." }
+      ],
+      8: [
+        { mode: "Train or car", bufferMin: 55, note: "Edinburgh to Stirling." },
+        { mode: "Bus/taxi", bufferMin: 20, note: "Castle to monument area." },
+        { mode: "Car/taxi", bufferMin: 25, note: "Monument to Bannockburn." },
+        { mode: "Train or car", bufferMin: 55, note: "Return to Edinburgh." }
+      ],
+      9: [
+        { mode: "Guided tour coach", bufferMin: 45, note: "Board coach in Edinburgh; guide handles routing." },
+        { mode: "Guided tour coach", bufferMin: 80, note: "Highlands route segment by tour vehicle." },
+        { mode: "Guided tour coach", bufferMin: 90, note: "Loch Ness to Glencoe segment on tour." },
+        { mode: "Guided tour coach", bufferMin: 75, note: "Transfer to overnight base with tour group." }
+      ],
+      10: [
+        { mode: "Guided tour coach", bufferMin: 55, note: "Morning stop via Skye tour route." },
+        { mode: "Guided tour coach", bufferMin: 75, note: "Scenic transfer managed by guide/driver." },
+        { mode: "Guided tour coach", bufferMin: 240, note: "Long southbound segment back toward Edinburgh." },
+        { mode: "Train (LNER)", bufferMin: 270, note: "Evening Edinburgh to London." }
+      ],
+      11: [
+        { mode: "Taxi/ride share", bufferMin: 60, note: "Pre-dawn airport transfer." },
+        { mode: "Airport process", bufferMin: 180, note: "Bag drop, security, boarding buffer." },
+        { mode: "Airplane", bufferMin: 0, note: "LHR to JFK travel segment via YYZ." }
+      ]
+    };
+
+    const dayLogisticsNotes = {
+      5: "No-car option: prebook Bletchley rail + Stratford guided coach tour; verify same-day return timing to London.",
+      9: "No-car option: board a prebooked Highlands guided tour from Edinburgh (coach + guide included).",
+      10: "If using guided Skye/Highlands tour transport, confirm Edinburgh arrival time before evening LNER train.",
+      11: "8:30am flight: leave central London around 4:30am to comfortably reach Heathrow by 5:30am."
+    };
+
+    const poiCoordinates = {
+      "303_E_83rd_St_NYC": [40.7759, -73.9528],
+      Newark_Liberty_International_Airport: [40.6895, -74.1745],
+      Washington_Dulles_International_Airport: [38.9531, -77.4565],
+      London_Heathrow_Arrival: [51.4700, -0.4543],
+      South_Bank: [51.5076, -0.1160],
+      "County_Hall,_London": [51.5033, -0.1195],
+      Tower_Bridge: [51.5055, -0.0754],
+      Borough_Market: [51.5055, -0.0911],
+      Buckingham_Palace: [51.5014, -0.1419],
+      "St_James's_Park": [51.5026, -0.1340],
+      Westminster_Abbey: [51.4993, -0.1273],
+      Big_Ben: [51.5007, -0.1246],
+      London_Eye: [51.5033, -0.1196],
+      Tower_of_London: [51.5081, -0.0759],
+      Tate_Modern: [51.5076, -0.0994],
+      "Shakespeare's_Globe": [51.5081, -0.0972],
+      National_Gallery: [51.5089, -0.1283],
+      Trafalgar_Square: [51.5080, -0.1281],
+      Piccadilly_Circus: [51.5101, -0.1340],
+      Leicester_Square: [51.5113, -0.1270],
+      Forbidden_Planet_London_Megastore: [51.5158, -0.1292],
+      John_Snow_cholera_pump: [51.5138, -0.1363],
+      Soho: [51.5136, -0.1365],
+      Ye_Olde_Cheshire_Cheese: [51.5145, -0.1084],
+      Dishoom_Covent_Garden: [51.5128, -0.1261],
+      Rock_and_Sole_Plaice: [51.5156, -0.1248],
+      Oxford_Street: [51.5154, -0.1410],
+      Royal_Observatory_Greenwich: [51.4769, 0.0005],
+      Stonehenge: [51.1789, -1.8262],
+      British_Museum: [51.5194, -0.1270],
+      Camden_Market: [51.5416, -0.1439],
+      Kensington_Palace: [51.5050, -0.1877],
+      Bletchley_Park: [51.9977, -0.7403],
+      "Shakespeare's_Birthplace": [52.1918, -1.7073],
+      Royal_Shakespeare_Theatre: [52.1905, -1.7008],
+      "Anne_Hathaway's_Cottage": [52.1855, -1.7405],
+      "River_Avon,_Warwickshire": [52.1910, -1.7090],
+      London: [51.5072, -0.1276],
+      LNER: [51.5308, -0.1238],
+      Royal_Mile: [55.9494, -3.1906],
+      Grassmarket: [55.9472, -3.1952],
+      Edinburgh: [55.9533, -3.1883],
+      Edinburgh_Castle: [55.9486, -3.1999],
+      Holyrood_Palace: [55.9526, -3.1727],
+      "Arthur's_Seat": [55.9445, -3.1619],
+      "Old_Town,_Edinburgh": [55.9497, -3.1900],
+      Stirling_Castle: [56.1238, -3.9469],
+      National_Wallace_Monument: [56.1349, -3.9254],
+      Battle_of_Bannockburn: [56.0899, -3.9365],
+      Scottish_Highlands: [57.1930, -3.8280],
+      Urquhart_Castle: [57.3240, -4.4410],
+      "Glencoe,_Highland": [56.6820, -5.1030],
+      Inverness: [57.4778, -4.2247],
+      Eilean_Donan: [57.2736, -5.5160],
+      Fairy_Pools: [57.2473, -6.2720],
+      Old_Man_of_Storr: [57.5061, -6.1731],
+      Neist_Point_Lighthouse: [57.4230, -6.7870],
+      "A9_road_(Scotland)": [56.8620, -4.2640],
+      Edinburgh_Waverley_railway_station: [55.9520, -3.1890],
+      London_Heathrow_Departure: [51.4700, -0.4543],
+      Edinburgh_Airport: [55.9500, -3.3725],
+      Airplane: [51.4700, -0.4543]
+    };
+
+    const fallbackImages = {
+      "303_E_83rd_St_NYC": "https://images.pexels.com/photos/466685/pexels-photo-466685.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Newark_Liberty_International_Airport: "https://images.pexels.com/photos/62623/wing-plane-flying-airplane-62623.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Washington_Dulles_International_Airport: "https://images.pexels.com/photos/358319/pexels-photo-358319.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      London_Heathrow_Arrival: "https://upload.wikimedia.org/wikipedia/commons/0/0d/London_-_Heathrow_%28LHR_-_EGLL%29_AN1572653.jpg",
+      South_Bank: "https://images.pexels.com/photos/460672/pexels-photo-460672.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      River_Thames: "https://images.pexels.com/photos/1796730/pexels-photo-1796730.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      "County_Hall,_London": "https://images.pexels.com/photos/460672/pexels-photo-460672.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Tower_Bridge: "https://images.pexels.com/photos/1650899/pexels-photo-1650899.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Borough_Market: "https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Tower_of_London: "https://upload.wikimedia.org/wikipedia/commons/e/ec/Tower_of_London_from_the_Shard_%288515883950%29.jpg",
+      Westminster: "https://images.pexels.com/photos/724533/pexels-photo-724533.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Buckingham_Palace: "https://images.pexels.com/photos/532826/pexels-photo-532826.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      "Hyde_Park,_London": "https://images.pexels.com/photos/2521619/pexels-photo-2521619.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      "St_James's_Park": "https://images.pexels.com/photos/1268871/pexels-photo-1268871.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      British_Museum: "https://images.pexels.com/photos/356844/pexels-photo-356844.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Westminster_Abbey: "https://images.pexels.com/photos/2082103/pexels-photo-2082103.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Big_Ben: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      London_Eye: "https://images.pexels.com/photos/460672/pexels-photo-460672.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      "Millennium_Bridge,_London": "https://images.pexels.com/photos/378570/pexels-photo-378570.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Tate_Modern: "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      "Shakespeare's_Globe": "https://images.pexels.com/photos/1796726/pexels-photo-1796726.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      National_Gallery: "https://images.pexels.com/photos/1666021/pexels-photo-1666021.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Trafalgar_Square: "https://images.pexels.com/photos/705764/pexels-photo-705764.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Piccadilly_Circus: "https://images.pexels.com/photos/297640/pexels-photo-297640.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Leicester_Square: "https://images.pexels.com/photos/214699/pexels-photo-214699.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Forbidden_Planet_London_Megastore: "https://upload.wikimedia.org/wikipedia/commons/b/b7/Forbidden_Planet_London_Cult_Entertainment_Megastore_2018-10-03.jpg",
+      John_Snow_cholera_pump: "https://upload.wikimedia.org/wikipedia/commons/0/08/Broadwick_street_pump.jpg",
+      Soho: "https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Ye_Olde_Cheshire_Cheese: "https://images.pexels.com/photos/1269036/pexels-photo-1269036.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Dishoom_Covent_Garden: "https://images.pexels.com/photos/2474661/pexels-photo-2474661.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Rock_and_Sole_Plaice: "https://images.pexels.com/photos/262978/pexels-photo-262978.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Oxford_Street: "https://images.pexels.com/photos/169647/pexels-photo-169647.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Royal_Observatory_Greenwich: "https://images.pexels.com/photos/372281/pexels-photo-372281.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Camden_Market: "https://images.pexels.com/photos/1450372/pexels-photo-1450372.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Kensington_Palace: "https://images.pexels.com/photos/532826/pexels-photo-532826.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Stonehenge: "https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      White_Cliffs_of_Dover: "https://images.pexels.com/photos/1631677/pexels-photo-1631677.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Dover: "https://images.pexels.com/photos/1005417/pexels-photo-1005417.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      London: "https://images.pexels.com/photos/1837590/pexels-photo-1837590.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Bletchley_Park: "https://images.pexels.com/photos/161154/street-building-road-old-161154.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      "Shakespeare's_Birthplace": "https://images.pexels.com/photos/161154/street-building-road-old-161154.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Royal_Shakespeare_Theatre: "https://images.pexels.com/photos/713149/pexels-photo-713149.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      "Anne_Hathaway's_Cottage": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Anne_Hathaways_Cottage_1_%285662418953%29.jpg",
+      "River_Avon,_Warwickshire": "https://images.pexels.com/photos/355423/pexels-photo-355423.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      LNER: "https://images.pexels.com/photos/302428/pexels-photo-302428.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Royal_Mile: "https://images.pexels.com/photos/427679/pexels-photo-427679.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Grassmarket: "https://images.pexels.com/photos/1827610/pexels-photo-1827610.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Edinburgh: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Skyline_of_Edinburgh.jpg",
+      Edinburgh_Castle: "https://images.pexels.com/photos/208745/pexels-photo-208745.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Holyrood_Palace: "https://images.pexels.com/photos/1329711/pexels-photo-1329711.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      "Arthur's_Seat": "https://images.pexels.com/photos/2901209/pexels-photo-2901209.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      "Old_Town,_Edinburgh": "https://images.pexels.com/photos/1308940/pexels-photo-1308940.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Stirling_Castle: "https://images.pexels.com/photos/208701/pexels-photo-208701.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      National_Wallace_Monument: "https://images.pexels.com/photos/157811/pexels-photo-157811.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Battle_of_Bannockburn: "https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Scottish_Highlands: "https://images.pexels.com/photos/572897/pexels-photo-572897.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Urquhart_Castle: "https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      "Glencoe,_Highland": "https://images.unsplash.com/photo-1551801691-f0bce83d4f68?w=1400&q=80",
+      Inverness: "https://images.pexels.com/photos/355465/pexels-photo-355465.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Eilean_Donan: "https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Fairy_Pools: "https://images.unsplash.com/photo-1609087998060-f567d481a1ae?w=1400&q=80",
+      Old_Man_of_Storr: "https://images.unsplash.com/photo-1589806567522-18564e9cf0bc?w=1400&q=80",
+      Neist_Point_Lighthouse: "https://images.unsplash.com/photo-1589708249886-cff7237d7586?w=1400&q=80",
+      "A9_road_(Scotland)": "https://images.pexels.com/photos/210243/pexels-photo-210243.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Edinburgh_Waverley_railway_station: "https://images.pexels.com/photos/302428/pexels-photo-302428.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      London_Heathrow_Departure: "https://upload.wikimedia.org/wikipedia/commons/5/5a/Departure_hall_entrance%2C_London_Heathrow_Terminal_2%2C_UK_-_20150621.jpg",
+      Edinburgh_Airport: "https://images.pexels.com/photos/52500/airport-aircraft-runway-flight-52500.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Airplane: "https://images.pexels.com/photos/358319/pexels-photo-358319.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400"
+    };
+
+    const secondaryFallbackImages = {
+      "303_E_83rd_St_NYC": "https://images.pexels.com/photos/1486222/pexels-photo-1486222.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Newark_Liberty_International_Airport: "https://images.pexels.com/photos/912050/pexels-photo-912050.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Washington_Dulles_International_Airport: "https://images.pexels.com/photos/62623/wing-plane-flying-airplane-62623.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      London_Heathrow_Arrival: "https://images.pexels.com/photos/46148/aircraft-jet-landing-cloud-46148.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      London_Heathrow_Departure: "https://images.pexels.com/photos/62623/wing-plane-flying-airplane-62623.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      LNER: "https://images.pexels.com/photos/302428/pexels-photo-302428.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Edinburgh: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Edinburgh_Castle_from_the_North.JPG/1280px-Edinburgh_Castle_from_the_North.JPG",
+      Edinburgh_Waverley_railway_station: "https://images.pexels.com/photos/163743/train-railway-carriage-rail-163743.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Airplane: "https://images.pexels.com/photos/46148/aircraft-jet-landing-cloud-46148.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400"
+    };
+
+    const localPhoto = (fileName) => `images/local-photos/${encodeURIComponent(fileName)}`;
+
+    const localPrimaryImages = {
+      "303_E_83rd_St_NYC": localPhoto("nyc-apt.webp"),
+      Newark_Liberty_International_Airport: localPhoto("newark-airport.jpg"),
+      Washington_Dulles_International_Airport: localPhoto("newark-airport-3.jpg"),
+      London_Heathrow_Arrival: localPhoto("heathrow-t5.jpg"),
+      London_Heathrow_Departure: localPhoto("heathrow.jpg"),
+      Airplane: localPhoto("flight home.jpg"),
+      South_Bank: localPhoto("south-bank.png"),
+      Tower_Bridge: localPhoto("tower-bridge.jpg"),
+      Tower_of_London: localPhoto("tower-london.jpg"),
+      Buckingham_Palace: localPhoto("buckingham.jpg"),
+      "St_James's_Park": localPhoto("buckingham-3.jpg"),
+      Big_Ben: localPhoto("big-ben.jpg"),
+      Westminster_Abbey: localPhoto("westminster-abbey-front.jpg"),
+      London_Eye: localPhoto("london-eye-2.jpg"),
+      British_Museum: localPhoto("british-museum.jpg"),
+      National_Gallery: localPhoto("national-gallery.jpg"),
+      Trafalgar_Square: localPhoto("trafalgar-sq.jpg"),
+      Tate_Modern: localPhoto("tate-modern.jpg"),
+      "Shakespeare's_Globe": localPhoto("globe-theatre.jpg"),
+      Soho: localPhoto("london-4.jpg"),
+      Piccadilly_Circus: localPhoto("london-5.jpg"),
+      Leicester_Square: localPhoto("london-6.jpg"),
+      Forbidden_Planet_London_Megastore: localPhoto("london-6.jpg"),
+      John_Snow_cholera_pump: localPhoto("london-3.jpg"),
+      Ye_Olde_Cheshire_Cheese: localPhoto("london-2.jpg"),
+      Dishoom_Covent_Garden: localPhoto("london-3.jpg"),
+      Rock_and_Sole_Plaice: localPhoto("london-2.jpg"),
+      Oxford_Street: localPhoto("london-2.jpg"),
+      Royal_Observatory_Greenwich: localPhoto("royal-observatory.webp"),
+      London: localPhoto("london-3.jpg"),
+      Bletchley_Park: localPhoto("cotswolds1.jpg"),
+      "Shakespeare's_Birthplace": localPhoto("cotswolds1.jpg"),
+      Royal_Shakespeare_Theatre: localPhoto("cotswolds2.jpg"),
+      "Anne_Hathaway's_Cottage": localPhoto("cotswolds2.jpg"),
+      "River_Avon,_Warwickshire": localPhoto("cotswolds1.jpg"),
+      Royal_Mile: localPhoto("Royal-Mile.webp"),
+      Grassmarket: localPhoto("Old-Town.webp"),
+      Edinburgh: localPhoto("Royal-Mile.webp"),
+      Edinburgh_Castle: localPhoto("Old-Town.webp"),
+      Holyrood_Palace: localPhoto("Royal-Mile.webp"),
+      "Arthur's_Seat": localPhoto("Old-Town.webp"),
+      "Old_Town,_Edinburgh": localPhoto("Old-Town.webp"),
+      Stirling_Castle: localPhoto("Old-Town.webp"),
+      National_Wallace_Monument: localPhoto("Royal-Mile.webp"),
+      Battle_of_Bannockburn: localPhoto("Old-Town.webp"),
+      Scottish_Highlands: localPhoto("quiraing-skye.jpg"),
+      Urquhart_Castle: localPhoto("eilean-donan-castle-scotland-highlands.jpg"),
+      "Glencoe,_Highland": localPhoto("quiraing.jpg"),
+      Inverness: localPhoto("quiraing-skye.jpg"),
+      Eilean_Donan: localPhoto("eilean-donan-castle-scotland-highlands.jpg"),
+      Old_Man_of_Storr: localPhoto("oldmanofstorr.jpg"),
+      "A9_road_(Scotland)": localPhoto("quiraing-skye.jpg"),
+      Edinburgh_Waverley_railway_station: localPhoto("Royal-Mile.webp"),
+      Stonehenge: localPhoto("stonehenge1.jpg")
+    };
+
+    const localSecondaryImages = {
+      "303_E_83rd_St_NYC": localPhoto("nyc-apt-2.webp"),
+      Newark_Liberty_International_Airport: localPhoto("newark-airport-2.jpg"),
+      Washington_Dulles_International_Airport: localPhoto("newark-airport.jpg"),
+      London_Heathrow_Arrival: localPhoto("heathrow.jpg"),
+      London_Heathrow_Departure: localPhoto("heathrow-t5.jpg"),
+      Airplane: localPhoto("heathrow.jpg"),
+      South_Bank: localPhoto("south-bank.jpg"),
+      Tower_Bridge: localPhoto("tower-bridge-3.jpg"),
+      Tower_of_London: localPhoto("tower-london-beefeater.jpg"),
+      Buckingham_Palace: localPhoto("buckingham-aerial.jpg"),
+      "St_James's_Park": localPhoto("buckingham.jpg"),
+      Big_Ben: localPhoto("big-ben-2.jpg"),
+      Westminster_Abbey: localPhoto("westminster-abbey-4.jpg"),
+      London_Eye: localPhoto("london-eye-3.jpg"),
+      British_Museum: localPhoto("british-museum-4.jpg"),
+      National_Gallery: localPhoto("national-gallery-3.jpg"),
+      Trafalgar_Square: localPhoto("trafalgar-sq-4.jpg"),
+      Tate_Modern: localPhoto("tate-modern-3.jpg"),
+      "Shakespeare's_Globe": localPhoto("globe-theatre-3.jpg"),
+      Soho: localPhoto("london-5.jpg"),
+      Piccadilly_Circus: localPhoto("london-6.jpg"),
+      Leicester_Square: localPhoto("london-7.jpg"),
+      Forbidden_Planet_London_Megastore: localPhoto("london-7.jpg"),
+      John_Snow_cholera_pump: localPhoto("london-4.jpg"),
+      Ye_Olde_Cheshire_Cheese: localPhoto("london-2.jpg"),
+      Dishoom_Covent_Garden: localPhoto("london-4.jpg"),
+      Rock_and_Sole_Plaice: localPhoto("london-2.jpg"),
+      Oxford_Street: localPhoto("london-3.jpg"),
+      Royal_Observatory_Greenwich: localPhoto("royal-observatory-2.webp"),
+      London: localPhoto("london-3.jpg"),
+      Bletchley_Park: localPhoto("cotswolds2.jpg"),
+      "Shakespeare's_Birthplace": localPhoto("cotswolds2.jpg"),
+      Royal_Shakespeare_Theatre: localPhoto("cotswolds1.jpg"),
+      "Anne_Hathaway's_Cottage": localPhoto("cotswolds1.jpg"),
+      "River_Avon,_Warwickshire": localPhoto("cotswolds2.jpg"),
+      Royal_Mile: localPhoto("Old-Town.webp"),
+      Grassmarket: localPhoto("Royal-Mile.webp"),
+      Edinburgh: localPhoto("Old-Town.webp"),
+      Edinburgh_Castle: localPhoto("Royal-Mile.webp"),
+      Holyrood_Palace: localPhoto("Old-Town.webp"),
+      "Arthur's_Seat": localPhoto("Royal-Mile.webp"),
+      "Old_Town,_Edinburgh": localPhoto("Royal-Mile.webp"),
+      Stirling_Castle: localPhoto("Royal-Mile.webp"),
+      National_Wallace_Monument: localPhoto("Old-Town.webp"),
+      Battle_of_Bannockburn: localPhoto("Royal-Mile.webp"),
+      Scottish_Highlands: localPhoto("quiraing.jpg"),
+      Urquhart_Castle: localPhoto("quiraing-skye.jpg"),
+      "Glencoe,_Highland": localPhoto("quiraing-skye.jpg"),
+      Inverness: localPhoto("quiraing.jpg"),
+      Eilean_Donan: localPhoto("eilean donan highlands.jpg"),
+      Old_Man_of_Storr: localPhoto("old-man-of-storr-stormy.jpg"),
+      "A9_road_(Scotland)": localPhoto("quiraing-skye.jpg"),
+      Edinburgh_Waverley_railway_station: localPhoto("Old-Town.webp"),
+      Stonehenge: localPhoto("stonehenge2.jpg")
+    };
+
+    const localImagePages = new Set([
+      ...Object.keys(localPrimaryImages),
+      ...Object.keys(localSecondaryImages)
+    ]);
+    const PHOTO_OVERRIDE_STORAGE_KEY = "ukTripPhotoOverridesV1";
+    const POI_CAROUSEL_INTERVAL_MS = 3500;
+    let poiCarouselTimers = [];
+
+    const poiMeta = {
+      "303_E_83rd_St_NYC": { why: "Your exact departure point for the airport run.", researchedCost: "No admission cost; subway + bus fare applies." },
+      Newark_Liberty_International_Airport: { why: "Major New York/New Jersey gateway and your updated trip launch point.", researchedCost: "No attraction admission; airline fare applies." },
+      Washington_Dulles_International_Airport: { why: "Main transatlantic connection hub in this itinerary.", researchedCost: "No attraction admission; connection only." },
+      London_Heathrow_Arrival: { why: "Primary UK entry point and start of your London leg.", researchedCost: "Free airport terminal access." },
+      South_Bank: { why: "One of London's best urban river walks with skyline views.", researchedCost: "Free public area." },
+      "County_Hall,_London": { why: "Historic riverside civic building beside key Westminster sights.", researchedCost: "Exterior/public riverside access is free." },
+      Tower_Bridge: { why: "Iconic Victorian bascule bridge and top London photo location.", researchedCost: "Bridge exterior walk is free; exhibition is paid." },
+      Borough_Market: { why: "Historic food market with strong local and global street-food scene.", researchedCost: "Entry is free; purchases are pay-as-you-go." },
+      Buckingham_Palace: { why: "Symbol of the British monarchy and Changing of the Guard.", researchedCost: "Exterior/guard viewing free; State Rooms are paid seasonal entry." },
+      "St_James's_Park": { why: "Classic royal park linking palace and Westminster.", researchedCost: "Free public park." },
+      Westminster_Abbey: { why: "Coronation church with major royal and national history.", researchedCost: "Paid admission (official tickets required)." },
+      Big_Ben: { why: "One of the world's most recognizable clock towers.", researchedCost: "Exterior viewing is free; tours are limited/paid." },
+      London_Eye: { why: "Giant observation wheel with one of the best panoramic views of central London.", researchedCost: "Paid timed-entry ticket required; prices vary by time slot." },
+      Tower_of_London: { why: "UNESCO fortress with Crown Jewels and deep medieval history.", researchedCost: "Paid admission (online booking recommended)." },
+      Tate_Modern: { why: "Global modern-art museum in a dramatic former power station.", researchedCost: "Main collection free; special exhibitions usually paid." },
+      "Shakespeare's_Globe": { why: "Reconstruction of Shakespeare's open-air playhouse.", researchedCost: "Exterior and riverside area free; tours/performances paid." },
+      National_Gallery: { why: "World-class European art collection on Trafalgar Square.", researchedCost: "Permanent collection free; some exhibitions paid." },
+      Trafalgar_Square: { why: "Historic civic square and central orientation point in London.", researchedCost: "Free public square." },
+      Piccadilly_Circus: { why: "Famous neon-lit junction and West End energy hub.", researchedCost: "Free public area." },
+      Leicester_Square: { why: "Cinema and theatre district heart with constant street activity.", researchedCost: "Free public square." },
+      Forbidden_Planet_London_Megastore: { why: "Flagship pop-culture megastore for comics, manga, and collectibles.", researchedCost: "Free entry retail shop." },
+      John_Snow_cholera_pump: { why: "Historic public-health landmark tied to the 1854 cholera outbreak mapping breakthrough.", researchedCost: "Free street-side historical stop." },
+      Soho: { why: "Dense district of restaurants, music, theatre, and nightlife culture.", researchedCost: "Free to walk and explore." },
+      Ye_Olde_Cheshire_Cheese: { why: "Historic London pub known for traditional interiors and classic pub food.", researchedCost: "Paid dining." },
+      Dishoom_Covent_Garden: { why: "One of London's best-known Indian restaurants for Bombay-style dishes.", researchedCost: "Paid dining." },
+      Rock_and_Sole_Plaice: { why: "Long-running London fish-and-chips institution near Covent Garden.", researchedCost: "Paid dining." },
+      Oxford_Street: { why: "Historic shopping boulevard with flagship stores.", researchedCost: "Free public street access." },
+      Royal_Observatory_Greenwich: { why: "Home of the Prime Meridian and one of London's key scientific-history sites.", researchedCost: "Greenwich Park access free; official Prime Meridian courtyard entry is paid." },
+      Stonehenge: { why: "One of Britain's most iconic prehistoric monuments with dramatic open-landscape setting.", researchedCost: "Paid timed-entry ticket required for official Stonehenge access." },
+      British_Museum: { why: "Major world-history museum with landmark artifacts.", researchedCost: "Permanent galleries free; some exhibitions paid." },
+      Camden_Market: { why: "Alternative market district known for food, fashion, and music culture.", researchedCost: "Market entry free; food/shopping paid." },
+      Kensington_Palace: { why: "Royal residence with state apartments and palace exhibitions.", researchedCost: "Paid admission (official tickets)." },
+      Bletchley_Park: { why: "WWII codebreaking site tied to Enigma and early computing.", researchedCost: "Paid admission (ticket includes annual return validity in many cases)." },
+      "Shakespeare's_Birthplace": { why: "Preserved birthplace of Shakespeare in Stratford.", researchedCost: "Paid admission via Shakespeare Birthplace Trust tickets." },
+      Royal_Shakespeare_Theatre: { why: "Flagship stage of the Royal Shakespeare Company.", researchedCost: "Performances and most tours are paid (prices vary by show)." },
+      "Anne_Hathaway's_Cottage": { why: "Thatched Tudor home linked to Shakespeare's family history.", researchedCost: "Paid admission, often bundled with Birthplace Trust passes." },
+      "River_Avon,_Warwickshire": { why: "Scenic riverfront that defines Stratford's atmosphere.", researchedCost: "Riverside walk free; boat hires paid." },
+      London: { why: "Global city core and logistical base for this itinerary.", researchedCost: "City base and overnight logistics stop." },
+      LNER: { why: "Fast intercity rail route linking London and Edinburgh.", researchedCost: "Rail fare required (dynamic pricing)." },
+      Royal_Mile: { why: "Historic spine of Edinburgh Old Town.", researchedCost: "Street access free." },
+      Grassmarket: { why: "Historic market square turned lively dining quarter.", researchedCost: "Area access free; dining spend optional." },
+      Edinburgh: { why: "Scotland's capital with layered medieval and Georgian history.", researchedCost: "No general city admission cost." },
+      Edinburgh_Castle: { why: "Dominant fortress above the city with national regalia.", researchedCost: "Paid admission (timed tickets advised)." },
+      Holyrood_Palace: { why: "Official Scottish royal residence with major Stuart-era history.", researchedCost: "Paid admission (official Royal Collection ticketing)." },
+      "Arthur's_Seat": { why: "Volcanic hill for panoramic views over Edinburgh.", researchedCost: "Free public hike." },
+      "Old_Town,_Edinburgh": { why: "Dense medieval urban fabric and UNESCO core area.", researchedCost: "Area access free." },
+      Stirling_Castle: { why: "One of Scotland's most historically strategic royal castles.", researchedCost: "Paid admission (Historic Environment Scotland)." },
+      National_Wallace_Monument: { why: "Tribute tower to William Wallace with wide-area views.", researchedCost: "Paid monument admission." },
+      Battle_of_Bannockburn: { why: "Site of a pivotal Scottish independence battle.", researchedCost: "Visitor experience/tours usually paid; grounds access may vary." },
+      Scottish_Highlands: { why: "Signature mountain-and-glen landscapes of Scotland.", researchedCost: "Scenic driving access generally free; parking/attractions may cost." },
+      Urquhart_Castle: { why: "Dramatic Loch Ness ruins with iconic shoreline views.", researchedCost: "Paid admission (Historic Environment Scotland)." },
+      "Glencoe,_Highland": { why: "Iconic glen with epic geology and layered clan history.", researchedCost: "Roadside viewpoints generally free; some car parks/facilities paid." },
+      Inverness: { why: "Highlands gateway city and practical touring base.", researchedCost: "Overnight base and logistics stop." },
+      Eilean_Donan: { why: "Photogenic loch-side castle on a tidal island setting.", researchedCost: "Viewpoints free; interior entry paid." },
+      Fairy_Pools: { why: "Clear blue pools and mountain backdrop on Skye.", researchedCost: "Access free; parking/managed facilities may have fees." },
+      Old_Man_of_Storr: { why: "Skye's famous rock pinnacle hike and viewpoint.", researchedCost: "Trail access free; car park commonly paid." },
+      Neist_Point_Lighthouse: { why: "Dramatic cliffside lighthouse and sunset location.", researchedCost: "Access free; parking conditions vary." },
+      "A9_road_(Scotland)": { why: "Main north-south route connecting Highlands and Edinburgh.", researchedCost: "Long transfer route back toward Edinburgh." },
+      Edinburgh_Waverley_railway_station: { why: "Central rail hub for London return leg.", researchedCost: "Station access free; ticketed rail travel required." },
+      London_Heathrow_Departure: { why: "International departure hub for your flight home.", researchedCost: "Free airport terminal access." },
+      Airplane: { why: "Transatlantic return transport to New York via Toronto.", researchedCost: "Airfare budget from latest screenshot: $3,069 round trip (about $1,534.50 per leg)." }
+    };
+
+    const COST_STORAGE_KEY = "ukTripCostInputsV1";
+    const COMMAND_CHECKLIST_STORAGE_KEY = "ukTripCommandChecklistV1";
+    const EMPTY_IMAGE_PLACEHOLDER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800'><rect width='1200' height='800' fill='white'/></svg>";
+    const STAY_COLOR_BY_TOWN = {
+      London: "#d1a900",
+      Edinburgh: "#1f5cb5",
+      "Inverness / Fort William area": "#1f8a4d"
+    };
+    const topMapSelectedDays = new Set(itinerary.map((day) => day.day));
+    let costState = {};
+    let commandChecklistState = {};
+    let routeMapState = null;
+
+    function renderStaySummary() {
+      const staySummaryEl = document.getElementById("stay-summary");
+      if (!staySummaryEl) return;
+
+      const segments = [];
+      itinerary.forEach((day) => {
+        const stay = dayStayPlan[day.day] || { town: "Unknown", country: "Unknown" };
+        const segmentKey = `${stay.town}|${stay.country}`;
+        const current = segments[segments.length - 1];
+        if (current && current.key === segmentKey) {
+          current.endDay = day.day;
+          current.days += 1;
+          return;
+        }
+
+        segments.push({
+          key: segmentKey,
+          town: stay.town,
+          country: stay.country,
+          startDay: day.day,
+          endDay: day.day,
+          days: 1
+        });
+      });
+
+      const hotelSwitches = Math.max(segments.length - 1, 0);
+      const segmentRows = segments
+        .map((segment) => {
+          const dayLabel = segment.days === 1 ? "day" : "days";
+          const dayRange = segment.startDay === segment.endDay
+            ? `Day ${segment.startDay}`
+            : `Day ${segment.startDay}-Day ${segment.endDay}`;
+          return `<li><strong>${segment.town}, ${segment.country}</strong>: ${segment.days} ${dayLabel} (${dayRange})</li>`;
+        })
+        .join("");
+
+      staySummaryEl.innerHTML = `
+        <article class="stay-summary-card">
+          <h3 class="stay-summary-title">Hotel Base Plan By Town/Country</h3>
+          <p class="stay-summary-meta">Estimated hotel switches: ${hotelSwitches}</p>
+          <ul class="stay-summary-list">${segmentRows}</ul>
+        </article>
+      `;
+    }
+
+    function renderTimeline() {
+      const timeline = document.getElementById("timeline");
+      timeline.innerHTML = itinerary
+        .map((day) => {
+          let itemsMarkup = "";
+          day.items.forEach((item, itemIndex) => {
+            const visitTime = visitTimes[item.page] || "Flexible";
+            const duration = visitDurationsMin[item.page] || 60;
+            const visitEndTime = addMinutesToTime(visitTime, duration);
+            const dayPart = getDayPart(visitTime);
+            const itemKey = getItemKey(day, item, itemIndex);
+            const savedCost = costState[itemKey];
+            const meta = poiMeta[item.page] || { why: "Noted stop in your trip flow.", researchedCost: "Cost unknown; please verify." };
+            const costType = getCostType(meta.researchedCost);
+            const costClass = costType === "paid" ? "paid-warning" : (costType === "free" ? "free-warning" : (costType === "mixed" ? "mixed-warning" : ""));
+            const transport = getTransportEntry(day.day, itemIndex);
+            const photoCarousels = getConfiguredPhotoCarousels(item.page);
+
+            if (transport && transport.bufferMin > 0) {
+              const transferEndTime = visitTime;
+              const transferStartTime = subtractMinutesFromTime(visitTime, transport.bufferMin);
+              itemsMarkup += `
+                <article class="travel-block">
+                  <div class="travel-title">${transferStartTime} - ${transferEndTime} (${transport.bufferMin} min) - ${transport.mode}</div>
+                  <div class="travel-desc">Estimated transfer buffer: ~${transport.bufferMin} min. ${transport.note}</div>
+                </article>
+              `;
+            }
+
+            itemsMarkup += `
+              <article class="poi-item">
+                ${renderPoiCarousel(photoCarousels.left, item.page, item.caption, "left")}
+                <div class="poi-text">
+                  <span class="poi-time">${visitTime} - ${visitEndTime} (${duration} min)${dayPart ? " - " + dayPart : ""}</span>
+                  <div class="poi-desc">${item.text}</div>
+                  <div class="poi-transport"><strong>Getting there:</strong> ${transport.mode} - allow ~${transport.bufferMin} min transit buffer. ${transport.note}</div>
+                  <div class="poi-why"><strong>Why care:</strong> ${meta.why}</div>
+                  <div class="poi-research ${costClass}">${costType === "paid" ? '<span class="paid-badge">Paid / Not Free</span><br>' : (costType === "free" ? '<span class="free-badge">Free</span><br>' : (costType === "mixed" ? '<span class="mixed-badge">Mixed (Free + Paid)</span><br>' : ""))}<strong>Researched cost:</strong> ${meta.researchedCost}</div>
+                  <div class="poi-cost">
+                    <label for="cost-${itemKey}">Cost (USD)</label>
+                    <input id="cost-${itemKey}" class="cost-input js-cost-input" data-cost-key="${itemKey}" type="number" min="0" step="0.01" value="${savedCost ?? ""}" placeholder="0.00">
+                  </div>
+                </div>
+                ${renderPoiCarousel(photoCarousels.right, item.page, item.caption, "right")}
+              </article>
+            `;
+          });
+
+          return `
+            <section class="day-card">
+              <div class="day-head">
+                <span class="day-pill">
+                  <span class="day-pill-main">Day ${day.day}</span>
+                  <span class="day-pill-weekday">${getWeekdayForDay(day)}</span>
+                </span>
+                <h3 class="day-title">${day.title}</h3>
+                <span class="day-date">${day.date}</span>
+              </div>
+              ${dayLogisticsNotes[day.day] ? `<div class="day-logistics"><strong>Logistics:</strong> ${dayLogisticsNotes[day.day]}</div>` : ""}
+              <div class="day-map-wrap">
+                <p class="day-map-title">Day ${day.day} Route Map</p>
+                <div id="day-map-${day.day}" class="day-map"></div>
+              </div>
+              <div class="poi-list">${itemsMarkup}</div>
+            </section>
+          `;
+        })
+        .join("");
+    }
+
+    function getDayPart(timeText) {
+      if (!timeText || !timeText.includes(":")) return "";
+      const hour = Number(timeText.split(":")[0]);
+      if (Number.isNaN(hour)) return "";
+      if (hour < 12) return "Morning";
+      if (hour < 17) return "Afternoon";
+      if (hour < 21) return "Evening";
+      return "Night";
+    }
+
+    function addMinutesToTime(timeText, minutesToAdd) {
+      if (!timeText || !timeText.includes(":")) return "Flexible";
+      const [h, m] = timeText.split(":").map(Number);
+      if (Number.isNaN(h) || Number.isNaN(m)) return "Flexible";
+      const total = h * 60 + m + Number(minutesToAdd || 0);
+      const wrapped = ((total % 1440) + 1440) % 1440;
+      const endH = String(Math.floor(wrapped / 60)).padStart(2, "0");
+      const endM = String(wrapped % 60).padStart(2, "0");
+      return `${endH}:${endM}`;
+    }
+
+    function subtractMinutesFromTime(timeText, minutesToSubtract) {
+      return addMinutesToTime(timeText, -Number(minutesToSubtract || 0));
+    }
+
+    function isPotentiallyPaid(costText) {
+      if (!costText) return false;
+      const t = String(costText).toLowerCase();
+      if (t.includes("paid") || t.includes("fare required") || t.includes("ticketed") || t.includes("airfare")) return true;
+      if (t.includes("costs apply") || t.includes("may have fees") || t.includes("shopping") || t.includes("purchases")) return true;
+      return false;
+    }
+
+    function isLikelyFree(costText) {
+      if (!costText) return false;
+      const t = String(costText).toLowerCase();
+      return t.includes("free");
+    }
+
+    function getCostType(costText) {
+      const hasPaid = isPotentiallyPaid(costText);
+      const hasFree = isLikelyFree(costText);
+      if (hasPaid && hasFree) return "mixed";
+      if (hasPaid) return "paid";
+      if (hasFree) return "free";
+      return "neutral";
+    }
+
+    function getItemKey(day, item, itemIndex) {
+      const safeCaption = item.caption.replace(/[^a-z0-9]+/gi, "_").toLowerCase();
+      return `d${day.day}_i${itemIndex}_${safeCaption}`;
+    }
+
+    function getTransportEntry(dayNumber, itemIndex) {
+      const dayPlan = dayTransportPlans[dayNumber] || [];
+      return dayPlan[itemIndex] || { mode: "Walk/Tube", bufferMin: 20, note: "Local transfer buffer." };
+    }
+
+    function formatDayFilterDate(day) {
+      const raw = String((day && day.date) || "");
+      const match = raw.match(/([A-Za-z]+)\s+(\d{1,2})/);
+      if (!match) return raw;
+      const monthName = match[1];
+      const dayNumber = Number(match[2]);
+      if (Number.isNaN(dayNumber)) return raw;
+      const parsed = new Date(`${monthName} ${dayNumber}, 2026`);
+      if (Number.isNaN(parsed.getTime())) return raw;
+      return new Intl.DateTimeFormat("en-US", {
+        weekday: "short",
+        month: "short",
+        day: "numeric"
+      }).format(parsed);
+    }
+
+    function getWeekdayForDay(day) {
+      const formatted = formatDayFilterDate(day);
+      if (!formatted) return "";
+      const weekday = formatted.split(",")[0];
+      return weekday || "";
+    }
+
+    function getPhotoOverrides() {
+      const fileState = window.UK_TRIP_PROJECT_STATE || {};
+      const fileOverrides = fileState.photoOverrides && typeof fileState.photoOverrides === "object" ? fileState.photoOverrides : {};
+      try {
+        const raw = localStorage.getItem(PHOTO_OVERRIDE_STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : {};
+        return { ...fileOverrides, ...(parsed && typeof parsed === "object" ? parsed : {}) };
+      } catch (error) {
+        return { ...fileOverrides };
+      }
+    }
+
+    function normalizeCarouselFiles(files, fallbacks = []) {
+      const out = [];
+      [...files, ...fallbacks].forEach((fileOrUrl) => {
+        if (!fileOrUrl) return;
+      const url = /^https?:|^data:image|^file:\/\/\/|^images\//i.test(fileOrUrl) ? fileOrUrl : localPhoto(fileOrUrl);
+        if (out.some((existing) => getImageIdentity(existing) === getImageIdentity(url))) return;
+        out.push(url);
+      });
+      return out;
+    }
+
+    function getConfiguredPhotoCarousels(page) {
+      const overrides = getPhotoOverrides();
+      const saved = overrides[page] || {};
+      const hasLeftCarousel = Object.prototype.hasOwnProperty.call(saved, "leftCarousel");
+      const hasRightCarousel = Object.prototype.hasOwnProperty.call(saved, "rightCarousel");
+      const primaryFallback = localPrimaryImages[page] || fallbackImages[page] || "https://images.pexels.com/photos/460672/pexels-photo-460672.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400";
+      const secondaryFallback = localSecondaryImages[page] || secondaryFallbackImages[page] || localPrimaryImages[page] || fallbackImages[page] || primaryFallback;
+      const leftSaved = Array.isArray(saved.leftCarousel)
+        ? saved.leftCarousel
+        : [saved.leftTop, saved.leftBottom, saved.left].filter(Boolean);
+      const rightSaved = Array.isArray(saved.rightCarousel)
+        ? saved.rightCarousel
+        : [saved.rightTop, saved.rightBottom, saved.right].filter(Boolean);
+      const leftImages = leftSaved.length
+        ? normalizeCarouselFiles(leftSaved, [])
+        : (hasLeftCarousel ? [] : normalizeCarouselFiles([], [primaryFallback]));
+      let rightImages = rightSaved.length
+        ? normalizeCarouselFiles(rightSaved, [])
+        : (hasRightCarousel ? [] : normalizeCarouselFiles([], [secondaryFallback]));
+      if (!rightImages.length && !hasRightCarousel) rightImages = normalizeCarouselFiles([], [secondaryFallback, primaryFallback]);
+      return { left: leftImages, right: rightImages };
+    }
+
+    function renderPoiCarousel(images, page, caption, side) {
+      const slotAttr = side === "left" ? "primary" : "secondary";
+      const safeImages = images && images.length ? images : [EMPTY_IMAGE_PLACEHOLDER];
+      return `
+        <figure class="poi-photo poi-carousel ${side === "right" ? "right" : ""}" data-carousel="${side}">
+          ${safeImages.map((src, index) => `<img src="${src}" ${index === 0 ? `data-wiki-page="${page}" data-wiki-slot="${slotAttr}" data-fallback="${src}"` : ""} class="${index === 0 ? "is-active" : ""}" alt="${caption}${side === "right" ? " view" : ""}">`).join("")}
+          <figcaption class="poi-caption">${caption}</figcaption>
+        </figure>
+      `;
+    }
+
+    function setupPoiCarousels() {
+      poiCarouselTimers.forEach((timer) => clearInterval(timer));
+      poiCarouselTimers = [];
+      const carousels = Array.from(document.querySelectorAll(".poi-carousel"));
+      carousels.forEach((carousel) => {
+        const slides = Array.from(carousel.querySelectorAll("img"));
+        if (slides.length <= 1) return;
+        let activeIndex = slides.findIndex((slide) => slide.classList.contains("is-active"));
+        if (activeIndex < 0) activeIndex = 0;
+        const timer = setInterval(() => {
+          slides[activeIndex].classList.remove("is-active");
+          activeIndex = (activeIndex + 1) % slides.length;
+          slides[activeIndex].classList.add("is-active");
+        }, POI_CAROUSEL_INTERVAL_MS);
+        poiCarouselTimers.push(timer);
+      });
+    }
+
+    function getImageIdentity(url) {
+      const raw = String(url || "").trim().toLowerCase();
+      if (!raw) return "";
+      const noQuery = raw.split("?")[0];
+      const fileName = noQuery.substring(noQuery.lastIndexOf("/") + 1).replace(/^\d+px-/, "");
+      return fileName;
+    }
+
+    function initializeCostState() {
+      const saved = localStorage.getItem(COST_STORAGE_KEY);
+      if (saved) {
+        try {
+          costState = JSON.parse(saved) || {};
+        } catch (_) {
+          costState = {};
+        }
+      }
+
+      const validCostKeys = new Set();
+      itinerary.forEach((day) => {
+        day.items.forEach((item, index) => {
+          const key = getItemKey(day, item, index);
+          validCostKeys.add(key);
+          if ((costState[key] === undefined || costState[key] === "") && typeof item.defaultCost === "number") {
+            costState[key] = item.defaultCost.toFixed(2);
+          }
+        });
+      });
+
+      Object.keys(costState).forEach((key) => {
+        if (!validCostKeys.has(key)) {
+          delete costState[key];
+        }
+      });
+      localStorage.setItem(COST_STORAGE_KEY, JSON.stringify(costState));
+    }
+
+    function renderCostSheet() {
+      const rows = [];
+      itinerary.forEach((day) => {
+        day.items.forEach((item, itemIndex) => {
+          const key = getItemKey(day, item, itemIndex);
+          const t = visitTimes[item.page] || "";
+          const meta = poiMeta[item.page] || { researchedCost: "Cost unknown; verify manually." };
+          rows.push(`
+            <tr>
+              <td>Day ${day.day}</td>
+              <td>${day.date}</td>
+              <td>${item.caption}</td>
+              <td>${t}</td>
+              <td>${meta.researchedCost}</td>
+              <td><input class="cost-input js-cost-input" data-cost-key="${key}" type="number" min="0" step="0.01" value="${costState[key] ?? ""}" placeholder="0.00"></td>
+            </tr>
+          `);
+        });
+      });
+
+      const tableHtml = `
+        <table class="cost-table">
+          <thead>
+            <tr>
+              <th>Day</th>
+              <th>Date</th>
+              <th>Point Of Interest</th>
+              <th>Planned Time</th>
+              <th>Researched Cost Guidance</th>
+              <th>Your Cost (USD)</th>
+            </tr>
+          </thead>
+          <tbody>${rows.join("")}</tbody>
+        </table>
+      `;
+      document.getElementById("cost-sheet").innerHTML = tableHtml;
+      updateCostSummary();
+    }
+
+    function updateCostSummary() {
+      let total = 0;
+      Object.values(costState).forEach((v) => {
+        const n = Number(v);
+        if (!Number.isNaN(n)) total += n;
+      });
+      document.getElementById("cost-summary").textContent = `Current tracked total: $${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    function bindCostInputs() {
+      document.addEventListener("input", (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLInputElement)) return;
+        if (!target.classList.contains("js-cost-input")) return;
+        const key = target.dataset.costKey;
+        if (!key) return;
+
+        costState[key] = target.value;
+        localStorage.setItem(COST_STORAGE_KEY, JSON.stringify(costState));
+
+        document.querySelectorAll(`.js-cost-input[data-cost-key="${key}"]`).forEach((el) => {
+          if (el !== target) {
+            el.value = target.value;
+          }
+        });
+        updateCostSummary();
+      });
+    }
+
+    function buildRouteMap() {
+      if (typeof L === "undefined") return;
+      const map = L.map("route-map");
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: "&copy; OpenStreetMap contributors"
+      }).addTo(map);
+
+      routeMapState = {
+        map,
+        markersLayer: L.layerGroup().addTo(map),
+        routeLayer: L.layerGroup().addTo(map)
+      };
+
+      renderRouteMapFilters();
+      refreshRouteMap();
+    }
+
+    function getSelectedRouteStops() {
+      const routeStops = [];
+      itinerary.forEach((day) => {
+        if (!topMapSelectedDays.has(day.day)) return;
+        const stay = dayStayPlan[day.day] || { town: "Unknown" };
+        const town = stay.town || "Unknown";
+        day.items.forEach((item, itemIndex) => {
+          const coords = poiCoordinates[item.page];
+          if (!coords || !isTopMapStop(item.page, coords)) return;
+          routeStops.push({
+            day: day.day,
+            order: itemIndex + 1,
+            label: item.caption,
+            page: item.page,
+            coords,
+            time: visitTimes[item.page] || "Flexible",
+            town
+          });
+        });
+      });
+      return routeStops;
+    }
+
+    function getSelectedDaysLabel() {
+      const selectedDays = Array.from(topMapSelectedDays).sort((a, b) => a - b);
+      if (!selectedDays.length) return "No days selected.";
+      if (selectedDays.length === itinerary.length) return "Showing all days on the map.";
+      return `Showing Day${selectedDays.length > 1 ? "s" : ""} ${selectedDays.join(", ")} on the map.`;
+    }
+
+    function renderRouteMapFilters() {
+      const actionsEl = document.getElementById("route-map-actions");
+      const daysEl = document.getElementById("route-day-filters");
+      if (!actionsEl || !daysEl) return;
+
+      actionsEl.innerHTML = `
+        <button type="button" class="map-filter-chip is-secondary" data-map-action="all">All days</button>
+        <button type="button" class="map-filter-chip is-secondary" data-map-action="clear">Clear</button>
+      `;
+
+      daysEl.innerHTML = itinerary
+        .map((day) => {
+          const stay = dayStayPlan[day.day] || { town: "Unknown" };
+          const town = stay.town || "Unknown";
+          const townClass = town === "London" ? "city-london" : (town === "Edinburgh" ? "city-edinburgh" : (town === "Inverness / Fort William area" ? "city-inverness" : ""));
+          return `
+          <button
+            type="button"
+            class="map-filter-chip ${townClass} ${topMapSelectedDays.has(day.day) ? "is-active" : ""}"
+            data-map-day="${day.day}"
+            aria-pressed="${topMapSelectedDays.has(day.day) ? "true" : "false"}"
+            title="${town}"
+          >
+            Day ${day.day} (${getWeekdayForDay(day)})
+          </button>
+        `;
+        })
+        .join("");
+
+      actionsEl.querySelector('[data-map-action="all"]')?.addEventListener("click", () => {
+        itinerary.forEach((day) => topMapSelectedDays.add(day.day));
+        renderRouteMapFilters();
+        refreshRouteMap();
+      });
+
+      actionsEl.querySelector('[data-map-action="clear"]')?.addEventListener("click", () => {
+        topMapSelectedDays.clear();
+        renderRouteMapFilters();
+        refreshRouteMap();
+      });
+
+      daysEl.querySelectorAll("[data-map-day]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const dayNumber = Number(button.getAttribute("data-map-day"));
+          if (topMapSelectedDays.has(dayNumber)) {
+            topMapSelectedDays.delete(dayNumber);
+          } else {
+            topMapSelectedDays.add(dayNumber);
+          }
+          renderRouteMapFilters();
+          refreshRouteMap();
+        });
+      });
+    }
+
+    function refreshRouteMap() {
+      if (!routeMapState) return;
+      const { map, markersLayer, routeLayer } = routeMapState;
+      const statusEl = document.getElementById("route-map-status");
+      const routeStops = getSelectedRouteStops();
+
+      markersLayer.clearLayers();
+      routeLayer.clearLayers();
+
+      if (statusEl) {
+        statusEl.textContent = getSelectedDaysLabel();
+      }
+
+      if (!routeStops.length) {
+        map.setView([54.5, -3.5], 5);
+        return;
+      }
+
+      routeStops.forEach((stop) => {
+        const color = STAY_COLOR_BY_TOWN[stop.town] || `hsl(${(stop.day * 32) % 360} 80% 45%)`;
+        const marker = L.circleMarker(stop.coords, {
+          radius: 7,
+          color: "#ffffff",
+          weight: 2,
+          fillColor: color,
+          fillOpacity: 0.95
+        }).addTo(markersLayer);
+        marker.bindTooltip(`Day ${stop.day} (${stop.town}) #${stop.order}: ${stop.label}`, {
+          permanent: true,
+          direction: "top",
+          className: "map-label",
+          offset: [0, -8]
+        });
+        marker.bindPopup(`<strong>Day ${stop.day} - Stop ${stop.order}</strong><br>${stop.label}<br>${stop.time}`);
+      });
+
+      const routeLine = routeStops.map((stop) => stop.coords);
+      if (routeLine.length > 1) {
+        L.polyline(routeLine, {
+          color: "#d81d2c",
+          weight: 5,
+          opacity: 0.9
+        }).addTo(routeLayer);
+        map.fitBounds(routeLine, { padding: [30, 30] });
+      } else {
+        map.setView(routeLine[0], 13);
+      }
+    }
+
+    function setCommandChecklistItemState(itemEl, isDone) {
+      if (!itemEl) return;
+      itemEl.classList.toggle("is-done", Boolean(isDone));
+      const button = itemEl.querySelector(".cc-check-btn");
+      if (button) {
+        button.setAttribute("aria-pressed", String(Boolean(isDone)));
+        button.textContent = isDone ? "\u2713" : "";
+      }
+    }
+
+    function initializeCommandChecklist() {
+      const saved = localStorage.getItem(COMMAND_CHECKLIST_STORAGE_KEY);
+      if (saved) {
+        try {
+          commandChecklistState = JSON.parse(saved) || {};
+        } catch (_) {
+          commandChecklistState = {};
+        }
+      }
+
+      const items = Array.from(document.querySelectorAll(".js-cc-check-item[data-check-id]"));
+      items.forEach((itemEl) => {
+        const id = itemEl.getAttribute("data-check-id");
+        const isDone = Boolean(commandChecklistState[id]);
+        setCommandChecklistItemState(itemEl, isDone);
+      });
+
+      const commandCenter = document.querySelector(".command-center");
+      if (!commandCenter) return;
+
+      commandCenter.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) return;
+        if (target.closest("a")) return;
+
+        const itemEl = target.closest(".js-cc-check-item");
+        if (!(itemEl instanceof HTMLElement)) return;
+        const id = itemEl.getAttribute("data-check-id");
+        if (!id) return;
+
+        const nextDone = !Boolean(commandChecklistState[id]);
+        commandChecklistState[id] = nextDone;
+        setCommandChecklistItemState(itemEl, nextDone);
+        localStorage.setItem(COMMAND_CHECKLIST_STORAGE_KEY, JSON.stringify(commandChecklistState));
+      });
+    }
+
+    function isTopMapStop(page, coords) {
+      if (!Array.isArray(coords) || coords.length !== 2) return false;
+      if (page === "Newark_Liberty_International_Airport" || page === "Airplane") return false;
+      const [lat, lon] = coords;
+      const isInUkBounds = lat >= 49.5 && lat <= 59.5 && lon >= -8.8 && lon <= 2.2;
+      return isInUkBounds;
+    }
+
+    function buildDayMaps() {
+      if (typeof L === "undefined") return;
+
+      itinerary.forEach((day) => {
+        const mapContainerId = `day-map-${day.day}`;
+        const map = L.map(mapContainerId, {
+          zoomControl: true,
+          attributionControl: true
+        });
+
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 19,
+          attribution: "&copy; OpenStreetMap contributors"
+        }).addTo(map);
+
+        const dayStops = day.items
+          .map((item) => ({
+            label: item.caption,
+            coords: poiCoordinates[item.page],
+            time: visitTimes[item.page] || "Flexible"
+          }))
+          .filter((stop) => Array.isArray(stop.coords));
+
+        if (!dayStops.length) return;
+
+        dayStops.forEach((stop, stopIndex) => {
+          const hue = (day.day * 32 + stopIndex * 11) % 360;
+          const marker = L.circleMarker(stop.coords, {
+            radius: 7,
+            color: "#ffffff",
+            weight: 2,
+            fillColor: `hsl(${hue} 80% 45%)`,
+            fillOpacity: 0.95
+          }).addTo(map);
+
+          marker.bindTooltip(`${stopIndex + 1}. ${stop.label}`, {
+            permanent: true,
+            direction: "top",
+            className: "map-label",
+            offset: [0, -8]
+          });
+          marker.bindPopup(`<strong>Day ${day.day}</strong><br>${stop.label}<br>${stop.time}`);
+        });
+
+        const dayLine = dayStops.map((stop) => stop.coords);
+        L.polyline(dayLine, {
+          color: "#d81d2c",
+          weight: 5,
+          opacity: 0.9
+        }).addTo(map);
+
+        if (dayLine.length === 1) {
+          map.setView(dayLine[0], 13);
+        } else {
+          map.fitBounds(dayLine, { padding: [24, 24] });
+        }
+      });
+    }
+
+    function isUsableWikiImage(urlOrTitle) {
+      const t = String(urlOrTitle || "").toLowerCase();
+      const blockedTerms = [
+        ".svg",
+        "icon",
+        "logo",
+        "map",
+        "locator",
+        "coat_of_arms",
+        "flag",
+        "diagram",
+        "route",
+        "seal",
+        "drawing",
+        "sketch",
+        "illustration"
+      ];
+      return !blockedTerms.some((term) => t.includes(term));
+    }
+
+    function pickBestMediaSrc(item) {
+      if (!item) return "";
+      if (Array.isArray(item.srcset) && item.srcset.length) {
+        return item.srcset[item.srcset.length - 1].src || "";
+      }
+      if (item.original && item.original.source) return item.original.source;
+      if (item.src) return item.src;
+      return "";
+    }
+
+    async function fetchWikiImageCandidates(page) {
+      const unique = new Set();
+      const pushUnique = (src) => {
+        if (!src) return;
+        if (!isUsableWikiImage(src)) return;
+        unique.add(src);
+      };
+
+      try {
+        const mediaUrl = "https://en.wikipedia.org/api/rest_v1/page/media-list/" + encodeURIComponent(page);
+        const mediaResp = await fetch(mediaUrl, { headers: { Accept: "application/json" } });
+        if (mediaResp.ok) {
+          const mediaData = await mediaResp.json();
+          const items = Array.isArray(mediaData.items) ? mediaData.items : [];
+          items.forEach((item) => {
+            if (item.type !== "image") return;
+            const src = pickBestMediaSrc(item);
+            const title = item.title || "";
+            if (isUsableWikiImage(title) && isUsableWikiImage(src)) pushUnique(src);
+          });
+        }
+      } catch (_) {
+        // Ignore and continue to summary fallback.
+      }
+
+      try {
+        const summaryUrl = "https://en.wikipedia.org/api/rest_v1/page/summary/" + encodeURIComponent(page);
+        const summaryResp = await fetch(summaryUrl, { headers: { Accept: "application/json" } });
+        if (summaryResp.ok) {
+          const summaryData = await summaryResp.json();
+          pushUnique(summaryData && summaryData.originalimage && summaryData.originalimage.source);
+          pushUnique(summaryData && summaryData.thumbnail && summaryData.thumbnail.source);
+        }
+      } catch (_) {
+        // Ignore summary errors.
+      }
+
+      return Array.from(unique);
+    }
+
+    async function loadWikipediaImages() {
+      const allImages = Array.from(document.querySelectorAll("img[data-wiki-page]"));
+      const pages = Array.from(new Set(
+        allImages
+          .map((img) => img.getAttribute("data-wiki-page"))
+          .filter((page) => page && !localImagePages.has(page))
+      ));
+
+      await Promise.all(pages.map(async (page) => {
+        const pageImages = allImages.filter((img) => img.getAttribute("data-wiki-page") === page);
+        if (!pageImages.length) return;
+
+        const primaryEl = pageImages.find((img) => img.getAttribute("data-wiki-slot") === "primary") || pageImages[0];
+        const secondaryEl = pageImages.find((img) => img.getAttribute("data-wiki-slot") === "secondary");
+        const primaryFallback = (primaryEl && primaryEl.getAttribute("data-fallback")) || fallbackImages[page] || EMPTY_IMAGE_PLACEHOLDER;
+        const secondaryFallback = (secondaryEl && secondaryEl.getAttribute("data-fallback")) || secondaryFallbackImages[page] || primaryFallback;
+
+        let primarySrc = primaryFallback;
+        // Keep right-side image relevant but visually different from the left side.
+        let secondarySrc = secondaryFallback;
+
+        const candidates = await fetchWikiImageCandidates(page);
+        if (candidates.length) {
+          primarySrc = candidates[0] || primaryFallback;
+        }
+
+        if (candidates.length) {
+          const secondaryCandidate = candidates.find((src) => getImageIdentity(src) !== getImageIdentity(primarySrc));
+          secondarySrc = secondaryCandidate || secondaryFallback || primaryFallback;
+        }
+
+        if (getImageIdentity(secondarySrc) === getImageIdentity(primarySrc)) {
+          const distinctFallback = secondaryFallbackImages[page];
+          if (distinctFallback && getImageIdentity(distinctFallback) !== getImageIdentity(primarySrc)) {
+            secondarySrc = distinctFallback;
+          }
+        }
+
+        if (primaryEl) primaryEl.src = primarySrc;
+        if (secondaryEl) secondaryEl.src = secondarySrc;
+      }));
+    }
+
+    initializeCostState();
+    renderStaySummary();
+    renderTimeline();
+    renderCostSheet();
+    bindCostInputs();
+    initializeCommandChecklist();
+    buildRouteMap();
+    buildDayMaps();
+    setupPoiCarousels();
+    loadWikipediaImages();
+  </script>
+
+<!-- ============================================================
+     HIGHLIGHTS GALLERY
+============================================================ -->
+<style>
+  .highlights-gallery {
+    background: #080e16;
+    padding: 4rem 0 5rem;
+    border-top: 1px solid rgba(200,151,58,0.15);
+  }
+  .highlights-gallery .gallery-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    padding: 0 1.5rem;
+  }
+  .highlights-gallery .gallery-header .gallery-label {
+    display: inline-block;
+    font-size: 0.68rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #c8973a;
+    margin-bottom: 0.5rem;
+  }
+  .highlights-gallery .gallery-header h2 {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    color: #f2f7fb;
+    margin: 0 0 0.6rem;
+  }
+  .highlights-gallery .gallery-header p {
+    font-size: 0.85rem;
+    color: #6b7a8d;
+    letter-spacing: 1px;
+  }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3px;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 3px;
+  }
+  .gallery-item {
+    position: relative;
+    overflow: hidden;
+    background: #1b2a4a;
+  }
+  .gallery-item img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+  .gallery-item:hover img {
+    transform: scale(1.06);
+  }
+  .gallery-caption {
+    padding: 8px 10px 10px;
+    background: #080e16;
+  }
+  .gallery-caption .cap-location {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #f2f7fb;
+    letter-spacing: 0.5px;
+    display: block;
+  }
+  .gallery-caption .cap-desc {
+    font-size: 0.67rem;
+    color: #6b7a8d;
+    line-height: 1.4;
+    margin-top: 2px;
+    display: block;
+  }
+  .gallery-section-divider {
+    display: contents;
+  }
+  .gallery-section-label {
+    grid-column: 1 / -1;
+    padding: 18px 4px 6px;
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #c8973a;
+    border-top: 1px solid rgba(200,151,58,0.15);
+  }
+  .gallery-section-label:first-child {
+    border-top: none;
+    padding-top: 0;
+  }
+  @media (max-width: 900px) {
+    .gallery-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+
+<section class="highlights-gallery">
+  <div class="gallery-header">
+    <span class="gallery-label">In order of travel</span>
+    <h2>Highlights of England &amp; Scotland</h2>
+    <p>London Â· Day Trips Â· Edinburgh Â· Highlands Â· Isle of Skye</p>
+  </div>
+
+  <div class="gallery-grid">
+
+    <!-- LONDON -->
+    <div class="gallery-section-label">ðŸ‡¬ðŸ‡§ &nbsp;London &mdash; Days 1&ndash;3</div>
+
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1667818748785-3d3a9411187f?w=600&q=80&fit=crop&h=600" alt="Tower Bridge at night" loading="lazy">
+      <div class="gallery-caption">
+        <span class="cap-location">Tower Bridge</span>
+        <span class="cap-desc">London's iconic bascule bridge glowing over the Thames at night</span>
+      </div>
+    </div>
+
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1693127935301-d4174b3aff96?w=600&q=80&fit=crop&h=600" alt="Buckingham Palace" loading="lazy">
+      <div class="gallery-caption">
+        <span class="cap-location">Buckingham Palace</span>
+        <span class="cap-desc">The King's official London residence â€” catch the Changing of the Guard at 11am</span>
+      </div>
+    </div>
+
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1680302061197-87c3a9be59cd?w=600&q=80&fit=crop&h=600" alt="Big Ben Westminster" loading="lazy">
+      <div class="gallery-caption">
+        <span class="cap-location">Big Ben &amp; Westminster</span>
+        <span class="cap-desc">The Elizabeth Tower rising above Parliament Square â€” London's most recognised silhouette</span>
+      </div>
+    </div>
+
+    <!-- placeholder to keep grid balanced -->
+    <div class="gallery-item" style="visibility:hidden;pointer-events:none;">
+      <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="aspect-ratio:1/1;">
+      <div class="gallery-caption"><span class="cap-location">&nbsp;</span></div>
+    </div>
+
+    <!-- ENGLAND DAY TRIPS -->
+    <div class="gallery-section-label">ðŸ—¿ &nbsp;England Day Trips &mdash; Days 4&ndash;5</div>
+
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1520499030345-d646f4350b30?w=600&q=80&fit=crop&h=600" alt="Stonehenge at sunset" loading="lazy">
+      <div class="gallery-caption">
+        <span class="cap-location">Stonehenge</span>
+        <span class="cap-desc">5,000-year-old stone circle silhouetted against a blazing sunset sky in Wiltshire</span>
+      </div>
+    </div>
+
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1560603383-64514a208263?w=600&q=80&fit=crop&h=600" alt="White Cliffs of Dover" loading="lazy">
+      <div class="gallery-caption">
+        <span class="cap-location">White Cliffs of Dover</span>
+        <span class="cap-desc">350ft chalk cliffs stretching along the Channel â€” England at its most dramatic</span>
+      </div>
+    </div>
+
+    <!-- two spacers to fill row -->
+    <div class="gallery-item" style="visibility:hidden;pointer-events:none;">
+      <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="aspect-ratio:1/1;">
+      <div class="gallery-caption"><span class="cap-location">&nbsp;</span></div>
+    </div>
+    <div class="gallery-item" style="visibility:hidden;pointer-events:none;">
+      <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="aspect-ratio:1/1;">
+      <div class="gallery-caption"><span class="cap-location">&nbsp;</span></div>
+    </div>
+
+    <!-- EDINBURGH -->
+    <div class="gallery-section-label">ðŸ´ó §ó ¢ó ³ó £ó ´ó ¿ &nbsp;Edinburgh &mdash; Days 6&ndash;8</div>
+
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1668509549273-14abf4067904?w=600&q=80&fit=crop&h=600" alt="Edinburgh Castle at sunrise" loading="lazy">
+      <div class="gallery-caption">
+        <span class="cap-location">Edinburgh Castle</span>
+        <span class="cap-desc">Scotland's most visited attraction, perched on volcanic rock above the golden city at sunrise</span>
+      </div>
+    </div>
+
+    <!-- spacers -->
+    <div class="gallery-item" style="visibility:hidden;pointer-events:none;">
+      <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="aspect-ratio:1/1;">
+      <div class="gallery-caption"><span class="cap-location">&nbsp;</span></div>
+    </div>
+    <div class="gallery-item" style="visibility:hidden;pointer-events:none;">
+      <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="aspect-ratio:1/1;">
+      <div class="gallery-caption"><span class="cap-location">&nbsp;</span></div>
+    </div>
+    <div class="gallery-item" style="visibility:hidden;pointer-events:none;">
+      <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="aspect-ratio:1/1;">
+      <div class="gallery-caption"><span class="cap-location">&nbsp;</span></div>
+    </div>
+
+    <!-- HIGHLANDS -->
+    <div class="gallery-section-label">â›°ï¸ &nbsp;Scottish Highlands &mdash; Day 9</div>
+
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1561538433-276d3f8e0359?w=600&q=80&fit=crop&h=600" alt="Loch Ness and Urquhart Castle" loading="lazy">
+      <div class="gallery-caption">
+        <span class="cap-location">Loch Ness &amp; Urquhart Castle</span>
+        <span class="cap-desc">Medieval castle ruins brooding on the shore of Scotland's most famous and mysterious loch</span>
+      </div>
+    </div>
+
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1532785907815-0afcbb413aa5?w=600&q=80&fit=crop&h=600" alt="Glencoe Valley" loading="lazy">
+      <div class="gallery-caption">
+        <span class="cap-location">Glencoe Valley</span>
+        <span class="cap-desc">A sweeping glacial valley of emerald peaks and brooding skies â€” one of Scotland's great drives</span>
+      </div>
+    </div>
+
+    <!-- spacers -->
+    <div class="gallery-item" style="visibility:hidden;pointer-events:none;">
+      <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="aspect-ratio:1/1;">
+      <div class="gallery-caption"><span class="cap-location">&nbsp;</span></div>
+    </div>
+    <div class="gallery-item" style="visibility:hidden;pointer-events:none;">
+      <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="aspect-ratio:1/1;">
+      <div class="gallery-caption"><span class="cap-location">&nbsp;</span></div>
+    </div>
+
+    <!-- ISLE OF SKYE -->
+    <div class="gallery-section-label">ðŸŒŠ &nbsp;Isle of Skye &mdash; Days 10&ndash;11</div>
+
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1655419157056-23863ba7948d?w=600&q=80&fit=crop&h=600" alt="Eilean Donan Castle" loading="lazy">
+      <div class="gallery-caption">
+        <span class="cap-location">Eilean Donan Castle</span>
+        <span class="cap-desc">Scotland's most photographed castle, rising from the mist where three lochs meet</span>
+      </div>
+    </div>
+
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1609087998060-f567d481a1ae?w=600&q=80&fit=crop&h=600" alt="Fairy Pools Isle of Skye" loading="lazy">
+      <div class="gallery-caption">
+        <span class="cap-location">Fairy Pools</span>
+        <span class="cap-desc">Crystal-clear blue pools fed by waterfalls cascading down from the Cuillin mountains at dusk</span>
+      </div>
+    </div>
+
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1551801691-f0bce83d4f68?w=600&q=80&fit=crop&h=600" alt="The Quiraing" loading="lazy">
+      <div class="gallery-caption">
+        <span class="cap-location">The Quiraing</span>
+        <span class="cap-desc">Ancient landslip on the Trotternish ridge â€” dramatic rocky pinnacles over sweeping green valleys</span>
+      </div>
+    </div>
+
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1589806567522-18564e9cf0bc?w=600&q=80&fit=crop&h=600" alt="Old Man of Storr" loading="lazy">
+      <div class="gallery-caption">
+        <span class="cap-location">Old Man of Storr</span>
+        <span class="cap-desc">Otherworldly basalt pinnacles rising through storm clouds above the Isle of Skye</span>
+      </div>
+    </div>
+
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1589708249886-cff7237d7586?w=600&q=80&fit=crop&h=600" alt="Neist Point Lighthouse" loading="lazy">
+      <div class="gallery-caption">
+        <span class="cap-location">Neist Point Lighthouse</span>
+        <span class="cap-desc">Skye's most westerly point â€” cliffside lighthouse with jaw-dropping sunset views over the Hebrides</span>
+      </div>
+    </div>
+
+    <!-- spacers to complete last row -->
+    <div class="gallery-item" style="visibility:hidden;pointer-events:none;">
+      <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="aspect-ratio:1/1;">
+      <div class="gallery-caption"><span class="cap-location">&nbsp;</span></div>
+    </div>
+    <div class="gallery-item" style="visibility:hidden;pointer-events:none;">
+      <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="aspect-ratio:1/1;">
+      <div class="gallery-caption"><span class="cap-location">&nbsp;</span></div>
+    </div>
+    <div class="gallery-item" style="visibility:hidden;pointer-events:none;">
+      <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="aspect-ratio:1/1;">
+      <div class="gallery-caption"><span class="cap-location">&nbsp;</span></div>
+    </div>
+
+  </div>
+</section>
+
+</body>
+</html>
+
+

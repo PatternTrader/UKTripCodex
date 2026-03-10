@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="UK flag favicon">
+  <defs>
+    <clipPath id="r">
+      <rect x="2" y="2" width="60" height="60" rx="12" ry="12"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#r)">
+    <rect width="64" height="64" fill="#012169"/>
+    <path d="M0 0 L26 0 L64 38 L64 64 L38 64 L0 26 Z" fill="#fff"/>
+    <path d="M64 0 L64 26 L26 64 L0 64 L0 38 L38 0 Z" fill="#fff"/>
+    <path d="M0 0 L10 0 L64 54 L64 64 L54 64 L0 10 Z" fill="#c8102e"/>
+    <path d="M64 0 L64 10 L10 64 L0 64 L0 54 L54 0 Z" fill="#c8102e"/>
+    <rect x="0" y="24" width="64" height="16" fill="#fff"/>
+    <rect x="24" y="0" width="16" height="64" fill="#fff"/>
+    <rect x="0" y="27" width="64" height="10" fill="#c8102e"/>
+    <rect x="27" y="0" width="10" height="64" fill="#c8102e"/>
+  </g>
+</svg>
