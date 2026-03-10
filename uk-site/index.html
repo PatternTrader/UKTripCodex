@@ -945,6 +945,7 @@
         items: [
           { text: "Visit the Royal Observatory Greenwich and stand on the Prime Meridian line.", page: "Royal_Observatory_Greenwich", caption: "Royal Observatory Greenwich" },
           { text: "Take a no-car Stonehenge excursion from London (coach tour or rail + local tour) and spend the core afternoon at the stones.", page: "Stonehenge", caption: "Stonehenge day trip" },
+          { text: "If you want a coastal add-on, make the White Cliffs of Dover a scenic stop for classic chalk-cliff views over the Channel before returning to London.", page: "White_Cliffs_of_Dover", caption: "White Cliffs of Dover" },
           { text: "Return to London for dinner at Dishoom Covent Garden. <a href=\"https://www.dishoom.com/menu/all-day-main/\" target=\"_blank\" rel=\"noopener noreferrer\">Dishoom all-day menu</a>.", page: "Dishoom_Covent_Garden", caption: "Dishoom dinner" }
         ]
       },
@@ -1291,6 +1292,7 @@
       Oxford_Street: [51.5154, -0.1410],
       Royal_Observatory_Greenwich: [51.4769, 0.0005],
       Stonehenge: [51.1789, -1.8262],
+      White_Cliffs_of_Dover: [51.1295, 1.3134],
       British_Museum: [51.5194, -0.1270],
       Camden_Market: [51.5416, -0.1439],
       Kensington_Palace: [51.5050, -0.1877],
@@ -1363,7 +1365,7 @@
       Camden_Market: "https://images.pexels.com/photos/1450372/pexels-photo-1450372.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
       Kensington_Palace: "https://images.pexels.com/photos/532826/pexels-photo-532826.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
       Stonehenge: "https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
-      White_Cliffs_of_Dover: "https://images.pexels.com/photos/1631677/pexels-photo-1631677.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      White_Cliffs_of_Dover: "https://images.unsplash.com/photo-1560603383-64514a208263?w=1200&q=80&fit=crop",
       Dover: "https://images.pexels.com/photos/1005417/pexels-photo-1005417.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
       London: "https://images.pexels.com/photos/1837590/pexels-photo-1837590.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
       Bletchley_Park: "https://images.pexels.com/photos/161154/street-building-road-old-161154.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
@@ -1532,6 +1534,7 @@
     const PHOTO_OVERRIDE_STORAGE_KEY = "ukTripPhotoOverridesV1";
     const POI_CAROUSEL_INTERVAL_MS = 3500;
     let poiCarouselTimers = [];
+    let runtimeProjectState = null;
 
     const poiMeta = {
       "303_E_83rd_St_NYC": { why: "Your exact departure point for the airport run.", researchedCost: "No admission cost; subway + bus fare applies." },
@@ -1563,6 +1566,7 @@
       Oxford_Street: { why: "Historic shopping boulevard with flagship stores.", researchedCost: "Free public street access." },
       Royal_Observatory_Greenwich: { why: "Home of the Prime Meridian and one of London's key scientific-history sites.", researchedCost: "Greenwich Park access free; official Prime Meridian courtyard entry is paid." },
       Stonehenge: { why: "One of Britain's most iconic prehistoric monuments with dramatic open-landscape setting.", researchedCost: "Paid timed-entry ticket required for official Stonehenge access." },
+      White_Cliffs_of_Dover: { why: "A classic south-coast scenic stop known for dramatic chalk cliffs and Channel views.", researchedCost: "Clifftop viewpoints are free; parking or transport costs may apply." },
       British_Museum: { why: "Major world-history museum with landmark artifacts.", researchedCost: "Permanent galleries free; some exhibitions paid." },
       Camden_Market: { why: "Alternative market district known for food, fashion, and music culture.", researchedCost: "Market entry free; food/shopping paid." },
       Kensington_Palace: { why: "Royal residence with state apartments and palace exhibitions.", researchedCost: "Paid admission (official tickets)." },
@@ -1809,14 +1813,31 @@
     function getPhotoOverrides() {
       const fileState = window.UK_TRIP_PROJECT_STATE || {};
       const fileOverrides = fileState.photoOverrides && typeof fileState.photoOverrides === "object" ? fileState.photoOverrides : {};
+      const runtimeOverrides = runtimeProjectState && runtimeProjectState.photoOverrides && typeof runtimeProjectState.photoOverrides === "object"
+        ? runtimeProjectState.photoOverrides
+        : {};
       try {
         const raw = localStorage.getItem(PHOTO_OVERRIDE_STORAGE_KEY);
         const parsed = raw ? JSON.parse(raw) : {};
-        return { ...fileOverrides, ...(parsed && typeof parsed === "object" ? parsed : {}) };
+        return { ...fileOverrides, ...(parsed && typeof parsed === "object" ? parsed : {}), ...runtimeOverrides };
       } catch (error) {
-        return { ...fileOverrides };
+        return { ...fileOverrides, ...runtimeOverrides };
       }
     }
+
+    function rerenderTimelineForPhotoUpdates() {
+      renderTimeline();
+      bindCostInputs();
+      buildDayMaps();
+      setupPoiCarousels();
+      loadWikipediaImages();
+    }
+
+    window.addEventListener("message", (event) => {
+      if (!event.data || event.data.type !== "ukTripProjectStateUpdate") return;
+      runtimeProjectState = event.data.payload && typeof event.data.payload === "object" ? event.data.payload : null;
+      rerenderTimelineForPhotoUpdates();
+    });
 
     function normalizeCarouselFiles(files, fallbacks = []) {
       const out = [];

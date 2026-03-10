@@ -25,55 +25,7 @@ h1{text-align:center;font-size:2rem;color:#f5f0e8;margin-bottom:.4rem}
 @media(max-width:900px){.photo-row{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:500px){.photo-row{grid-template-columns:repeat(2,1fr)}}
 
-.img-wrap img[src^="file:///"] {
-  outline: 4px solid orange;
-  outline-offset: -4px;
-  border-radius: 5px;
-}
-
-.img-wrap .gi img, .photo-item.gi .img-wrap img {
-  outline: 4px solid #00cc44;
-  outline-offset: -4px;
-  border-radius: 5px;
-}
-
 /* Download Manager */
-.dl-badge {
-  position: absolute;
-  bottom: 6px;
-  right: 6px;
-  background: #00cc44;
-  color: #fff;
-  font-size: .6rem;
-  font-weight: 700;
-  padding: 2px 7px;
-  border-radius: 4px;
-  letter-spacing: .4px;
-  pointer-events: none;
-  z-index: 3;
-}
-.dl-btn {
-  position: absolute;
-  bottom: 6px;
-  right: 6px;
-  background: rgba(0,0,0,.72);
-  color: #fff;
-  font-size: .65rem;
-  font-weight: 700;
-  padding: 3px 8px;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity .2s;
-  z-index: 4;
-  letter-spacing: .3px;
-  white-space: nowrap;
-}
-.img-wrap:hover .dl-btn { opacity: 1; }
-.img-wrap.is-saved .dl-btn { display: none; }
-.img-wrap.is-saved .dl-badge { display: block; }
-.img-wrap:not(.is-saved) .dl-badge { display: none; }
 .selector-btn {
   position: absolute;
   bottom: 6px;
@@ -117,10 +69,6 @@ h1{text-align:center;font-size:2rem;color:#f5f0e8;margin-bottom:.4rem}
   cursor: not-allowed;
   opacity: .8;
   background: rgba(93, 93, 93, .86);
-}
-/* also mark the photo-num badge green for saved photos */
-.img-wrap.is-saved .photo-num {
-  background: #00882e;
 }
 
 </style>
@@ -2096,7 +2044,7 @@ h1{text-align:center;font-size:2rem;color:#f5f0e8;margin-bottom:.4rem}
           </div>
           <div class="cap">John Snow Cholera Pump, Soho</div>
         </div>
-        </div></div></div><div class="section"><div class="section-header">ðŸ—¿ England Day Trips</div><div class="loc-block"><div class="loc-title">Stonehenge, Wiltshire</div><div class="photo-row">
+</div></div></div><div class="section"><div class="section-header">England Day Trips</div><div class="loc-block"><div class="loc-title">Stonehenge, Wiltshire</div><div class="photo-row">
         <div class="photo-item gi">
           <div class="img-wrap">
             <img src="https://commons.wikimedia.org/wiki/File:Stonehenge,_Wiltshire.jpg" alt="Stonehenge, Wiltshire" loading="lazy" onerror="this.closest('.photo-item').style.display='none'">
@@ -2665,7 +2613,7 @@ h1{text-align:center;font-size:2rem;color:#f5f0e8;margin-bottom:.4rem}
           </div>
           <div class="cap">The Cotswolds, England</div>
         </div>
-        </div></div><div class="section"><div class="section-header">ðŸš„ Travel North</div><div class="loc-block"><div class="loc-title">LNER Train</div><div class="photo-row">
+</div></div><div class="section"><div class="section-header">Travel North</div><div class="loc-block"><div class="loc-title">LNER Train</div><div class="photo-row">
         <div class="photo-item gi">
           <div class="img-wrap">
             <img src="https://i.ytimg.com/vi/ugpHj_e6ARo/maxresdefault.jpg" alt="LNER Train" loading="lazy" onerror="this.closest('.photo-item').style.display='none'">
@@ -2805,7 +2753,7 @@ h1{text-align:center;font-size:2rem;color:#f5f0e8;margin-bottom:.4rem}
             <span class="photo-num">381</span>
           </div>
           <div class="cap">A9 Road &mdash; Scottish Highlands</div>
-        </div></div></div></div><div class="section"><div class="section-header">ðŸ´ó §ó ¢ó ³ó £ó ´ó ¿ Edinburgh</div><div class="loc-block"><div class="loc-title">Edinburgh, Scotland</div><div class="photo-row">
+</div></div></div></div><div class="section"><div class="section-header">Edinburgh</div><div class="loc-block"><div class="loc-title">Edinburgh, Scotland</div><div class="photo-row">
         <div class="photo-item gi">
           <div class="img-wrap">
             <img src="https://ewh.org.uk/wp-content/uploads/2023/11/Old-Town.png" alt="Edinburgh, Scotland" loading="lazy" onerror="this.closest('.photo-item').style.display='none'">
@@ -3429,7 +3377,7 @@ h1{text-align:center;font-size:2rem;color:#f5f0e8;margin-bottom:.4rem}
             <span class="photo-num">470</span>
           </div>
           <div class="cap">Arthur's Seat, Edinburgh</div>
-        </div></div></div></div><div class="section"><div class="section-header">âš”ï¸ Stirling Day Trip</div><div class="loc-block"><div class="loc-title">Stirling Castle</div><div class="photo-row">
+</div></div></div></div><div class="section"><div class="section-header">Stirling Day Trip</div><div class="loc-block"><div class="loc-title">Stirling Castle</div><div class="photo-row">
         <div class="photo-item gi">
           <div class="img-wrap">
             <img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Scotland-2016-Aerial-Stirling-Stirling_Castle.jpg" alt="Stirling Castle" loading="lazy" onerror="this.closest('.photo-item').style.display='none'">
@@ -3681,7 +3629,7 @@ h1{text-align:center;font-size:2rem;color:#f5f0e8;margin-bottom:.4rem}
             <span class="photo-num">506</span>
           </div>
           <div class="cap">Wallace Monument, Stirling</div>
-        </div></div></div></div><div class="section"><div class="section-header">â›°ï¸ Scottish Highlands</div><div class="loc-block"><div class="loc-title">Scottish Highlands</div><div class="photo-row">
+</div></div></div></div><div class="section"><div class="section-header">Scottish Highlands</div><div class="loc-block"><div class="loc-title">Scottish Highlands</div><div class="photo-row">
         <div class="photo-item gi">
           <div class="img-wrap">
             <img src="https://wanderlusters.com/wp-content/uploads/2018/10/Scottish-Highlands-Hiking-Guide-1155x770.jpg" alt="Scottish Highlands" loading="lazy" onerror="this.closest('.photo-item').style.display='none'">
@@ -3961,7 +3909,7 @@ h1{text-align:center;font-size:2rem;color:#f5f0e8;margin-bottom:.4rem}
             <span class="photo-num">546</span>
           </div>
           <div class="cap">Glencoe Valley, Highlands</div>
-        </div></div></div></div><div class="section"><div class="section-header">ðŸŒŠ Isle of Skye Route</div><div class="loc-block"><div class="loc-title">Eilean Donan Castle</div><div class="photo-row">
+</div></div></div></div><div class="section"><div class="section-header">Isle of Skye Route</div><div class="loc-block"><div class="loc-title">Eilean Donan Castle</div><div class="photo-row">
         <div class="photo-item gi">
           <div class="img-wrap">
             <img src="https://www.eileandonancastle.com/wp-content/uploads/eilean-donan-visit2.jpg" alt="Eilean Donan Castle" loading="lazy" onerror="this.closest('.photo-item').style.display='none'">
@@ -4403,6 +4351,7 @@ h1{text-align:center;font-size:2rem;color:#f5f0e8;margin-bottom:.4rem}
     'Rock & Sole Plaice, London': 'Rock_and_Sole_Plaice',
     'Royal Observatory, Greenwich': 'Royal_Observatory_Greenwich',
     'Stonehenge, Wiltshire': 'Stonehenge',
+    'White Cliffs of Dover': 'White_Cliffs_of_Dover',
     'Bletchley Park': 'Bletchley_Park',
     "Shakespeare's Birthplace": "Shakespeare's_Birthplace",
     'Royal Shakespeare Theatre': 'Royal_Shakespeare_Theatre',
@@ -4519,22 +4468,6 @@ h1{text-align:center;font-size:2rem;color:#f5f0e8;margin-bottom:.4rem}
     toastTimer = setTimeout(function(){ toastEl.style.opacity = '0'; }, duration || 4000);
   }
 
-  // Photos already saved to disk (baked in at build time)
-  const SAVED = new Set([1,2,3,14,15,16,27,29,33,34,37,38,44,45,47,52,54,55,58,60,61,64,66,67,68,71,75,77,82,83,85,87,90,91,92,101,106,111,112,113,114,115,116,119,121,123,124,129,133,134,135,137,139,140,143,144,145,146,155,156,157,158,159,160,161,168,169,170,171,172,173,174,180,181,182,184,185,187]);
-
-  // Also read any user-downloaded photos from localStorage
-  try {
-    const extra = JSON.parse(localStorage.getItem('dl_photos') || '[]');
-    extra.forEach(n => SAVED.add(n));
-  } catch(e) {}
-
-  function saveDl(num) {
-    try {
-      const arr = JSON.parse(localStorage.getItem('dl_photos') || '[]');
-      if (!arr.includes(num)) { arr.push(num); localStorage.setItem('dl_photos', JSON.stringify(arr)); }
-    } catch(e) {}
-  }
-
   document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.photo-item').forEach(function(item) {
       const wrap = item.querySelector('.img-wrap');
@@ -4543,12 +4476,6 @@ h1{text-align:center;font-size:2rem;color:#f5f0e8;margin-bottom:.4rem}
       const num = parseInt(numEl.textContent, 10);
       const img = wrap.querySelector('img');
       if (!img) return;
-
-      // Add saved badge
-      const badge = document.createElement('span');
-      badge.className = 'dl-badge';
-      badge.textContent = 'Saved';
-      wrap.appendChild(badge);
 
       var locBlock = item.closest('.loc-block');
       var locTitleEl = locBlock ? locBlock.querySelector('.loc-title') : null;
@@ -4601,68 +4528,6 @@ h1{text-align:center;font-size:2rem;color:#f5f0e8;margin-bottom:.4rem}
         showToast('Sent to selector: ' + locTitle, 2500);
       });
       wrap.appendChild(selectorBtn);
-
-      // Add download button
-      const btn = document.createElement('button');
-      btn.className = 'dl-btn';
-      btn.textContent = 'Save image';
-      btn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        const src = img.src;
-        if (!src || src.startsWith('file:///')) return;
-        const ext = src.split('?')[0].split('.').pop().slice(0,4).toLowerCase() || 'jpg';
-        const pad = String(num).padStart(3,'0');
-        const filename = 'photo-' + pad + '.' + ext;
-        btn.textContent = 'Saving...';
-        btn.disabled = true;
-        // Use local proxy when on localhost (avoids CORS from file:// origin)
-        const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
-        const fetchUrl = isLocal
-          ? 'http://localhost:8080/proxy?url=' + encodeURIComponent(src) + '&filename=' + encodeURIComponent(filename)
-          : src;
-        fetch(fetchUrl)
-          .then(function(r){
-            if (!r.ok) throw new Error(r.status);
-            return r.blob();
-          })
-          .then(function(blob){
-            const blobUrl = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = blobUrl;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            setTimeout(function(){ URL.revokeObjectURL(blobUrl); }, 10000);
-            SAVED.add(num);
-            saveDl(num);
-            wrap.classList.add('is-saved');
-          })
-          .catch(function(){
-            btn.textContent = 'Save image';
-            btn.disabled = false;
-            if (location.protocol === 'file:') {
-              showToast('Open via local server to download: run  node server.js  then visit localhost:8080', 5000);
-            } else {
-              // Server blocks hotlinking; open image in a new tab for manual save.
-              window.open(src, '_blank');
-              showToast('#' + num + ': blocked by source server - opened in a new tab. Right-click and choose Save image as.', 6000);
-            }
-          });
-      });
-      wrap.appendChild(btn);
-
-      // Mark already-saved photos
-      if (SAVED.has(num)) {
-        wrap.classList.add('is-saved');
-      }
-
-      // Local file:/// photos are inherently "saved" &mdash; hide the download button
-      if (img.src.startsWith('file:///')) {
-        wrap.classList.add('is-saved');
-        badge.textContent = 'Local';
-        badge.style.background = '#e07b00';
-      }
     });
   });
 

@@ -171,6 +171,7 @@
     (function () {
       const tabs = Array.from(document.querySelectorAll(".tab"));
       const panels = Array.from(document.querySelectorAll(".panel"));
+      const websitePanel = document.querySelector('[data-panel="website"]');
 
       function activateTab(tabName) {
         tabs.forEach((tab) => {
@@ -193,6 +194,12 @@
       if (initialTab && tabs.some((tab) => tab.getAttribute("data-tab") === initialTab)) {
         activateTab(initialTab);
       }
+
+      window.addEventListener("message", (event) => {
+        if (!event.data || event.data.type !== "ukTripProjectStateUpdate") return;
+        if (!websitePanel || !websitePanel.contentWindow) return;
+        websitePanel.contentWindow.postMessage(event.data, "*");
+      });
     })();
   </script>
 </body>

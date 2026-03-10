@@ -665,6 +665,7 @@
         { file: "stonehenge1.jpg", caption: "Stonehenge day trip", poi: "Stonehenge" },
         { file: "stonehenge2.jpg", caption: "Stonehenge day trip", poi: "Stonehenge alternate view" }
       ],
+      White_Cliffs_of_Dover: [],
       Bletchley_Park: [
         { file: "cotswolds1.jpg", caption: "Bletchley Park", poi: "Bletchley / day trip placeholder" },
         { file: "cotswolds2.jpg", caption: "Bletchley Park", poi: "Bletchley / day trip alternate view" }
@@ -879,6 +880,7 @@
       Rock_and_Sole_Plaice: "Rock & Sole Plaice",
       Royal_Observatory_Greenwich: "Royal Observatory Greenwich",
       Stonehenge: "Stonehenge",
+      White_Cliffs_of_Dover: "White Cliffs of Dover",
       Bletchley_Park: "Bletchley Park",
       "Shakespeare's_Birthplace": "Shakespeare's Birthplace",
       Royal_Shakespeare_Theatre: "Royal Shakespeare Theatre",
@@ -912,7 +914,7 @@
       { day: 1, weekday: "Wed-Thu", date: "Apr 2-3, 2025", title: "New York to London Flight", pages: ["303_E_83rd_St_NYC", "Newark_Liberty_International_Airport", "Washington_Dulles_International_Airport", "London_Heathrow_Arrival", "South_Bank"] },
       { day: 2, weekday: "Thu", date: "Apr 3, 2025", title: "Royal and Historic London", pages: ["Buckingham_Palace", "St_James's_Park", "Westminster_Abbey", "Big_Ben", "London_Eye", "Tate_Modern", "Shakespeare's_Globe", "Tower_Bridge", "Tower_of_London"] },
       { day: 3, weekday: "Fri", date: "Apr 4, 2025", title: "Museum Day and West End Highlights", pages: ["British_Museum", "National_Gallery", "Trafalgar_Square", "Leicester_Square", "Piccadilly_Circus", "Forbidden_Planet_London_Megastore", "John_Snow_cholera_pump", "Soho", "Oxford_Street", "Ye_Olde_Cheshire_Cheese"] },
-      { day: 4, weekday: "Sat", date: "Apr 5, 2025", title: "Greenwich and Stonehenge Day Trip", pages: ["Royal_Observatory_Greenwich", "Stonehenge", "Dishoom_Covent_Garden"] },
+      { day: 4, weekday: "Sat", date: "Apr 5, 2025", title: "Greenwich and Stonehenge Day Trip", pages: ["Royal_Observatory_Greenwich", "Stonehenge", "White_Cliffs_of_Dover", "Dishoom_Covent_Garden"] },
       { day: 5, weekday: "Sun", date: "Apr 6, 2025", title: "Stratford-upon-Avon", pages: ["Bletchley_Park", "Shakespeare's_Birthplace", "Royal_Shakespeare_Theatre", "Anne_Hathaway's_Cottage", "River_Avon,_Warwickshire", "London", "Rock_and_Sole_Plaice"] },
       { day: 6, weekday: "Mon", date: "Apr 7, 2025", title: "Train to Edinburgh", pages: ["LNER", "Royal_Mile", "Grassmarket", "Edinburgh"] },
       { day: 7, weekday: "Tue", date: "Apr 8, 2025", title: "Edinburgh Castle and Old Town", pages: ["Edinburgh_Castle", "Holyrood_Palace", "Arthur's_Seat", "Old_Town,_Edinburgh"] },
@@ -999,6 +1001,23 @@
         : `photos/${encodeURIComponent(fileOrUrl)}`;
     }
 
+    function getDisplayFileLabel(fileOrUrl) {
+      if (!/^(https?:|data:image|file:\/\/\/)/i.test(fileOrUrl)) return fileOrUrl;
+      if (/^data:image/i.test(fileOrUrl)) return "Embedded image";
+      if (/^file:\/\/\//i.test(fileOrUrl)) {
+        const parts = fileOrUrl.split("/");
+        return decodeURIComponent(parts[parts.length - 1] || fileOrUrl);
+      }
+      try {
+        const url = new URL(fileOrUrl);
+        const parts = url.pathname.split("/").filter(Boolean);
+        const tail = parts.slice(-2).join("/") || url.pathname;
+        return `${url.hostname} / ${decodeURIComponent(tail)}`;
+      } catch (error) {
+        return fileOrUrl;
+      }
+    }
+
     function updateSummary() {
       const importedCount = Object.values(getPreviewImportsByPage())
         .flat()
@@ -1012,6 +1031,15 @@
         photoOverrides: getPhotoOverrides(),
         previewImports: getPreviewImportsByPage()
       };
+    }
+
+    function notifyWorkspaceOfState() {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({
+          type: "ukTripProjectStateUpdate",
+          payload: buildProjectStatePayload()
+        }, "*");
+      }
     }
 
     function serializeProjectState() {
@@ -1120,7 +1148,7 @@
           <div class="meta">
             <p class="poi">${entry.poi || "Unassigned photo"}</p>
             <p class="caption">${entry.caption || "Not yet placed in the itinerary"}</p>
-            <p class="filename">${entry.file}</p>
+            <p class="filename" title="${entry.file}">${getDisplayFileLabel(entry.file)}</p>
           </div>
         </article>
       `;
@@ -1232,6 +1260,7 @@
       overrides[page] = next;
       savePhotoOverrides(overrides);
       renderGallery();
+      notifyWorkspaceOfState();
     }
 
     sectionsEl.addEventListener("change", (event) => {
@@ -1255,10 +1284,12 @@
     window.addEventListener("storage", (event) => {
       if (event.key === PHOTO_OVERRIDE_STORAGE_KEY || event.key === PREVIEW_IMPORT_STORAGE_KEY) {
         renderGallery();
+        notifyWorkspaceOfState();
       }
     });
 
     renderGallery();
+    notifyWorkspaceOfState();
   </script>
 </body>
 </html>
