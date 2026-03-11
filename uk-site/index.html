@@ -3001,7 +3001,7 @@
             aria-pressed="${topMapSelectedDays.has(day.day) ? "true" : "false"}"
             title="${town}"
           >
-            Day ${day.day} (${getWeekdayForDay(day)})
+            Day ${day.day} (${formatDayFilterDate(day)})
           </button>
         `;
         })
