@@ -4046,6 +4046,22 @@
       }
     }
 
+    function buildHotelDatesLabel(def, checkInIso, checkOutIso) {
+      const inText  = checkInIso  ? formatHotelDate(checkInIso)  : null;
+      const outText = checkOutIso ? formatHotelDate(checkOutIso) : null;
+      if (inText || outText) {
+        return `${inText || def.plannedCheckIn} check-in \u2192 ${outText || def.plannedCheckOut} check-out`;
+      }
+      return `Planned: ${def.plannedCheckIn} check-in \u2192 ${def.plannedCheckOut} check-out`;
+    }
+
+    function updateHotelDatesLabel(hotelId, def) {
+      const labelEl = document.getElementById(`hotel-dates-label-${hotelId}`);
+      if (!labelEl) return;
+      const saved = hotelCheckinData[hotelId] || {};
+      labelEl.textContent = buildHotelDatesLabel(def, saved.checkIn, saved.checkOut);
+    }
+
     function renderHotelCheckinGrid() {
       const grid = document.getElementById("hotel-checkin-grid");
       if (!grid) return;
@@ -4061,12 +4077,13 @@
         const geoStatusText = hasCoords
           ? `\uD83D\uDCCD Mapped to map`
           : "";
+        const datesLabel = buildHotelDatesLabel(def, saved.checkIn, saved.checkOut);
 
         return `
           <div class="hotel-entry" id="hotel-entry-${def.id}">
             <div class="hotel-entry-header">
               <span class="hotel-entry-title">\uD83C\uDFE8 ${def.label}</span>
-              <span class="hotel-entry-dates">Planned: ${def.plannedCheckIn} check-in \u2192 ${def.plannedCheckOut} check-out</span>
+              <span class="hotel-entry-dates" id="hotel-dates-label-${def.id}">${datesLabel}</span>
             </div>
             <div class="hotel-entry-fields">
               <div class="hotel-field-row">
@@ -4243,8 +4260,10 @@
             hotelGeoTimers[hotelId] = setTimeout(() => triggerHotelGeocode(hotelId, def), 1400);
           } else if (input.classList.contains("js-hotel-checkin")) {
             hotelCheckinData[hotelId].checkIn = input.value;
+            updateHotelDatesLabel(hotelId, def);
           } else if (input.classList.contains("js-hotel-checkout")) {
             hotelCheckinData[hotelId].checkOut = input.value;
+            updateHotelDatesLabel(hotelId, def);
           }
 
           input.classList.toggle("has-value", Boolean(input.value.trim()));
