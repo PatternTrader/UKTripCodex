@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -453,6 +453,60 @@
     margin: 8px 0 28px;
   }
 
+  .cost-add-wrap {
+    display: grid;
+    gap: 10px;
+    margin: 0 0 12px;
+  }
+
+  .cost-add-form {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) 140px auto;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .cost-add-input,
+  .cost-add-amount {
+    width: 100%;
+    border: 1px solid #c8d2de;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 0.86rem;
+    background: #fff;
+  }
+
+  .cost-add-btn,
+  .cost-remove-btn {
+    border: 1px solid #1a6bbf;
+    border-radius: 8px;
+    background: #1a6bbf;
+    color: #fff;
+    font-size: 0.84rem;
+    font-weight: 700;
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+
+  .cost-remove-btn {
+    border-color: #b94b3b;
+    background: #b94b3b;
+    padding: 6px 10px;
+  }
+
+  .cost-add-btn:hover,
+  .cost-remove-btn:hover {
+    filter: brightness(0.96);
+  }
+
+  .cost-extra-wrap {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: auto;
+    background: #fff;
+    box-shadow: 0 10px 22px rgba(14, 34, 56, 0.08);
+  }
+
   .cost-sheet-wrap {
     border: 1px solid var(--line);
     border-radius: 12px;
@@ -659,7 +713,7 @@
 
   .cc-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
     gap: 12px;
   }
 
@@ -669,6 +723,8 @@
     background: #fff;
     padding: 12px 13px;
     box-shadow: 0 10px 22px rgba(14, 34, 56, 0.08);
+    position: relative;
+    overflow: visible;
   }
 
   .cc-card h3 {
@@ -704,6 +760,27 @@
     font-size: 0.85rem;
   }
 
+  .cc-check-item.has-cost {
+    background: linear-gradient(90deg, rgba(255, 244, 79, 0.92) 0%, rgba(255, 244, 79, 0.92) 100%);
+    box-shadow: inset 0 0 0 1px rgba(201, 168, 0, 0.35);
+    border-radius: 8px;
+    padding: 6px 8px;
+  }
+
+  .cc-check-item.has-note {
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .cc-check-item.has-note .cc-check-text {
+    flex: 1 1 280px;
+    min-width: 220px;
+  }
+
+  .cc-check-item.has-note .cc-link-wrap {
+    flex: 0 1 260px;
+  }
+
   .cc-check-btn {
     width: 18px;
     height: 18px;
@@ -728,6 +805,57 @@
     flex: 1;
   }
 
+  .cc-link-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 0 1 270px;
+    min-width: 0;
+  }
+
+  .cc-link-input {
+    width: 180px;
+    min-width: 0;
+    padding: 2px 6px;
+    border: 1px solid #c0ccda;
+    border-radius: 5px;
+    font-size: 0.82rem;
+    font-family: inherit;
+    color: #324559;
+    background: rgba(255, 255, 255, 0.85);
+  }
+
+  .cc-link-input:focus {
+    outline: none;
+    border-color: #1a6bbf;
+    box-shadow: 0 0 0 2px rgba(26, 107, 191, 0.18);
+  }
+
+  .cc-link-input.has-url {
+    background: rgba(255, 244, 79, 0.92);
+    border-color: #c9a800;
+    box-shadow: inset 0 0 0 1px rgba(201, 168, 0, 0.28);
+  }
+
+  .cc-link-open {
+    color: #0f4e84;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    border-radius: 999px;
+    padding: 2px 6px;
+  }
+
+  .cc-link-open:hover {
+    text-decoration: underline;
+  }
+
+  .cc-link-open.has-url {
+    background: rgba(255, 244, 79, 0.92);
+    color: #6b5600;
+  }
+
   .cc-check-item.is-done .cc-check-text {
     text-decoration: line-through;
     opacity: 0.7;
@@ -742,6 +870,220 @@
     text-decoration: underline;
   }
 
+  .cc-card--flight {
+    border-left: 4px solid #1a6bbf;
+    background: #eef4ff;
+  }
+  .cc-card--flight h3 { color: #1a4d8f; }
+  .cc-card--flight .cc-check-item.is-done .cc-check-btn { background: #1a6bbf; border-color: #1a6bbf; }
+
+  .cc-card--hotel { border-left: 4px solid #1f7a4a; background: #edfaf3; }
+  .cc-card--hotel h3 { color: #155c35; }
+  .cc-card--hotel .cc-check-item.is-done .cc-check-btn { background: #1f7a4a; border-color: #1f7a4a; }
+
+  .cc-card--ticket { border-left: 4px solid #c45c0a; background: #fff5ec; }
+  .cc-card--ticket h3 { color: #8f3e00; }
+  .cc-card--ticket .cc-check-item.is-done .cc-check-btn { background: #c45c0a; border-color: #c45c0a; }
+
+  .cc-card--booking { border-left: 4px solid #6d3a9c; background: #f8f0ff; }
+  .cc-card--booking h3 { color: #4e2470; }
+  .cc-card--booking .cc-check-item.is-done .cc-check-btn { background: #6d3a9c; border-color: #6d3a9c; }
+
+  .cc-card--review { border-left: 4px solid #b23b3b; background: #fff2f0; }
+  .cc-card--review h3 { color: #7d1f1f; }
+  .cc-card--review .cc-check-item.is-done .cc-check-btn { background: #b23b3b; border-color: #b23b3b; }
+
+  .cc-review-meta {
+    display: block;
+    margin-top: 3px;
+    color: #6d4d4d;
+    font-size: 0.77rem;
+  }
+
+  .cc-cost-input {
+    width: 80px;
+    padding: 2px 6px;
+    border: 1px solid #c0ccda;
+    border-radius: 5px;
+    font-size: 0.82rem;
+    font-family: inherit;
+    color: #324559;
+    background: rgba(255, 255, 255, 0.85);
+    flex: 0 0 auto;
+  }
+  .cc-cost-input:focus { outline: none; border-color: #1a6bbf; box-shadow: 0 0 0 2px rgba(26, 107, 191, 0.18); }
+
+  .cc-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .cc-card-header h3 { margin: 0; }
+
+  .cc-card-total {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #1a4d8f;
+    color: #fff;
+    border-radius: 8px;
+    padding: 4px 12px 6px;
+    line-height: 1.3;
+    min-width: 80px;
+    text-align: center;
+    white-space: nowrap;
+    flex-shrink: 0;
+    position: absolute;
+    top: -16px;
+    right: 14px;
+    z-index: 1;
+    box-shadow: 0 10px 20px rgba(15, 52, 92, 0.2);
+  }
+  .cc-card-total--overall {
+    top: -64px;
+    background: #0f6a4b;
+    box-shadow: 0 12px 24px rgba(15, 106, 75, 0.22);
+  }
+  .cc-card-total-label {
+    font-size: 0.63rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.8;
+  }
+  .cc-card-total-value {
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+
+  .cc-date-input {
+    width: 110px;
+    padding: 2px 5px;
+    border: 1px solid #c0ccda;
+    border-radius: 5px;
+    font-size: 0.78rem;
+    font-family: inherit;
+    color: #324559;
+    background: rgba(255, 255, 255, 0.85);
+    flex: 0 0 auto;
+  }
+  .cc-date-input:focus { outline: none; border-color: #1a6bbf; box-shadow: 0 0 0 2px rgba(26, 107, 191, 0.18); }
+
+  .cc-cost-note {
+    order: 20;
+    flex: 1 1 calc(100% - 34px);
+    margin: 4px 0 0 34px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: rgba(255, 248, 196, 0.92);
+    border: 1px dashed rgba(201, 168, 0, 0.5);
+    font-size: 0.76rem;
+    color: #6b5600;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  .cc-remove-btn {
+    border: 1px solid #c8d2de;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #6a7685;
+    font-size: 0.73rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    cursor: pointer;
+    flex: 0 0 auto;
+  }
+
+  .cc-remove-btn:hover {
+    border-color: #b94b3b;
+    color: #b94b3b;
+  }
+
+  .cc-edit-btn {
+    border: 1px solid #c8d2de;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #4d6f93;
+    font-size: 0.73rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    cursor: pointer;
+    flex: 0 0 auto;
+  }
+
+  .cc-edit-btn:hover {
+    border-color: #1a6bbf;
+    color: #1a6bbf;
+  }
+
+  .cc-attention-star {
+    border: 1px solid #b8c8d8;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.95);
+    color: #9badbf;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1;
+    padding: 4px 9px;
+    cursor: pointer;
+    flex: 0 0 auto;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+  }
+
+  .cc-attention-star:hover {
+    border-color: #39b54a;
+    color: #39b54a;
+  }
+
+  .cc-attention-star.is-active {
+    background: #39ff5a;
+    border-color: #149a2a;
+    color: #0e5d1d;
+    box-shadow: 0 0 0 3px rgba(57, 255, 90, 0.24);
+    transform: scale(1.04);
+  }
+
+  .cc-check-item.needs-attention {
+    box-shadow: 0 0 0 3px rgba(57, 255, 90, 0.22);
+    border-radius: 8px;
+    background: linear-gradient(90deg, rgba(57, 255, 90, 0.18), rgba(57, 255, 90, 0.08));
+  }
+  .cc-add-btn {
+    border: 1px solid #1a6bbf;
+    border-radius: 999px;
+    background: #1a6bbf;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    cursor: pointer;
+    flex: 0 0 auto;
+    margin-bottom: 8px;
+  }
+
+  .cc-add-btn:hover {
+    filter: brightness(0.96);
+  }
+
+  .cc-drag-handle {
+    cursor: grab;
+    color: #b8c8d8;
+    font-size: 1rem;
+    flex: 0 0 auto;
+    user-select: none;
+    line-height: 1;
+    padding: 1px 0;
+    touch-action: none;
+  }
+  .cc-drag-handle:active { cursor: grabbing; }
+  .cc-check-item.cc-drag-over {
+    outline: 2px dashed #1a6bbf;
+    border-radius: 6px;
+    background: rgba(26, 107, 191, 0.07);
+  }
+
   footer {
     text-align: center;
     color: #5b6676;
@@ -754,7 +1096,18 @@
     .poi-photo { min-height: 210px; }
     #route-map { height: 360px; }
     .day-map { height: 220px; }
+    .cost-add-form { grid-template-columns: 1fr; }
     .cc-grid { grid-template-columns: 1fr; }
+    .cc-check-item { flex-wrap: wrap; }
+    .cc-link-wrap { flex: 1 1 100%; }
+    .cc-link-input { width: 100%; }
+    .cc-card-total {
+      right: 10px;
+      top: -14px;
+    }
+    .cc-card-total--overall {
+      top: -60px;
+    }
   }
 
   /* Highlight Unsplash photos */
@@ -782,96 +1135,205 @@
     <section class="command-center">
       <h2 class="section-title">Dad-Level Trip Command Center</h2>
       <div class="cc-grid">
-        <article class="cc-card">
-          <h3>Flights Tracker</h3>
-          <ul class="cc-list">
-            <li>Outbound: Thu Apr 2, 3:07pm EWR -> Fri Apr 3, 6:55am LHR (1h 55m IAD connection)</li>
-            <li>Return: Sun Apr 12, 8:30am LHR -> 3:07pm JFK (2h 5m YYZ connection)</li>
-            <li>Total flight cost tracked: $3,069.00</li>
+        <article class="cc-card cc-card--flight" data-card-id="flight">
+          <div class="cc-card-header">
+            <h3>Flights Tracker</h3>
+            <div class="cc-card-total cc-card-total--overall">
+              <span class="cc-card-total-label">All 4 Boxes</span>
+              <span class="cc-card-total-value js-cc-grand-total">$0.00</span>
+            </div>
+            <div class="cc-card-total">
+              <span class="cc-card-total-label">Total</span>
+              <span class="cc-card-total-value js-cc-card-total" data-total-card="flight">$0.00</span>
+            </div>
+          </div>
+          <ul class="cc-checklist">
+            <li class="cc-check-item js-cc-check-item" data-check-id="flight-outbound">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text">Outbound: Thu Apr 2, 3:07pm EWR &rarr; Fri Apr 3, 6:55am LHR (1h 55m IAD connection)</span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-outbound" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-outbound" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-outbound" placeholder="$0.00" aria-label="Cost">
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="flight-return">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text">Return: Sun Apr 12, 8:30am LHR &rarr; 3:07pm JFK (2h 5m YYZ connection)</span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-return" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-return" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-return" placeholder="$0.00" aria-label="Cost">
+            </li>
           </ul>
         </article>
-        <article class="cc-card">
-          <h3>Hotel Options (When Needed)</h3>
+        <article class="cc-card cc-card--hotel" data-card-id="hotel">
+          <div class="cc-card-header">
+            <h3>Hotel Bookings To Lock In Early</h3>
+            <div class="cc-card-total">
+              <span class="cc-card-total-label">Total</span>
+              <span class="cc-card-total-value js-cc-card-total" data-total-card="hotel">$0.00</span>
+            </div>
+          </div>
           <ul class="cc-checklist">
-            <li class="cc-check-item js-cc-check-item" data-check-id="hotel-london">
+            <li class="cc-check-item js-cc-check-item" data-check-id="hotel-london-main">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text">London base (South Bank / Westminster): Apr 3-6 and Apr 11 night</span>
+              <span class="cc-check-text">Book London base early (South Bank / Westminster): Apr 3-6</span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="hotel-london-main" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-london-main" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-london-main" placeholder="$0.00" aria-label="Cost">
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="hotel-london-return">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text">Book London return night (South Bank / Westminster): Apr 11</span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="hotel-london-return" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-london-return" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-london-return" placeholder="$0.00" aria-label="Cost">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="hotel-edinburgh">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text">Edinburgh base (Royal Mile / New Town): Apr 7-9</span>
+              <span class="cc-check-text">Book Edinburgh base early (Royal Mile / New Town): Apr 7-9</span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="hotel-edinburgh" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-edinburgh" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-edinburgh" placeholder="$0.00" aria-label="Cost">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="hotel-highlands">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text">Highlands transit base (Inverness/Fort William): Apr 10</span>
+              <span class="cc-check-text">Reserve Highlands transit base early if self-driving (Inverness/Fort William): Apr 10</span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="hotel-highlands" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-highlands" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-highlands" placeholder="$0.00" aria-label="Cost">
             </li>
           </ul>
         </article>
-        <article class="cc-card">
-          <h3>Ticket Purchases Tracker</h3>
-          <ul class="cc-checklist">
-            <li class="cc-check-item js-cc-check-item" data-check-id="ticket-priority">
-              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text">Priority buys: Tower of London, Westminster Abbey, Edinburgh Castle, Stirling Castle, Bletchley Park</span>
-            </li>
-            <li class="cc-check-item js-cc-check-item" data-check-id="ticket-rail">
-              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text">Rail buys: LNER London -> Edinburgh and Edinburgh -> London</span>
-            </li>
-            <li class="cc-check-item js-cc-check-item" data-check-id="ticket-reminder">
-              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text">Reminder: update each paid POI cost in the itinerary and spreadsheet</span>
-            </li>
-          </ul>
-        </article>
-        <article class="cc-card">
-          <h3>Booking Links</h3>
+        <article class="cc-card cc-card--booking" data-card-id="booking">
+          <div class="cc-card-header">
+            <h3>Tours to Consider</h3>
+            <div class="cc-card-total">
+              <span class="cc-card-total-label">Total</span>
+              <span class="cc-card-total-value js-cc-card-total" data-total-card="booking">$0.00</span>
+            </div>
+          </div>
           <ul class="cc-checklist">
             <li class="cc-check-item js-cc-check-item" data-check-id="link-tower-london">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text"><a href="https://www.historicroyalpalaces.com/tower-of-london/" target="_blank" rel="noopener noreferrer">Tower of London tickets</a></span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="link-tower-london" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-tower-london" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-tower-london" placeholder="$0.00" aria-label="Cost">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-westminster">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text"><a href="https://www.westminster-abbey.org/" target="_blank" rel="noopener noreferrer">Westminster Abbey</a></span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="link-westminster" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-westminster" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-westminster" placeholder="$0.00" aria-label="Cost">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-london-eye">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text"><a href="https://www.londoneye.com/tickets-and-prices/" target="_blank" rel="noopener noreferrer">London Eye tickets</a></span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="link-london-eye" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-london-eye" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-london-eye" placeholder="$0.00" aria-label="Cost">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-edinburgh-castle">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text"><a href="https://www.edinburghcastle.scot/" target="_blank" rel="noopener noreferrer">Edinburgh Castle</a></span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="link-edinburgh-castle" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-edinburgh-castle" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-edinburgh-castle" placeholder="$0.00" aria-label="Cost">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-lner">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text"><a href="https://www.lner.co.uk/" target="_blank" rel="noopener noreferrer">LNER train bookings</a></span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="link-lner" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-lner" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-lner" placeholder="$0.00" aria-label="Cost">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-booking">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text"><a href="https://www.booking.com/" target="_blank" rel="noopener noreferrer">Hotel search (Booking.com)</a></span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="link-booking" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-booking" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-booking" placeholder="$0.00" aria-label="Cost">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-bletchley">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text"><a href="https://www.bletchleypark.org.uk/" target="_blank" rel="noopener noreferrer">Bletchley Park</a></span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="link-bletchley" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-bletchley" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-bletchley" placeholder="$0.00" aria-label="Cost">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-national-rail">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text"><a href="https://www.nationalrail.co.uk/destinations/trains-from-london-to-bletchley/" target="_blank" rel="noopener noreferrer">National Rail: London to Bletchley</a></span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="link-national-rail" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-national-rail" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-national-rail" placeholder="$0.00" aria-label="Cost">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-evan-evans">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text"><a href="https://evanevanstours.com/tours/day-tours-from-london/warwick-castle-shakespeares-birthplace-oxford-the-cotswolds/" target="_blank" rel="noopener noreferrer">Evan Evans: Stratford guided day tour</a></span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="link-evan-evans" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-evan-evans" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-evan-evans" placeholder="$0.00" aria-label="Cost">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-timberbush">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text"><a href="https://www.timberbush-tours.co.uk/our-tours/from-edinburgh/2-day-tours/loch-ness-inverness-highlands" target="_blank" rel="noopener noreferrer">Timberbush: Highlands/Inverness 2-day tour</a></span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="link-timberbush" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-timberbush" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-timberbush" placeholder="$0.00" aria-label="Cost">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-rabbies">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text"><a href="https://www.rabbies.com/en-us/tour/the-isle-of-skye-3-day-tour-from-edinburgh" target="_blank" rel="noopener noreferrer">Rabbie's: Isle of Skye 3-day tour</a></span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="link-rabbies" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-rabbies" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-rabbies" placeholder="$0.00" aria-label="Cost">
             </li>
           </ul>
+        </article>
+        <article class="cc-card cc-card--review" data-card-id="review">
+          <div class="cc-card-header">
+            <h3>Purchases</h3>
+            <div class="cc-card-total">
+              <span class="cc-card-total-label">Total</span>
+              <span class="cc-card-total-value js-cc-card-total" data-total-card="review">$0.00</span>
+            </div>
+          </div>
+          <ul class="cc-checklist" id="cc-paid-mixed-review"></ul>
         </article>
       </div>
     </section>
@@ -881,7 +1343,15 @@
     <main id="timeline" class="timeline"></main>
 
     <section class="cost-panel">
-      <h2 class="section-title">Travel Cost Spreadsheet</h2>
+      <h2 class="section-title">Actual Travel Costs Spreadsheet</h2>
+      <div class="cost-add-wrap">
+        <div class="cost-add-form">
+          <input id="custom-cost-label" class="cost-add-input" type="text" placeholder="Add a new travel cost item">
+          <input id="custom-cost-amount" class="cost-add-amount" type="number" min="0" step="0.01" placeholder="0.00">
+          <button id="add-custom-cost" class="cost-add-btn" type="button">Add Cost</button>
+        </div>
+        <div class="cost-extra-wrap" id="custom-cost-sheet"></div>
+      </div>
       <div class="cost-sheet-wrap" id="cost-sheet"></div>
       <div class="cost-summary" id="cost-summary"></div>
     </section>
@@ -1028,6 +1498,7 @@
           { text: "Flight departs London at 8:30am, connects via Toronto (YYZ) for about 2h 5m, and arrives New York (JFK) at 3:07pm.", page: "Airplane", caption: "London to New York flight", defaultCost: 1534.5 }
         ]
       }
+
     ];
 
     const dayStayPlan = {
@@ -1444,7 +1915,7 @@
       Oxford_Street: localPhoto("london-2.jpg"),
       Royal_Observatory_Greenwich: localPhoto("royal-observatory.webp"),
       London: localPhoto("london-3.jpg"),
-      Bletchley_Park: localPhoto("cotswolds1.jpg"),
+      Bletchley_Park: "https://commons.wikimedia.org/wiki/Special:FilePath/Bletchley_Park_Mansion.jpg",
       "Shakespeare's_Birthplace": localPhoto("cotswolds1.jpg"),
       Royal_Shakespeare_Theatre: localPhoto("cotswolds2.jpg"),
       "Anne_Hathaway's_Cottage": localPhoto("cotswolds2.jpg"),
@@ -1601,8 +2072,63 @@
       Airplane: { why: "Transatlantic return transport to New York via Toronto.", researchedCost: "Airfare budget from latest screenshot: $3,069 round trip (about $1,534.50 per leg)." }
     };
 
+    const PURCHASE_LINKS_BY_PAGE = {
+      Buckingham_Palace: "https://www.rct.uk/visit/buckingham-palace",
+      Westminster_Abbey: "https://www.westminster-abbey.org/visit-us",
+      Big_Ben: "https://www.parliament.uk/bigben",
+      London_Eye: "https://www.londoneye.com/tickets-and-prices/",
+      Tate_Modern: "https://www.tate.org.uk/visit/tate-modern",
+      "Shakespeare's_Globe": "https://www.shakespearesglobe.com/visit/",
+      Tower_of_London: "https://www.hrp.org.uk/tower-of-london/",
+      Tower_Bridge: "https://www.towerbridge.org.uk/plan-your-visit",
+      British_Museum: "https://www.britishmuseum.org/visit",
+      National_Gallery: "https://www.nationalgallery.org.uk/visiting",
+      Ye_Olde_Cheshire_Cheese: "https://ye-olde-cheshire-cheese.co.uk/",
+      Royal_Observatory_Greenwich: "https://www.rmg.co.uk/royal-observatory",
+      Stonehenge: "https://www.english-heritage.org.uk/visit/places/stonehenge/",
+      Dishoom_Covent_Garden: "https://www.dishoom.com/covent-garden/",
+      Bletchley_Park: "https://bletchleypark.org.uk/visit-us/",
+      "Shakespeare's_Birthplace": "https://www.shakespeare.org.uk/visit/shakespeares-birthplace/",
+      Royal_Shakespeare_Theatre: "https://www.rsc.org.uk/your-visit/royal-shakespeare-theatre/",
+      "Anne_Hathaway's_Cottage": "https://www.shakespeare.org.uk/visit/anne-hathaways-cottage/",
+      Rock_and_Sole_Plaice: "https://www.rockandsoleplaice.com/",
+      LNER: "https://www.lner.co.uk/",
+      Edinburgh_Castle: "https://www.edinburghcastle.scot/plan-your-visit/tickets",
+      Holyrood_Palace: "https://www.rct.uk/visit/palace-of-holyroodhouse",
+      Stirling_Castle: "https://www.stirlingcastle.scot/visit-us/tickets/",
+      National_Wallace_Monument: "https://www.nationalwallacemonument.com/",
+      Battle_of_Bannockburn: "https://www.nts.org.uk/visit/places/bannockburn",
+      Urquhart_Castle: "https://www.historicenvironment.scot/visit-a-place/places/urquhart-castle/",
+      Eilean_Donan: "https://www.eileandonancastle.com/visit",
+      Edinburgh_Waverley_railway_station: "https://www.lner.co.uk/",
+      Airplane: "https://www.united.com/en/us/book-flight/united-reservations"
+    };
+
+    const COMMAND_DEFAULT_LINKS_BY_ID = {
+      "link-tower-london": "https://www.historicroyalpalaces.com/tower-of-london/",
+      "link-westminster": "https://www.westminster-abbey.org/",
+      "link-london-eye": "https://www.londoneye.com/tickets-and-prices/",
+      "link-edinburgh-castle": "https://www.edinburghcastle.scot/",
+      "link-lner": "https://www.lner.co.uk/",
+      "link-booking": "https://www.booking.com/",
+      "link-bletchley": "https://www.bletchleypark.org.uk/",
+      "link-national-rail": "https://www.nationalrail.co.uk/destinations/trains-from-london-to-bletchley/",
+      "link-evan-evans": "https://evanevanstours.com/tours/day-tours-from-london/warwick-castle-shakespeares-birthplace-oxford-the-cotswolds/",
+      "link-timberbush": "https://www.timberbush-tours.co.uk/our-tours/from-edinburgh/2-day-tours/loch-ness-inverness-highlands",
+      "link-rabbies": "https://www.rabbies.com/en-us/tour/the-isle-of-skye-3-day-tour-from-edinburgh"
+    };
+
     const COST_STORAGE_KEY = "ukTripCostInputsV1";
+    const CUSTOM_COSTS_STORAGE_KEY = "ukTripCustomCostEntriesV1";
     const COMMAND_CHECKLIST_STORAGE_KEY = "ukTripCommandChecklistV1";
+    const COMMAND_REMOVED_STORAGE_KEY = "ukTripCommandRemovedV1";
+    const COMMAND_TEXT_STORAGE_KEY = "ukTripCommandTextV1";
+    const COMMAND_CUSTOM_ITEMS_STORAGE_KEY = "ukTripCommandCustomItemsV1";
+    const COMMAND_ATTENTION_STORAGE_KEY = "ukTripCommandAttentionV1";
+    const CC_COSTS_STORAGE_KEY = "ukTripCCCostsV1";
+    const CC_COST_NOTES_STORAGE_KEY = "ukTripCCCostNotesV1";
+    const CC_LINKS_STORAGE_KEY = "ukTripCCLinksV1";
+    const CC_DATES_STORAGE_KEY = "ukTripCCDatesV1";
     const EMPTY_IMAGE_PLACEHOLDER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800'><rect width='1200' height='800' fill='white'/></svg>";
     const STAY_COLOR_BY_TOWN = {
       London: "#d1a900",
@@ -1611,6 +2137,7 @@
     };
     const topMapSelectedDays = new Set(itinerary.map((day) => day.day));
     let costState = {};
+    let customCostEntries = [];
     let commandChecklistState = {};
     let routeMapState = null;
 
@@ -1787,6 +2314,15 @@
       return dayPlan[itemIndex] || { mode: "Walk/Tube", bufferMin: 20, note: "Local transfer buffer." };
     }
 
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
     function formatDayFilterDate(day) {
       const raw = String((day && day.date) || "");
       const match = raw.match(/([A-Za-z]+)\s+(\d{1,2})/);
@@ -1937,6 +2473,18 @@
         }
       });
       localStorage.setItem(COST_STORAGE_KEY, JSON.stringify(costState));
+
+      const savedCustomCosts = localStorage.getItem(CUSTOM_COSTS_STORAGE_KEY);
+      if (savedCustomCosts) {
+        try {
+          const parsed = JSON.parse(savedCustomCosts);
+          customCostEntries = Array.isArray(parsed) ? parsed : [];
+        } catch (_) {
+          customCostEntries = [];
+        }
+      }
+      customCostEntries = customCostEntries.filter((entry) => entry && typeof entry.id === "string");
+      localStorage.setItem(CUSTOM_COSTS_STORAGE_KEY, JSON.stringify(customCostEntries));
     }
 
     function renderCostSheet() {
@@ -1975,6 +2523,7 @@
         </table>
       `;
       document.getElementById("cost-sheet").innerHTML = tableHtml;
+      renderCustomCostSheet();
       updateCostSummary();
     }
 
@@ -1984,7 +2533,153 @@
         const n = Number(v);
         if (!Number.isNaN(n)) total += n;
       });
+      customCostEntries.forEach((entry) => {
+        const n = Number(entry.amount);
+        if (!Number.isNaN(n)) total += n;
+      });
       document.getElementById("cost-summary").textContent = `Current tracked total: $${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    function renderCustomCostSheet() {
+      const container = document.getElementById("custom-cost-sheet");
+      if (!container) return;
+      if (!customCostEntries.length) {
+        container.innerHTML = `
+          <table class="cost-table">
+            <thead>
+              <tr>
+                <th>Custom Travel Cost</th>
+                <th>Amount (USD)</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="3">No custom travel costs added yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        `;
+        return;
+      }
+
+      const rows = customCostEntries
+        .map((entry) => `
+          <tr>
+            <td>${escapeHtml(entry.label)}</td>
+            <td>$${Number(entry.amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+            <td><button type="button" class="cost-remove-btn js-remove-custom-cost" data-custom-cost-id="${entry.id}">Remove</button></td>
+          </tr>
+        `)
+        .join("");
+
+      container.innerHTML = `
+        <table class="cost-table">
+          <thead>
+            <tr>
+              <th>Custom Travel Cost</th>
+              <th>Amount (USD)</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+    }
+
+    function saveCustomCostEntries() {
+      localStorage.setItem(CUSTOM_COSTS_STORAGE_KEY, JSON.stringify(customCostEntries));
+    }
+
+    function addCustomCostEntry() {
+      const labelInput = document.getElementById("custom-cost-label");
+      const amountInput = document.getElementById("custom-cost-amount");
+      if (!(labelInput instanceof HTMLInputElement) || !(amountInput instanceof HTMLInputElement)) return;
+
+      const label = labelInput.value.trim();
+      const amount = Number(amountInput.value);
+      if (!label || Number.isNaN(amount) || amount < 0) return;
+
+      customCostEntries.push({
+        id: `custom-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        label,
+        amount: amount.toFixed(2)
+      });
+      saveCustomCostEntries();
+      renderCustomCostSheet();
+      updateCostSummary();
+      labelInput.value = "";
+      amountInput.value = "";
+      labelInput.focus();
+    }
+
+    function bindCustomCostControls() {
+      const addButton = document.getElementById("add-custom-cost");
+      const labelInput = document.getElementById("custom-cost-label");
+      const amountInput = document.getElementById("custom-cost-amount");
+
+      addButton?.addEventListener("click", addCustomCostEntry);
+      [labelInput, amountInput].forEach((input) => {
+        input?.addEventListener("keydown", (event) => {
+          if (event.key !== "Enter") return;
+          event.preventDefault();
+          addCustomCostEntry();
+        });
+      });
+
+      document.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) return;
+        if (!target.classList.contains("js-remove-custom-cost")) return;
+        const id = target.getAttribute("data-custom-cost-id");
+        if (!id) return;
+        customCostEntries = customCostEntries.filter((entry) => entry.id !== id);
+        saveCustomCostEntries();
+        renderCustomCostSheet();
+        updateCostSummary();
+      });
+    }
+
+    function getPaidMixedReviewItems() {
+      const items = [];
+      itinerary.forEach((day) => {
+        day.items.forEach((item, itemIndex) => {
+          const meta = poiMeta[item.page] || { researchedCost: "Cost unknown; verify manually." };
+          const costType = getCostType(meta.researchedCost);
+          if (costType !== "paid" && costType !== "mixed") return;
+          const weekday = getWeekdayForDay(day);
+          const dayLabel = `Day ${day.day}${weekday ? ` (${weekday}, ${day.date})` : ` (${day.date})`}`;
+          items.push({
+            id: `review-${getItemKey(day, item, itemIndex)}`,
+            page: item.page,
+            text: `${dayLabel}: ${item.caption}`,
+            detail: `${costType === "paid" ? "Paid" : "Mixed"} - ${meta.researchedCost}`,
+            defaultUrl: PURCHASE_LINKS_BY_PAGE[item.page] || ""
+          });
+        });
+      });
+      return items;
+    }
+
+    function renderPaidMixedReviewChecklist() {
+      const container = document.getElementById("cc-paid-mixed-review");
+      if (!container) return;
+      const reviewItems = getPaidMixedReviewItems();
+      if (!reviewItems.length) {
+        container.innerHTML = `<li class="cc-check-item"><span class="cc-check-text">No paid or mixed stops detected.</span></li>`;
+        return;
+      }
+      container.innerHTML = reviewItems.map((item) => `
+        <li class="cc-check-item js-cc-check-item" data-check-id="${item.id}">
+          <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+          <span class="cc-check-text">${escapeHtml(item.text)}<span class="cc-review-meta">${escapeHtml(item.detail)}</span></span>
+          <span class="cc-link-wrap">
+            <input type="url" class="cc-link-input js-cc-link" data-link-id="${item.id}" value="${escapeHtml(item.defaultUrl)}" placeholder="Paste URL" aria-label="Relevant URL">
+            <a class="cc-link-open js-cc-link-open" data-link-open-id="${item.id}" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+          </span>
+          <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="${item.id}" placeholder="$0.00" aria-label="Cost">
+        </li>
+      `).join("");
     }
 
     function bindCostInputs() {
@@ -2179,11 +2874,375 @@
         }
       }
 
-      const items = Array.from(document.querySelectorAll(".js-cc-check-item[data-check-id]"));
-      items.forEach((itemEl) => {
+      let removedCommandItems = {};
+      try {
+        removedCommandItems = JSON.parse(localStorage.getItem(COMMAND_REMOVED_STORAGE_KEY) || "{}") || {};
+      } catch (_) {
+        removedCommandItems = {};
+      }
+
+      let commandTextOverrides = {};
+      try {
+        commandTextOverrides = JSON.parse(localStorage.getItem(COMMAND_TEXT_STORAGE_KEY) || "{}") || {};
+      } catch (_) {
+        commandTextOverrides = {};
+      }
+
+      let commandCustomItems = {};
+      try {
+        commandCustomItems = JSON.parse(localStorage.getItem(COMMAND_CUSTOM_ITEMS_STORAGE_KEY) || "{}") || {};
+      } catch (_) {
+        commandCustomItems = {};
+      }
+
+      let commandAttentionState = {};
+      try {
+        commandAttentionState = JSON.parse(localStorage.getItem(COMMAND_ATTENTION_STORAGE_KEY) || "{}") || {};
+      } catch (_) {
+        commandAttentionState = {};
+      }
+
+      function hideCommandItem(itemEl, id) {
+        if (!itemEl || !id) return;
+        removedCommandItems[id] = true;
+        localStorage.setItem(COMMAND_REMOVED_STORAGE_KEY, JSON.stringify(removedCommandItems));
+        itemEl.hidden = true;
+        itemEl.style.display = "none";
+        updateFlightTotal();
+      }
+
+      function getEditableCommandText(itemEl) {
+        const textEl = itemEl?.querySelector(".cc-check-text");
+        if (!(textEl instanceof HTMLElement)) return "";
+        const anchor = textEl.querySelector("a");
+        if (anchor instanceof HTMLAnchorElement) return anchor.textContent.trim();
+        const meta = textEl.querySelector(".cc-review-meta");
+        if (meta) {
+          const clone = textEl.cloneNode(true);
+          const cloneMeta = clone.querySelector(".cc-review-meta");
+          cloneMeta?.remove();
+          return clone.textContent.trim();
+        }
+        return textEl.textContent.trim();
+      }
+
+      function setEditableCommandText(itemEl, value) {
+        const textEl = itemEl?.querySelector(".cc-check-text");
+        if (!(textEl instanceof HTMLElement)) return;
+        const nextText = String(value || "").trim();
+        if (!nextText) return;
+        const anchor = textEl.querySelector("a");
+        if (anchor instanceof HTMLAnchorElement) {
+          anchor.textContent = nextText;
+          return;
+        }
+        const meta = textEl.querySelector(".cc-review-meta");
+        if (meta) {
+          const firstTextNode = Array.from(textEl.childNodes).find((node) => node.nodeType === Node.TEXT_NODE);
+          if (firstTextNode) {
+            firstTextNode.textContent = nextText;
+          } else {
+            textEl.insertBefore(document.createTextNode(nextText), textEl.firstChild);
+          }
+          return;
+        }
+        textEl.textContent = nextText;
+      }
+
+      function editCommandItemText(itemEl, id) {
+        if (!itemEl || !id) return;
+        const currentText = commandTextOverrides[id] || getEditableCommandText(itemEl);
+        const updatedText = window.prompt("Edit item text", currentText);
+        if (updatedText === null) return;
+        const nextText = updatedText.trim();
+        if (!nextText) return;
+        commandTextOverrides[id] = nextText;
+        localStorage.setItem(COMMAND_TEXT_STORAGE_KEY, JSON.stringify(commandTextOverrides));
+        Object.keys(commandCustomItems).forEach((cardId) => {
+          const entry = Array.isArray(commandCustomItems[cardId]) ? commandCustomItems[cardId].find((item) => item.id === id) : null;
+          if (!entry) return;
+          entry.text = nextText;
+          localStorage.setItem(COMMAND_CUSTOM_ITEMS_STORAGE_KEY, JSON.stringify(commandCustomItems));
+        });
+        setEditableCommandText(itemEl, nextText);
+      }
+
+      function createCommandCenterItemElement(id, text) {
+        const itemEl = document.createElement("li");
+        itemEl.className = "cc-check-item js-cc-check-item";
+        itemEl.setAttribute("data-check-id", id);
+        itemEl.innerHTML = `
+          <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+          <span class="cc-check-text">${escapeHtml(text)}</span>
+          <span class="cc-link-wrap">
+            <input type="url" class="cc-link-input js-cc-link" data-link-id="${id}" placeholder="Paste URL" aria-label="Relevant URL">
+            <a class="cc-link-open js-cc-link-open" data-link-open-id="${id}" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+          </span>
+          <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="${id}" placeholder="$0.00" aria-label="Cost">
+        `;
+        return itemEl;
+      }
+
+      function setCommandAttentionState(itemEl, id, isActive) {
+        if (!(itemEl instanceof HTMLElement) || !id) return;
+        const nextActive = Boolean(isActive);
+        itemEl.classList.toggle("needs-attention", nextActive);
+        const starBtn = itemEl.querySelector(".js-cc-attention-star");
+        if (starBtn instanceof HTMLButtonElement) {
+          starBtn.classList.toggle("is-active", nextActive);
+          starBtn.setAttribute("aria-pressed", String(nextActive));
+          starBtn.title = nextActive ? "Marked for special attention" : "Mark for special attention";
+        }
+        if (nextActive) {
+          commandAttentionState[id] = true;
+        } else {
+          delete commandAttentionState[id];
+        }
+        localStorage.setItem(COMMAND_ATTENTION_STORAGE_KEY, JSON.stringify(commandAttentionState));
+      }
+
+      let ccLinks = {};
+      try { ccLinks = JSON.parse(localStorage.getItem(CC_LINKS_STORAGE_KEY) || "{}"); } catch (_) {}
+
+      let ccCosts = {};
+      try { ccCosts = JSON.parse(localStorage.getItem(CC_COSTS_STORAGE_KEY) || "{}"); } catch (_) {}
+
+      let ccCostNotes = {};
+      try { ccCostNotes = JSON.parse(localStorage.getItem(CC_COST_NOTES_STORAGE_KEY) || "{}"); } catch (_) {}
+
+      function bindLinkInput(input) {
+        const id = input.getAttribute("data-link-id");
+        if (!id) return;
+        const savedValue = typeof ccLinks[id] === "string" ? ccLinks[id].trim() : "";
+        const defaultValue = COMMAND_DEFAULT_LINKS_BY_ID[id] || "";
+        if (!savedValue && !input.value.trim() && defaultValue) {
+          input.value = defaultValue;
+        }
+        if (savedValue) input.value = savedValue;
+        syncCommandCenterLink(id, input.value);
+        if (!savedValue && input.value.trim()) {
+          ccLinks[id] = input.value.trim();
+          localStorage.setItem(CC_LINKS_STORAGE_KEY, JSON.stringify(ccLinks));
+        }
+        if (input.dataset.bound === "true") return;
+        input.dataset.bound = "true";
+        input.addEventListener("input", () => {
+          ccLinks[id] = input.value;
+          localStorage.setItem(CC_LINKS_STORAGE_KEY, JSON.stringify(ccLinks));
+          syncCommandCenterLink(id, input.value);
+        });
+      }
+
+      function bindCostInput(input) {
+        const id = input.getAttribute("data-cost-id");
+        if (!id) return;
+        if (ccCosts[id]) input.value = ccCosts[id];
+        const noteEl = (() => {
+          const itemEl = input.closest(".js-cc-check-item");
+          if (!(itemEl instanceof HTMLElement)) return null;
+          let existing = itemEl.querySelector(`.cc-cost-note[data-note-id="${id}"]`);
+          if (existing instanceof HTMLElement) return existing;
+          const note = document.createElement("div");
+          note.className = "cc-cost-note";
+          note.setAttribute("data-note-id", id);
+          note.hidden = true;
+          itemEl.appendChild(note);
+          return note;
+        })();
+
+        const renderCostNote = () => {
+          const itemEl = input.closest(".js-cc-check-item");
+          if (itemEl instanceof HTMLElement) {
+            itemEl.classList.remove("has-note");
+          }
+          if (!(noteEl instanceof HTMLElement)) return;
+          const noteText = typeof ccCostNotes[id] === "string" ? ccCostNotes[id].trim() : "";
+          if (!noteText) {
+            noteEl.hidden = true;
+            noteEl.textContent = "";
+            return;
+          }
+          if (itemEl instanceof HTMLElement) {
+            itemEl.classList.add("has-note");
+          }
+          noteEl.hidden = false;
+          noteEl.textContent = `Math: ${noteText}`;
+        };
+
+        const evaluateCostExpression = () => {
+          const raw = String(input.value || "").trim();
+          if (!raw.startsWith("=")) return;
+          const cleaned = raw
+            .slice(1)
+            .replace(/"/g, "")
+            .replace(/\s+/g, "");
+          if (!cleaned) return;
+          const parts = cleaned.split("+");
+          if (!parts.length || parts.some((part) => !part || Number.isNaN(Number(part)))) return;
+          const numbers = parts.map((part) => Number(part));
+          const sum = numbers.reduce((acc, value) => acc + value, 0);
+          const prettyParts = numbers.map((value) => Number.isInteger(value) ? String(value) : value.toFixed(2).replace(/\.00$/, ""));
+          const prettyTotal = Number.isInteger(sum) ? String(sum) : sum.toFixed(2).replace(/\.00$/, "");
+          input.value = sum.toFixed(2);
+          ccCosts[id] = input.value;
+          ccCostNotes[id] = `${prettyParts.join(" + ")} = ${prettyTotal}`;
+          localStorage.setItem(CC_COSTS_STORAGE_KEY, JSON.stringify(ccCosts));
+          localStorage.setItem(CC_COST_NOTES_STORAGE_KEY, JSON.stringify(ccCostNotes));
+        };
+
+        const syncCostHighlight = () => {
+          const itemEl = input.closest(".js-cc-check-item");
+          if (!(itemEl instanceof HTMLElement)) return;
+          const raw = String(input.value || "").trim();
+          const normalized = raw.replace(/[$,\s]/g, "");
+          const hasCost = normalized !== "" && !Number.isNaN(Number(normalized));
+        };
+        if (input.dataset.bound === "true") {
+          renderCostNote();
+          syncCostHighlight();
+          attachDateInputToCostInput(input);
+          autofillTodayForCostInput(input);
+          return;
+        }
+        input.dataset.bound = "true";
+        input.addEventListener("input", () => {
+          if (!String(input.value || "").trim().startsWith("=") && ccCostNotes[id]) {
+            delete ccCostNotes[id];
+            localStorage.setItem(CC_COST_NOTES_STORAGE_KEY, JSON.stringify(ccCostNotes));
+          }
+          ccCosts[id] = input.value;
+          localStorage.setItem(CC_COSTS_STORAGE_KEY, JSON.stringify(ccCosts));
+          renderCostNote();
+          syncCostHighlight();
+          autofillTodayForCostInput(input);
+          updateFlightTotal();
+        });
+        input.addEventListener("change", () => {
+          evaluateCostExpression();
+          renderCostNote();
+          syncCostHighlight();
+          autofillTodayForCostInput(input);
+          updateFlightTotal();
+        });
+        input.addEventListener("blur", () => {
+          evaluateCostExpression();
+          renderCostNote();
+          syncCostHighlight();
+          autofillTodayForCostInput(input);
+          updateFlightTotal();
+        });
+        renderCostNote();
+        syncCostHighlight();
+        attachDateInputToCostInput(input);
+        autofillTodayForCostInput(input);
+      }
+
+      function decorateCommandItem(itemEl) {
         const id = itemEl.getAttribute("data-check-id");
+        if (!id) return;
+        const cardId = itemEl.closest(".cc-card")?.getAttribute("data-card-id");
+        if (id && commandTextOverrides[id]) {
+          setEditableCommandText(itemEl, commandTextOverrides[id]);
+        }
+        const supportsAttentionStar = cardId === "review" || cardId === "hotel" || cardId === "booking";
+        if (supportsAttentionStar && !itemEl.querySelector(".js-cc-attention-star")) {
+          const starBtn = document.createElement("button");
+          starBtn.type = "button";
+          starBtn.className = "cc-attention-star js-cc-attention-star";
+          starBtn.setAttribute("aria-label", "Mark for special attention");
+          starBtn.textContent = String.fromCharCode(9733);
+          starBtn.addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            setCommandAttentionState(itemEl, id, !Boolean(commandAttentionState[id]));
+          });
+          const checkBtn = itemEl.querySelector(".cc-check-btn");
+          checkBtn?.insertAdjacentElement("afterend", starBtn);
+        }
+        if (!itemEl.querySelector(".js-cc-edit-item")) {
+          const editBtn = document.createElement("button");
+          editBtn.type = "button";
+          editBtn.className = "cc-edit-btn js-cc-edit-item";
+          editBtn.setAttribute("aria-label", "Edit item text");
+          editBtn.textContent = "Edit";
+          editBtn.addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            editCommandItemText(itemEl, id);
+          });
+          itemEl.appendChild(editBtn);
+        }
+        if (!itemEl.querySelector(".js-cc-remove-item")) {
+          const removeBtn = document.createElement("button");
+          removeBtn.type = "button";
+          removeBtn.className = "cc-remove-btn js-cc-remove-item";
+          removeBtn.setAttribute("aria-label", "Remove item");
+          removeBtn.textContent = "Remove";
+          removeBtn.addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            hideCommandItem(itemEl, id);
+          });
+          itemEl.appendChild(removeBtn);
+        }
+        if (removedCommandItems[id]) {
+          itemEl.hidden = true;
+          itemEl.style.display = "none";
+        } else {
+          itemEl.hidden = false;
+          itemEl.style.display = "";
+        }
         const isDone = Boolean(commandChecklistState[id]);
         setCommandChecklistItemState(itemEl, isDone);
+        if (supportsAttentionStar) {
+          setCommandAttentionState(itemEl, id, Boolean(commandAttentionState[id]));
+        }
+        itemEl.querySelectorAll(".js-cc-link[data-link-id]").forEach((input) => bindLinkInput(input));
+        itemEl.querySelectorAll(".js-cc-cost[data-cost-id]").forEach((input) => bindCostInput(input));
+      }
+
+      ["flight", "hotel", "booking", "review"].forEach((cardId) => {
+        const card = document.querySelector(`.cc-card[data-card-id="${cardId}"]`);
+        const list = card?.querySelector(".cc-checklist");
+        if (!(card instanceof HTMLElement) || !(list instanceof HTMLElement)) return;
+        const savedItems = Array.isArray(commandCustomItems[cardId]) ? commandCustomItems[cardId] : [];
+        savedItems.forEach((item) => {
+          if (!item || typeof item.id !== "string" || typeof item.text !== "string") return;
+          if (!list.querySelector(`.js-cc-check-item[data-check-id="${item.id}"]`)) {
+            list.appendChild(createCommandCenterItemElement(item.id, item.text));
+          }
+        });
+        if (!card.querySelector(".js-cc-add-item")) {
+          const addBtn = document.createElement("button");
+          addBtn.type = "button";
+          addBtn.className = "cc-add-btn js-cc-add-item";
+          addBtn.textContent = "Add Item";
+          addBtn.addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            const text = window.prompt("New item text");
+            if (text === null) return;
+            const nextText = text.trim();
+            if (!nextText) return;
+            const id = `custom-${cardId}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+            const itemEl = createCommandCenterItemElement(id, nextText);
+            list.appendChild(itemEl);
+            if (!Array.isArray(commandCustomItems[cardId])) commandCustomItems[cardId] = [];
+            commandCustomItems[cardId].push({ id, text: nextText });
+            localStorage.setItem(COMMAND_CUSTOM_ITEMS_STORAGE_KEY, JSON.stringify(commandCustomItems));
+            decorateCommandItem(itemEl);
+            if (typeof window.attachCommandItemDragHandle === "function") {
+              window.attachCommandItemDragHandle(itemEl, list);
+            }
+          });
+          const anchorEl = card.querySelector(".cc-card-header") || card.querySelector("h3");
+          anchorEl?.insertAdjacentElement(anchorEl.classList?.contains("cc-card-header") ? "afterend" : "afterend", addBtn);
+        }
+      });
+
+      const items = Array.from(document.querySelectorAll(".js-cc-check-item[data-check-id]"));
+      items.forEach((itemEl) => {
+        decorateCommandItem(itemEl);
       });
 
       const commandCenter = document.querySelector(".command-center");
@@ -2192,7 +3251,27 @@
       commandCenter.addEventListener("click", (event) => {
         const target = event.target;
         if (!(target instanceof HTMLElement)) return;
+        const editBtn = target.closest(".js-cc-edit-item");
+        if (editBtn instanceof HTMLElement) {
+          const itemEl = editBtn.closest(".js-cc-check-item");
+          if (!(itemEl instanceof HTMLElement)) return;
+          const id = itemEl.getAttribute("data-check-id");
+          if (!id) return;
+          editCommandItemText(itemEl, id);
+          return;
+        }
+        const removeBtn = target.closest(".js-cc-remove-item");
+        if (removeBtn instanceof HTMLElement) {
+          const itemEl = removeBtn.closest(".js-cc-check-item");
+          if (!(itemEl instanceof HTMLElement)) return;
+          const id = itemEl.getAttribute("data-check-id");
+          if (!id) return;
+          hideCommandItem(itemEl, id);
+          return;
+        }
+        if (target.closest(".js-cc-attention-star")) return;
         if (target.closest("a")) return;
+        if (target.closest("input")) return;
 
         const itemEl = target.closest(".js-cc-check-item");
         if (!(itemEl instanceof HTMLElement)) return;
@@ -2203,6 +3282,208 @@
         commandChecklistState[id] = nextDone;
         setCommandChecklistItemState(itemEl, nextDone);
         localStorage.setItem(COMMAND_CHECKLIST_STORAGE_KEY, JSON.stringify(commandChecklistState));
+      });
+
+      function normalizeCommandCenterUrl(value) {
+        const raw = String(value || "").trim();
+        if (!raw) return "";
+        try {
+          const parsed = new URL(raw);
+          if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+            return parsed.toString();
+          }
+        } catch (_) {}
+        return "";
+      }
+
+      function syncCommandCenterLink(id, value) {
+        const linkEl = document.querySelector(`.js-cc-link-open[data-link-open-id="${id}"]`);
+        const inputEl = document.querySelector(`.js-cc-link[data-link-id="${id}"]`);
+        if (inputEl instanceof HTMLInputElement) {
+          inputEl.classList.remove("has-url");
+        }
+        if (!(linkEl instanceof HTMLAnchorElement)) return;
+        linkEl.classList.remove("has-url");
+        const normalizedUrl = normalizeCommandCenterUrl(value);
+        if (!normalizedUrl) {
+          linkEl.hidden = true;
+          linkEl.removeAttribute("href");
+          return;
+        }
+        linkEl.href = normalizedUrl;
+        linkEl.hidden = false;
+        linkEl.classList.add("has-url");
+        if (inputEl instanceof HTMLInputElement) {
+          inputEl.classList.add("has-url");
+        }
+      }
+
+      const linkInputs = Array.from(document.querySelectorAll(".js-cc-link[data-link-id]"));
+      linkInputs.forEach((input) => bindLinkInput(input));
+
+      const costInputs = Array.from(document.querySelectorAll(".js-cc-cost[data-cost-id]"));
+      costInputs.forEach((input) => bindCostInput(input));
+      updateFlightTotal();
+    }
+
+    function updateFlightTotal() {
+      let grandTotal = 0;
+      document.querySelectorAll(".js-cc-card-total[data-total-card]").forEach((totalEl) => {
+        if (!(totalEl instanceof HTMLElement)) return;
+        const cardId = totalEl.getAttribute("data-total-card");
+        if (!cardId) return;
+        const cardEl = document.querySelector(`.cc-card[data-card-id="${cardId}"]`);
+        if (!(cardEl instanceof HTMLElement)) return;
+        let sum = 0;
+        cardEl.querySelectorAll(".js-cc-cost[data-cost-id]").forEach((input) => {
+          if (!(input instanceof HTMLInputElement)) return;
+          const itemEl = input.closest(".js-cc-check-item");
+          if (itemEl instanceof HTMLElement && itemEl.hidden) return;
+          const val = parseFloat(input.value.replace(/[$,\s]/g, ""));
+          if (!isNaN(val)) sum += val;
+        });
+        grandTotal += sum;
+        totalEl.textContent = "$" + sum.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      });
+      const grandTotalEl = document.querySelector(".js-cc-grand-total");
+      if (grandTotalEl instanceof HTMLElement) {
+        grandTotalEl.textContent = "$" + grandTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+    }
+
+    function attachDateInputToCostInput(costInput) {
+      if (!(costInput instanceof HTMLElement)) return;
+      const id = costInput.getAttribute("data-cost-id");
+      if (!id) return;
+      const existing = costInput.parentElement?.querySelector(`.js-cc-date[data-date-id="${id}"]`);
+      if (existing) return;
+
+      let ccDates = {};
+      try { ccDates = JSON.parse(localStorage.getItem(CC_DATES_STORAGE_KEY) || "{}"); } catch (_) {}
+
+      const dateInput = document.createElement("input");
+      dateInput.type = "date";
+      dateInput.className = "cc-date-input js-cc-date";
+      dateInput.setAttribute("data-date-id", id);
+      dateInput.setAttribute("aria-label", "Price valid date");
+      dateInput.title = "Date this price was valid";
+      if (ccDates[id]) dateInput.value = ccDates[id];
+      dateInput.addEventListener("change", () => {
+        ccDates[id] = dateInput.value;
+        localStorage.setItem(CC_DATES_STORAGE_KEY, JSON.stringify(ccDates));
+      });
+      dateInput.addEventListener("click", (e) => e.stopPropagation());
+      costInput.insertAdjacentElement("afterend", dateInput);
+    }
+
+    function initializeDateInputs() {
+      document.querySelectorAll(".js-cc-cost[data-cost-id]").forEach((costInput) => {
+        attachDateInputToCostInput(costInput);
+      });
+    }
+
+    function autofillTodayForCostInput(costInput) {
+      if (!(costInput instanceof HTMLElement)) return;
+      const id = costInput.getAttribute("data-cost-id");
+      if (!id) return;
+      const raw = String(costInput.value || "").trim();
+      const normalized = raw.replace(/[$,\s]/g, "");
+      if (!normalized || Number.isNaN(Number(normalized))) return;
+      const dateInput = costInput.parentElement?.querySelector(`.js-cc-date[data-date-id="${id}"]`);
+      if (!(dateInput instanceof HTMLInputElement) || dateInput.value) return;
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, "0");
+      const dd = String(today.getDate()).padStart(2, "0");
+      const iso = `${yyyy}-${mm}-${dd}`;
+      dateInput.value = iso;
+      let ccDates = {};
+      try { ccDates = JSON.parse(localStorage.getItem(CC_DATES_STORAGE_KEY) || "{}"); } catch (_) {}
+      ccDates[id] = iso;
+      localStorage.setItem(CC_DATES_STORAGE_KEY, JSON.stringify(ccDates));
+    }
+
+    function initializeDragReorder() {
+      const CC_ORDER_STORAGE_KEY = "ukTripCCOrderV1";
+      let savedOrders = {};
+      try { savedOrders = JSON.parse(localStorage.getItem(CC_ORDER_STORAGE_KEY) || "{}"); } catch (_) {}
+      let dragSrc = null;
+
+      function attachDragHandle(item, list) {
+        if (!(item instanceof HTMLElement) || !(list instanceof HTMLElement)) return;
+        if (item.querySelector(".cc-drag-handle")) return;
+        const handle = document.createElement("span");
+        handle.className = "cc-drag-handle";
+        handle.setAttribute("draggable", "true");
+        handle.setAttribute("aria-hidden", "true");
+        handle.textContent = "\u2807";
+        item.insertBefore(handle, item.firstChild);
+
+        handle.addEventListener("dragstart", (e) => {
+          dragSrc = item;
+          e.dataTransfer.effectAllowed = "move";
+          e.dataTransfer.setData("text/plain", "");
+          setTimeout(() => { item.style.opacity = "0.4"; }, 0);
+        });
+
+        handle.addEventListener("dragend", () => {
+          if (dragSrc) dragSrc.style.opacity = "";
+          dragSrc = null;
+          list.querySelectorAll(".js-cc-check-item").forEach((i) => i.classList.remove("cc-drag-over"));
+        });
+      }
+
+      window.attachCommandItemDragHandle = attachDragHandle;
+
+      document.querySelectorAll(".cc-card[data-card-id]").forEach((card) => {
+        const cardId = card.getAttribute("data-card-id");
+        const list = card.querySelector(".cc-checklist");
+        if (!list) return;
+
+        // Restore saved order
+        if (savedOrders[cardId]) {
+          savedOrders[cardId].forEach((checkId) => {
+            const item = list.querySelector(`.js-cc-check-item[data-check-id="${checkId}"]`);
+            if (item) list.appendChild(item);
+          });
+        }
+
+        // Inject drag handles
+        list.querySelectorAll(".js-cc-check-item").forEach((item) => {
+          attachDragHandle(item, list);
+        });
+
+        list.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = "move";
+          const target = e.target.closest(".js-cc-check-item");
+          list.querySelectorAll(".js-cc-check-item").forEach((i) => i.classList.remove("cc-drag-over"));
+          if (target && target !== dragSrc) target.classList.add("cc-drag-over");
+        });
+
+        list.addEventListener("dragleave", (e) => {
+          if (!list.contains(e.relatedTarget)) {
+            list.querySelectorAll(".js-cc-check-item").forEach((i) => i.classList.remove("cc-drag-over"));
+          }
+        });
+
+        list.addEventListener("drop", (e) => {
+          e.preventDefault();
+          const target = e.target.closest(".js-cc-check-item");
+          list.querySelectorAll(".js-cc-check-item").forEach((i) => i.classList.remove("cc-drag-over"));
+          if (!dragSrc || !target || dragSrc === target || !list.contains(dragSrc)) return;
+          const rect = target.getBoundingClientRect();
+          if (e.clientY < rect.top + rect.height / 2) {
+            list.insertBefore(dragSrc, target);
+          } else {
+            list.insertBefore(dragSrc, target.nextSibling);
+          }
+          dragSrc.style.opacity = "";
+          dragSrc = null;
+          const items = Array.from(list.querySelectorAll(".js-cc-check-item[data-check-id]"));
+          savedOrders[cardId] = items.map((i) => i.getAttribute("data-check-id"));
+          localStorage.setItem(CC_ORDER_STORAGE_KEY, JSON.stringify(savedOrders));
+        });
       });
     }
 
@@ -2389,299 +3670,24 @@
     initializeCostState();
     renderStaySummary();
     renderTimeline();
+    renderPaidMixedReviewChecklist();
     renderCostSheet();
     bindCostInputs();
+    bindCustomCostControls();
     initializeCommandChecklist();
+    initializeDateInputs();
+    initializeDragReorder();
     buildRouteMap();
     buildDayMaps();
     setupPoiCarousels();
     loadWikipediaImages();
   </script>
 
-<!-- ============================================================
-     HIGHLIGHTS GALLERY
-============================================================ -->
-<style>
-  .highlights-gallery {
-    background: #080e16;
-    padding: 4rem 0 5rem;
-    border-top: 1px solid rgba(200,151,58,0.15);
-  }
-  .highlights-gallery .gallery-header {
-    text-align: center;
-    margin-bottom: 2.5rem;
-    padding: 0 1.5rem;
-  }
-  .highlights-gallery .gallery-header .gallery-label {
-    display: inline-block;
-    font-size: 0.68rem;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: #c8973a;
-    margin-bottom: 0.5rem;
-  }
-  .highlights-gallery .gallery-header h2 {
-    font-family: 'Libre Baskerville', serif;
-    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
-    color: #f2f7fb;
-    margin: 0 0 0.6rem;
-  }
-  .highlights-gallery .gallery-header p {
-    font-size: 0.85rem;
-    color: #6b7a8d;
-    letter-spacing: 1px;
-  }
-  .gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 3px;
-    max-width: 1300px;
-    margin: 0 auto;
-    padding: 0 3px;
-  }
-  .gallery-item {
-    position: relative;
-    overflow: hidden;
-    background: #1b2a4a;
-  }
-  .gallery-item img {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.4s ease;
-  }
-  .gallery-item:hover img {
-    transform: scale(1.06);
-  }
-  .gallery-caption {
-    padding: 8px 10px 10px;
-    background: #080e16;
-  }
-  .gallery-caption .cap-location {
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: #f2f7fb;
-    letter-spacing: 0.5px;
-    display: block;
-  }
-  .gallery-caption .cap-desc {
-    font-size: 0.67rem;
-    color: #6b7a8d;
-    line-height: 1.4;
-    margin-top: 2px;
-    display: block;
-  }
-  .gallery-section-divider {
-    display: contents;
-  }
-  .gallery-section-label {
-    grid-column: 1 / -1;
-    padding: 18px 4px 6px;
-    font-size: 0.65rem;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: #c8973a;
-    border-top: 1px solid rgba(200,151,58,0.15);
-  }
-  .gallery-section-label:first-child {
-    border-top: none;
-    padding-top: 0;
-  }
-  @media (max-width: 900px) {
-    .gallery-grid { grid-template-columns: repeat(3, 1fr); }
-  }
-  @media (max-width: 600px) {
-    .gallery-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-</style>
-
-<section class="highlights-gallery">
-  <div class="gallery-header">
-    <span class="gallery-label">In order of travel</span>
-    <h2>Highlights of England &amp; Scotland</h2>
-    <p>London Â· Day Trips Â· Edinburgh Â· Highlands Â· Isle of Skye</p>
-  </div>
-
-  <div class="gallery-grid">
-
-    <!-- LONDON -->
-    <div class="gallery-section-label">ðŸ‡¬ðŸ‡§ &nbsp;London &mdash; Days 1&ndash;3</div>
-
-    <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1667818748785-3d3a9411187f?w=600&q=80&fit=crop&h=600" alt="Tower Bridge at night" loading="lazy">
-      <div class="gallery-caption">
-        <span class="cap-location">Tower Bridge</span>
-        <span class="cap-desc">London's iconic bascule bridge glowing over the Thames at night</span>
-      </div>
-    </div>
-
-    <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1693127935301-d4174b3aff96?w=600&q=80&fit=crop&h=600" alt="Buckingham Palace" loading="lazy">
-      <div class="gallery-caption">
-        <span class="cap-location">Buckingham Palace</span>
-        <span class="cap-desc">The King's official London residence â€” catch the Changing of the Guard at 11am</span>
-      </div>
-    </div>
-
-    <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1680302061197-87c3a9be59cd?w=600&q=80&fit=crop&h=600" alt="Big Ben Westminster" loading="lazy">
-      <div class="gallery-caption">
-        <span class="cap-location">Big Ben &amp; Westminster</span>
-        <span class="cap-desc">The Elizabeth Tower rising above Parliament Square â€” London's most recognised silhouette</span>
-      </div>
-    </div>
-
-    <!-- placeholder to keep grid balanced -->
-    <div class="gallery-item" style="visibility:hidden;pointer-events:none;">
-      <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="aspect-ratio:1/1;">
-      <div class="gallery-caption"><span class="cap-location">&nbsp;</span></div>
-    </div>
-
-    <!-- ENGLAND DAY TRIPS -->
-    <div class="gallery-section-label">ðŸ—¿ &nbsp;England Day Trips &mdash; Days 4&ndash;5</div>
-
-    <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1520499030345-d646f4350b30?w=600&q=80&fit=crop&h=600" alt="Stonehenge at sunset" loading="lazy">
-      <div class="gallery-caption">
-        <span class="cap-location">Stonehenge</span>
-        <span class="cap-desc">5,000-year-old stone circle silhouetted against a blazing sunset sky in Wiltshire</span>
-      </div>
-    </div>
-
-    <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1560603383-64514a208263?w=600&q=80&fit=crop&h=600" alt="White Cliffs of Dover" loading="lazy">
-      <div class="gallery-caption">
-        <span class="cap-location">White Cliffs of Dover</span>
-        <span class="cap-desc">350ft chalk cliffs stretching along the Channel â€” England at its most dramatic</span>
-      </div>
-    </div>
-
-    <!-- two spacers to fill row -->
-    <div class="gallery-item" style="visibility:hidden;pointer-events:none;">
-      <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="aspect-ratio:1/1;">
-      <div class="gallery-caption"><span class="cap-location">&nbsp;</span></div>
-    </div>
-    <div class="gallery-item" style="visibility:hidden;pointer-events:none;">
-      <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="aspect-ratio:1/1;">
-      <div class="gallery-caption"><span class="cap-location">&nbsp;</span></div>
-    </div>
-
-    <!-- EDINBURGH -->
-    <div class="gallery-section-label">ðŸ´ó §ó ¢ó ³ó £ó ´ó ¿ &nbsp;Edinburgh &mdash; Days 6&ndash;8</div>
-
-    <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1668509549273-14abf4067904?w=600&q=80&fit=crop&h=600" alt="Edinburgh Castle at sunrise" loading="lazy">
-      <div class="gallery-caption">
-        <span class="cap-location">Edinburgh Castle</span>
-        <span class="cap-desc">Scotland's most visited attraction, perched on volcanic rock above the golden city at sunrise</span>
-      </div>
-    </div>
-
-    <!-- spacers -->
-    <div class="gallery-item" style="visibility:hidden;pointer-events:none;">
-      <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="aspect-ratio:1/1;">
-      <div class="gallery-caption"><span class="cap-location">&nbsp;</span></div>
-    </div>
-    <div class="gallery-item" style="visibility:hidden;pointer-events:none;">
-      <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="aspect-ratio:1/1;">
-      <div class="gallery-caption"><span class="cap-location">&nbsp;</span></div>
-    </div>
-    <div class="gallery-item" style="visibility:hidden;pointer-events:none;">
-      <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="aspect-ratio:1/1;">
-      <div class="gallery-caption"><span class="cap-location">&nbsp;</span></div>
-    </div>
-
-    <!-- HIGHLANDS -->
-    <div class="gallery-section-label">â›°ï¸ &nbsp;Scottish Highlands &mdash; Day 9</div>
-
-    <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1561538433-276d3f8e0359?w=600&q=80&fit=crop&h=600" alt="Loch Ness and Urquhart Castle" loading="lazy">
-      <div class="gallery-caption">
-        <span class="cap-location">Loch Ness &amp; Urquhart Castle</span>
-        <span class="cap-desc">Medieval castle ruins brooding on the shore of Scotland's most famous and mysterious loch</span>
-      </div>
-    </div>
-
-    <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1532785907815-0afcbb413aa5?w=600&q=80&fit=crop&h=600" alt="Glencoe Valley" loading="lazy">
-      <div class="gallery-caption">
-        <span class="cap-location">Glencoe Valley</span>
-        <span class="cap-desc">A sweeping glacial valley of emerald peaks and brooding skies â€” one of Scotland's great drives</span>
-      </div>
-    </div>
-
-    <!-- spacers -->
-    <div class="gallery-item" style="visibility:hidden;pointer-events:none;">
-      <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="aspect-ratio:1/1;">
-      <div class="gallery-caption"><span class="cap-location">&nbsp;</span></div>
-    </div>
-    <div class="gallery-item" style="visibility:hidden;pointer-events:none;">
-      <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="aspect-ratio:1/1;">
-      <div class="gallery-caption"><span class="cap-location">&nbsp;</span></div>
-    </div>
-
-    <!-- ISLE OF SKYE -->
-    <div class="gallery-section-label">ðŸŒŠ &nbsp;Isle of Skye &mdash; Days 10&ndash;11</div>
-
-    <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1655419157056-23863ba7948d?w=600&q=80&fit=crop&h=600" alt="Eilean Donan Castle" loading="lazy">
-      <div class="gallery-caption">
-        <span class="cap-location">Eilean Donan Castle</span>
-        <span class="cap-desc">Scotland's most photographed castle, rising from the mist where three lochs meet</span>
-      </div>
-    </div>
-
-    <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1609087998060-f567d481a1ae?w=600&q=80&fit=crop&h=600" alt="Fairy Pools Isle of Skye" loading="lazy">
-      <div class="gallery-caption">
-        <span class="cap-location">Fairy Pools</span>
-        <span class="cap-desc">Crystal-clear blue pools fed by waterfalls cascading down from the Cuillin mountains at dusk</span>
-      </div>
-    </div>
-
-    <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1551801691-f0bce83d4f68?w=600&q=80&fit=crop&h=600" alt="The Quiraing" loading="lazy">
-      <div class="gallery-caption">
-        <span class="cap-location">The Quiraing</span>
-        <span class="cap-desc">Ancient landslip on the Trotternish ridge â€” dramatic rocky pinnacles over sweeping green valleys</span>
-      </div>
-    </div>
-
-    <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1589806567522-18564e9cf0bc?w=600&q=80&fit=crop&h=600" alt="Old Man of Storr" loading="lazy">
-      <div class="gallery-caption">
-        <span class="cap-location">Old Man of Storr</span>
-        <span class="cap-desc">Otherworldly basalt pinnacles rising through storm clouds above the Isle of Skye</span>
-      </div>
-    </div>
-
-    <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1589708249886-cff7237d7586?w=600&q=80&fit=crop&h=600" alt="Neist Point Lighthouse" loading="lazy">
-      <div class="gallery-caption">
-        <span class="cap-location">Neist Point Lighthouse</span>
-        <span class="cap-desc">Skye's most westerly point â€” cliffside lighthouse with jaw-dropping sunset views over the Hebrides</span>
-      </div>
-    </div>
-
-    <!-- spacers to complete last row -->
-    <div class="gallery-item" style="visibility:hidden;pointer-events:none;">
-      <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="aspect-ratio:1/1;">
-      <div class="gallery-caption"><span class="cap-location">&nbsp;</span></div>
-    </div>
-    <div class="gallery-item" style="visibility:hidden;pointer-events:none;">
-      <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="aspect-ratio:1/1;">
-      <div class="gallery-caption"><span class="cap-location">&nbsp;</span></div>
-    </div>
-    <div class="gallery-item" style="visibility:hidden;pointer-events:none;">
-      <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="aspect-ratio:1/1;">
-      <div class="gallery-caption"><span class="cap-location">&nbsp;</span></div>
-    </div>
-
-  </div>
-</section>
-
 </body>
 </html>
 
 
+
+
+
+<script>(function(){function syncCostControlHighlights(){document.querySelectorAll(".js-cc-cost[data-cost-id]").forEach(function(input){if(!(input instanceof HTMLInputElement)) return;var raw=String(input.value||"").trim();var normalized=raw.replace(/[$,\\s]/g,"");var hasCost=normalized!==""&&!Number.isNaN(Number(normalized));var itemEl=input.closest(".js-cc-check-item");if(!(itemEl instanceof HTMLElement)) return;itemEl.classList.toggle("has-cost",hasCost);itemEl.querySelectorAll(".cc-cost-input, .cc-date-input, .cc-edit-btn, .cc-remove-btn").forEach(function(control){if(!(control instanceof HTMLElement)) return;control.style.background=hasCost?"rgba(255, 244, 79, 0.95)":"";control.style.borderColor=hasCost?"#c9a800":"";control.style.boxShadow=hasCost?"inset 0 0 0 1px rgba(201, 168, 0, 0.28)":"";if(control.classList.contains("cc-edit-btn")||control.classList.contains("cc-remove-btn")){control.style.color=hasCost?"#5f5200":"";}});});}syncCostControlHighlights();document.addEventListener("input",syncCostControlHighlights,true);document.addEventListener("change",syncCostControlHighlights,true);new MutationObserver(syncCostControlHighlights).observe(document.documentElement,{childList:true,subtree:true});})();</script>
