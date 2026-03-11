@@ -1158,6 +1158,154 @@
     outline: 4px solid orange;
     outline-offset: -4px;
   }
+
+  /* ---- Check-Ins & Check-Outs ---- */
+  .cc-card--checkin { border-left: 4px solid #0d7a4e; background: #edfaf3; }
+  .cc-card--checkin h3 { color: #155c35; }
+
+  .checkin-subtitle {
+    font-size: 0.82rem;
+    color: #2a5a3a;
+    margin: 0 0 14px;
+    line-height: 1.45;
+  }
+
+  .hotel-checkin-grid { display: grid; gap: 14px; }
+
+  .hotel-entry {
+    border: 1px solid #b8dcc9;
+    border-radius: 10px;
+    padding: 12px 14px;
+    background: #f4fdf8;
+  }
+
+  .hotel-entry-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 12px;
+    margin-bottom: 10px;
+  }
+
+  .hotel-entry-title { font-size: 0.93rem; font-weight: 700; color: #155c35; }
+  .hotel-entry-dates { font-size: 0.77rem; color: #2a7a4e; font-weight: 600; }
+
+  .hotel-entry-fields { display: grid; gap: 8px; }
+
+  .hotel-field-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hotel-field-label { font-size: 0.8rem; font-weight: 700; color: #1e4a30; }
+
+  .hotel-field-input {
+    width: 100%;
+    border: 1px solid #b8dcc9;
+    border-radius: 7px;
+    padding: 7px 10px;
+    font-size: 0.86rem;
+    font-family: inherit;
+    color: #1e3a28;
+    background: #fff;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .hotel-field-input:focus {
+    outline: none;
+    border-color: #0d7a4e;
+    box-shadow: 0 0 0 2px rgba(13, 122, 78, 0.18);
+  }
+
+  .hotel-field-input.has-value {
+    background: rgba(255, 244, 79, 0.9);
+    border-color: #c9a800;
+  }
+
+  .hotel-dates-row {
+    display: grid;
+    grid-template-columns: 110px 1fr 110px 1fr;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hotel-geo-status {
+    margin-top: 6px;
+    font-size: 0.76rem;
+    color: #6a7685;
+    min-height: 18px;
+    line-height: 1.35;
+  }
+  .hotel-geo-status.success { color: #1f7a4a; font-weight: 600; }
+  .hotel-geo-status.error { color: #b23b3b; font-weight: 600; }
+
+  /* Hotel check-in / check-out banners in itinerary */
+  .hotel-checkin-banner,
+  .hotel-checkout-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 6px 0;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 0.86rem;
+  }
+  .hotel-checkin-banner {
+    border: 2px solid #1f7a4a;
+    background: linear-gradient(120deg, #edfaf3 0%, #d4f5e4 100%);
+  }
+  .hotel-checkout-banner {
+    border: 2px solid #c45c0a;
+    background: linear-gradient(120deg, #fff5ec 0%, #ffe8d0 100%);
+  }
+
+  .hotel-banner-icon { font-size: 1.3rem; flex: 0 0 auto; line-height: 1; }
+
+  .hotel-banner-content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 10px;
+  }
+
+  .hotel-banner-action {
+    font-size: 0.7rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 999px;
+    padding: 2px 8px;
+  }
+  .hotel-checkin-banner .hotel-banner-action { background: #1f7a4a; color: #fff; }
+  .hotel-checkout-banner .hotel-banner-action { background: #c45c0a; color: #fff; }
+
+  .hotel-banner-name { font-weight: 700; color: #1e2d1a; font-size: 0.9rem; }
+  .hotel-banner-address { color: #4a5a48; font-size: 0.78rem; flex: 1 1 100%; }
+  .hotel-banner-date { color: #4a5a48; font-size: 0.78rem; font-weight: 600; }
+
+  /* Hotel map marker pin */
+  .hotel-marker-pin {
+    background: #1f7a4a;
+    color: #fff;
+    border: 2px solid #fff;
+    border-radius: 6px;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 900;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    font-family: "Manrope", sans-serif;
+  }
+
+  @media (max-width: 920px) {
+    .hotel-field-row { grid-template-columns: 90px 1fr; }
+    .hotel-dates-row { grid-template-columns: 1fr 1fr; }
+  }
 </style>
 </head>
 <body>
@@ -1265,6 +1413,15 @@
               <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-highlands" placeholder="$0.00" aria-label="Cost">
             </li>
           </ul>
+        </article>
+        <article class="cc-card cc-card--checkin" data-card-id="checkin">
+          <div class="cc-card-header">
+            <h3>Check-Ins &amp; Check-Outs</h3>
+          </div>
+          <p class="checkin-subtitle">Enter your booked hotel name, address, and dates. Once an address is saved it is geocoded and placed as a <strong>hotel marker</strong> on the relevant day maps and the main route map. Check-in / check-out notices will also appear inline in the itinerary below.</p>
+          <div class="hotel-checkin-grid" id="hotel-checkin-grid">
+            <!-- Populated by initializeHotelCheckIns() -->
+          </div>
         </article>
         <article class="cc-card cc-card--booking" data-card-id="booking">
           <div class="cc-card-header">
@@ -2169,6 +2326,7 @@
       "link-rabbies": "https://www.rabbies.com/en-us/tour/the-isle-of-skye-3-day-tour-from-edinburgh"
     };
 
+    const HOTEL_CHECKINS_STORAGE_KEY = "ukTripHotelCheckinsV1";
     const COST_STORAGE_KEY = "ukTripCostInputsV1";
     const CUSTOM_COSTS_STORAGE_KEY = "ukTripCustomCostEntriesV1";
     const COMMAND_CHECKLIST_STORAGE_KEY = "ukTripCommandChecklistV1";
@@ -2181,6 +2339,7 @@
     const CC_LINKS_STORAGE_KEY = "ukTripCCLinksV1";
     const CC_DATES_STORAGE_KEY = "ukTripCCDatesV1";
     const COMMAND_CENTER_BACKUP_STORAGE_KEYS = [
+      HOTEL_CHECKINS_STORAGE_KEY,
       COST_STORAGE_KEY,
       CUSTOM_COSTS_STORAGE_KEY,
       COMMAND_CHECKLIST_STORAGE_KEY,
@@ -2205,6 +2364,9 @@
     let customCostEntries = [];
     let commandChecklistState = {};
     let routeMapState = null;
+    const dayMapInstances = {};
+    const dayMapHotelLayers = {};
+    let hotelCheckinData = {};
 
     function renderStaySummary() {
       const staySummaryEl = document.getElementById("stay-summary");
@@ -2300,7 +2462,7 @@
           });
 
           return `
-            <section class="day-card">
+            <section class="day-card" data-day="${day.day}">
               <div class="day-head">
                 <span class="day-pill">
                   <span class="day-pill-main">Day ${day.day}</span>
@@ -2778,7 +2940,8 @@
       routeMapState = {
         map,
         markersLayer: L.layerGroup().addTo(map),
-        routeLayer: L.layerGroup().addTo(map)
+        routeLayer: L.layerGroup().addTo(map),
+        hotelLayer: L.layerGroup().addTo(map)
       };
 
       renderRouteMapFilters();
@@ -3656,6 +3819,9 @@
           attribution: "&copy; OpenStreetMap contributors"
         }).addTo(map);
 
+        dayMapInstances[day.day] = map;
+        dayMapHotelLayers[day.day] = L.layerGroup().addTo(map);
+
         const dayStops = day.items
           .map((item) => ({
             label: item.caption,
@@ -3813,6 +3979,347 @@
       }));
     }
 
+    // ---- Hotel Check-Ins & Check-Outs ----
+
+    const HOTEL_STAY_DEFS = [
+      {
+        id: "checkin-london-main",
+        label: "London \u2013 Main Stay",
+        suggestedArea: "e.g. Premier Inn London Southwark",
+        plannedCheckIn: "Apr 3",
+        plannedCheckOut: "Apr 7",
+        checkInDay: 2,
+        checkOutDay: 6,
+        affectedDays: [2, 3, 4, 5]
+      },
+      {
+        id: "checkin-edinburgh",
+        label: "Edinburgh",
+        suggestedArea: "e.g. Hotel on Royal Mile",
+        plannedCheckIn: "Apr 7",
+        plannedCheckOut: "Apr 10",
+        checkInDay: 6,
+        checkOutDay: 9,
+        affectedDays: [6, 7, 8]
+      },
+      {
+        id: "checkin-highlands",
+        label: "Highlands (Inverness / Fort William)",
+        suggestedArea: "e.g. Inverness City Hotel",
+        plannedCheckIn: "Apr 10",
+        plannedCheckOut: "Apr 11",
+        checkInDay: 9,
+        checkOutDay: 10,
+        affectedDays: [9]
+      },
+      {
+        id: "checkin-london-return",
+        label: "London \u2013 Return Night",
+        suggestedArea: "e.g. Premier Inn London Southwark",
+        plannedCheckIn: "Apr 11",
+        plannedCheckOut: "Apr 12",
+        checkInDay: 10,
+        checkOutDay: 11,
+        affectedDays: [10, 11]
+      }
+    ];
+
+    function loadHotelCheckinData() {
+      try {
+        const saved = localStorage.getItem(HOTEL_CHECKINS_STORAGE_KEY);
+        hotelCheckinData = saved ? (JSON.parse(saved) || {}) : {};
+      } catch (_) {
+        hotelCheckinData = {};
+      }
+    }
+
+    function saveHotelCheckinData() {
+      localStorage.setItem(HOTEL_CHECKINS_STORAGE_KEY, JSON.stringify(hotelCheckinData));
+    }
+
+    function formatHotelDate(isoDate) {
+      if (!isoDate) return "";
+      try {
+        return new Date(isoDate + "T12:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+      } catch (_) {
+        return isoDate;
+      }
+    }
+
+    function renderHotelCheckinGrid() {
+      const grid = document.getElementById("hotel-checkin-grid");
+      if (!grid) return;
+
+      grid.innerHTML = HOTEL_STAY_DEFS.map((def) => {
+        const saved = hotelCheckinData[def.id] || {};
+        const nameVal = escapeHtml(saved.name || "");
+        const addrVal = escapeHtml(saved.address || "");
+        const checkInVal = saved.checkIn || "";
+        const checkOutVal = saved.checkOut || "";
+        const hasCoords = saved.lat && saved.lng;
+        const geoStatusClass = hasCoords ? "success" : "";
+        const geoStatusText = hasCoords
+          ? `\uD83D\uDCCD Mapped to map`
+          : "";
+
+        return `
+          <div class="hotel-entry" id="hotel-entry-${def.id}">
+            <div class="hotel-entry-header">
+              <span class="hotel-entry-title">\uD83C\uDFE8 ${def.label}</span>
+              <span class="hotel-entry-dates">Planned: ${def.plannedCheckIn} check-in \u2192 ${def.plannedCheckOut} check-out</span>
+            </div>
+            <div class="hotel-entry-fields">
+              <div class="hotel-field-row">
+                <label class="hotel-field-label" for="hotel-name-${def.id}">Hotel Name</label>
+                <input type="text" class="hotel-field-input js-hotel-name${nameVal ? " has-value" : ""}" id="hotel-name-${def.id}" data-hotel-id="${def.id}" placeholder="${def.suggestedArea}" value="${nameVal}">
+              </div>
+              <div class="hotel-field-row">
+                <label class="hotel-field-label" for="hotel-addr-${def.id}">Address</label>
+                <input type="text" class="hotel-field-input js-hotel-address${addrVal ? " has-value" : ""}" id="hotel-addr-${def.id}" data-hotel-id="${def.id}" placeholder="Full hotel street address" value="${addrVal}">
+              </div>
+              <div class="hotel-dates-row">
+                <label class="hotel-field-label" for="hotel-cin-${def.id}">Check-In</label>
+                <input type="date" class="hotel-field-input js-hotel-checkin${checkInVal ? " has-value" : ""}" id="hotel-cin-${def.id}" data-hotel-id="${def.id}" value="${checkInVal}">
+                <label class="hotel-field-label" for="hotel-cout-${def.id}">Check-Out</label>
+                <input type="date" class="hotel-field-input js-hotel-checkout${checkOutVal ? " has-value" : ""}" id="hotel-cout-${def.id}" data-hotel-id="${def.id}" value="${checkOutVal}">
+              </div>
+            </div>
+            <div class="hotel-geo-status ${geoStatusClass}" id="geo-status-${def.id}">${geoStatusText}</div>
+          </div>
+        `;
+      }).join("");
+
+      bindHotelCheckinInputs();
+    }
+
+    async function geocodeHotelAddress(address) {
+      if (!address || !address.trim()) return null;
+      try {
+        const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address.trim())}&format=json&limit=1`;
+        const resp = await fetch(url, { headers: { "Accept-Language": "en-US,en;q=0.9" } });
+        if (!resp.ok) return null;
+        const data = await resp.json();
+        if (!Array.isArray(data) || !data.length) return null;
+        return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), displayName: data[0].display_name };
+      } catch (_) {
+        return null;
+      }
+    }
+
+    function createHotelMapMarker(name, def) {
+      const icon = L.divIcon({
+        className: "",
+        html: `<div class="hotel-marker-pin" title="${escapeHtml(name || def.label)}">H</div>`,
+        iconSize: [26, 26],
+        iconAnchor: [13, 13],
+        popupAnchor: [0, -16]
+      });
+      return icon;
+    }
+
+    function refreshHotelMarkersOnAllMaps() {
+      // Clear all existing hotel layers
+      Object.values(dayMapHotelLayers).forEach((layer) => layer.clearLayers());
+      if (routeMapState && routeMapState.hotelLayer) routeMapState.hotelLayer.clearLayers();
+
+      HOTEL_STAY_DEFS.forEach((def) => {
+        const saved = hotelCheckinData[def.id] || {};
+        if (!saved.lat || !saved.lng) return;
+        const coords = [saved.lat, saved.lng];
+        const name = saved.name || def.label;
+        const icon = createHotelMapMarker(name, def);
+
+        // Add to each affected day map
+        def.affectedDays.forEach((dayNum) => {
+          const hotelLayer = dayMapHotelLayers[dayNum];
+          if (!hotelLayer) return;
+          const marker = L.marker(coords, { icon }).addTo(hotelLayer);
+          marker.bindPopup(`<strong>\uD83C\uDFE8 ${escapeHtml(name)}</strong><br><small>Your hotel base for this day</small>`);
+          marker.bindTooltip(`\uD83C\uDFE8 ${escapeHtml(name)}`, { permanent: false, direction: "top", offset: [0, -14] });
+        });
+
+        // Add to main route map
+        if (routeMapState && routeMapState.hotelLayer) {
+          const marker = L.marker(coords, { icon }).addTo(routeMapState.hotelLayer);
+          marker.bindPopup(`<strong>\uD83C\uDFE8 ${escapeHtml(name)}</strong><br>${def.label}<br><small>Planned: ${def.plannedCheckIn} \u2013 ${def.plannedCheckOut}</small>`);
+        }
+      });
+    }
+
+    function renderHotelCheckInOutBanners() {
+      // Remove all existing banners first
+      document.querySelectorAll(".hotel-checkin-banner, .hotel-checkout-banner").forEach((b) => b.remove());
+
+      // Build a per-day list of banners to insert
+      const dayBanners = {};
+
+      HOTEL_STAY_DEFS.forEach((def) => {
+        const saved = hotelCheckinData[def.id] || {};
+        const hasInfo = saved.name || saved.address || saved.checkIn || saved.checkOut;
+        if (!hasInfo) return;
+
+        const name = escapeHtml(saved.name || def.label);
+        const address = escapeHtml(saved.address || "");
+        const checkInFormatted = formatHotelDate(saved.checkIn);
+        const checkOutFormatted = formatHotelDate(saved.checkOut);
+
+        // Check-OUT banner (order 1 = shown first on day)
+        const outDay = def.checkOutDay;
+        if (!dayBanners[outDay]) dayBanners[outDay] = [];
+        dayBanners[outDay].push({
+          order: 1,
+          html: `<div class="hotel-checkout-banner" data-hotel-id="${def.id}">
+            <span class="hotel-banner-icon">\uD83E\uDDF3</span>
+            <div class="hotel-banner-content">
+              <span class="hotel-banner-action">Check-Out</span>
+              <span class="hotel-banner-name">${name}</span>
+              ${address ? `<span class="hotel-banner-address">${address}</span>` : ""}
+              ${checkOutFormatted ? `<span class="hotel-banner-date">${checkOutFormatted}</span>` : ""}
+            </div>
+          </div>`
+        });
+
+        // Check-IN banner (order 2 = shown after check-out on same day)
+        const inDay = def.checkInDay;
+        if (!dayBanners[inDay]) dayBanners[inDay] = [];
+        dayBanners[inDay].push({
+          order: 2,
+          html: `<div class="hotel-checkin-banner" data-hotel-id="${def.id}">
+            <span class="hotel-banner-icon">\uD83D\uDD11</span>
+            <div class="hotel-banner-content">
+              <span class="hotel-banner-action">Check-In</span>
+              <span class="hotel-banner-name">${name}</span>
+              ${address ? `<span class="hotel-banner-address">${address}</span>` : ""}
+              ${checkInFormatted ? `<span class="hotel-banner-date">${checkInFormatted}</span>` : ""}
+            </div>
+          </div>`
+        });
+      });
+
+      // Insert banners into day cards
+      Object.keys(dayBanners).forEach((dayNum) => {
+        const dayCard = document.querySelector(`.day-card[data-day="${dayNum}"]`);
+        if (!dayCard) return;
+
+        const sorted = dayBanners[dayNum].slice().sort((a, b) => a.order - b.order);
+        const dayHead = dayCard.querySelector(".day-head");
+        const logistics = dayCard.querySelector(".day-logistics");
+        let insertAfter = logistics || dayHead;
+
+        sorted.forEach((bannerData) => {
+          const wrapper = document.createElement("div");
+          wrapper.innerHTML = bannerData.html.trim();
+          const bannerEl = wrapper.firstElementChild;
+          if (bannerEl && insertAfter) {
+            insertAfter.insertAdjacentElement("afterend", bannerEl);
+            insertAfter = bannerEl;
+          }
+        });
+      });
+    }
+
+    const hotelGeoTimers = {};
+
+    function bindHotelCheckinInputs() {
+      const grid = document.getElementById("hotel-checkin-grid");
+      if (!grid) return;
+
+      grid.querySelectorAll(".js-hotel-name, .js-hotel-address, .js-hotel-checkin, .js-hotel-checkout").forEach((input) => {
+        if (input.dataset.bound === "true") return;
+        input.dataset.bound = "true";
+
+        const hotelId = input.getAttribute("data-hotel-id");
+        const def = HOTEL_STAY_DEFS.find((d) => d.id === hotelId);
+        if (!def) return;
+
+        input.addEventListener("input", () => {
+          if (!hotelCheckinData[hotelId]) hotelCheckinData[hotelId] = {};
+
+          if (input.classList.contains("js-hotel-name")) {
+            hotelCheckinData[hotelId].name = input.value;
+          } else if (input.classList.contains("js-hotel-address")) {
+            hotelCheckinData[hotelId].address = input.value;
+            clearTimeout(hotelGeoTimers[hotelId]);
+            hotelGeoTimers[hotelId] = setTimeout(() => triggerHotelGeocode(hotelId, def), 1400);
+          } else if (input.classList.contains("js-hotel-checkin")) {
+            hotelCheckinData[hotelId].checkIn = input.value;
+          } else if (input.classList.contains("js-hotel-checkout")) {
+            hotelCheckinData[hotelId].checkOut = input.value;
+          }
+
+          input.classList.toggle("has-value", Boolean(input.value.trim()));
+          saveHotelCheckinData();
+          renderHotelCheckInOutBanners();
+        });
+
+        input.addEventListener("change", () => {
+          if (input.classList.contains("js-hotel-address")) {
+            clearTimeout(hotelGeoTimers[hotelId]);
+            triggerHotelGeocode(hotelId, def);
+          }
+        });
+      });
+    }
+
+    async function triggerHotelGeocode(hotelId, def) {
+      const data = hotelCheckinData[hotelId] || {};
+      const address = (data.address || "").trim();
+      const statusEl = document.getElementById(`geo-status-${hotelId}`);
+
+      if (!address) {
+        if (hotelCheckinData[hotelId]) {
+          delete hotelCheckinData[hotelId].lat;
+          delete hotelCheckinData[hotelId].lng;
+          delete hotelCheckinData[hotelId].displayName;
+        }
+        saveHotelCheckinData();
+        if (statusEl) { statusEl.textContent = ""; statusEl.className = "hotel-geo-status"; }
+        refreshHotelMarkersOnAllMaps();
+        return;
+      }
+
+      if (statusEl) { statusEl.textContent = "\uD83D\uDD0D Looking up address\u2026"; statusEl.className = "hotel-geo-status"; }
+
+      const coords = await geocodeHotelAddress(address);
+      if (!hotelCheckinData[hotelId]) hotelCheckinData[hotelId] = {};
+
+      if (coords) {
+        hotelCheckinData[hotelId].lat = coords.lat;
+        hotelCheckinData[hotelId].lng = coords.lng;
+        hotelCheckinData[hotelId].displayName = coords.displayName;
+        saveHotelCheckinData();
+        if (statusEl) {
+          statusEl.textContent = `\uD83D\uDCCD Added to maps`;
+          statusEl.className = "hotel-geo-status success";
+        }
+      } else {
+        delete hotelCheckinData[hotelId].lat;
+        delete hotelCheckinData[hotelId].lng;
+        delete hotelCheckinData[hotelId].displayName;
+        saveHotelCheckinData();
+        if (statusEl) {
+          statusEl.textContent = "\u26A0\uFE0F Address not found \u2013 try a more specific address.";
+          statusEl.className = "hotel-geo-status error";
+        }
+      }
+
+      refreshHotelMarkersOnAllMaps();
+    }
+
+    function initializeHotelCheckIns() {
+      loadHotelCheckinData();
+      renderHotelCheckinGrid();
+
+      // Restore any previously saved hotel markers
+      const hasSavedCoords = HOTEL_STAY_DEFS.some((def) => {
+        const saved = hotelCheckinData[def.id] || {};
+        return saved.lat && saved.lng;
+      });
+      if (hasSavedCoords) refreshHotelMarkersOnAllMaps();
+
+      renderHotelCheckInOutBanners();
+    }
+
     initializeCostState();
     renderStaySummary();
     renderTimeline();
@@ -3826,6 +4333,7 @@
     initializeCommandCenterBackup();
     buildRouteMap();
     buildDayMaps();
+    initializeHotelCheckIns();
     setupPoiCarousels();
     loadWikipediaImages();
   </script>
