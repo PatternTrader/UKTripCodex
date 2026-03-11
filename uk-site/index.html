@@ -714,7 +714,7 @@
   .cc-section-head {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: 12px;
     margin-bottom: 14px;
     flex-wrap: wrap;
@@ -722,6 +722,7 @@
 
   .cc-section-head .section-title {
     margin: 0;
+    flex: 0 0 auto;
   }
 
   .cc-toolbar {
@@ -729,6 +730,7 @@
     align-items: center;
     gap: 8px;
     flex-wrap: wrap;
+    justify-content: flex-start;
   }
 
   .cc-utility-btn {
@@ -957,7 +959,7 @@
   .cc-card-header {
     display: flex;
     align-items: flex-start;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: 8px;
     margin-bottom: 10px;
   }
@@ -1188,7 +1190,7 @@
           <div class="cc-card-header">
             <h3>Flights Tracker</h3>
             <div class="cc-card-total cc-card-total--overall">
-              <span class="cc-card-total-label">All 4 Boxes</span>
+              <span class="cc-card-total-label">Grand Total</span>
               <span class="cc-card-total-value js-cc-grand-total">$0.00</span>
             </div>
             <div class="cc-card-total">
