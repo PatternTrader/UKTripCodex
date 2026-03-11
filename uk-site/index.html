@@ -3096,6 +3096,16 @@
           const raw = String(input.value || "").trim();
           const normalized = raw.replace(/[$,\s]/g, "");
           const hasCost = normalized !== "" && !Number.isNaN(Number(normalized));
+          itemEl.classList.toggle("has-cost", hasCost);
+          itemEl.querySelectorAll(".cc-cost-input, .cc-date-input, .cc-edit-btn, .cc-remove-btn").forEach((control) => {
+            if (!(control instanceof HTMLElement)) return;
+            control.style.background = hasCost ? "rgba(255, 244, 79, 0.95)" : "";
+            control.style.borderColor = hasCost ? "#c9a800" : "";
+            control.style.boxShadow = hasCost ? "inset 0 0 0 1px rgba(201, 168, 0, 0.28)" : "";
+            if (control.classList.contains("cc-edit-btn") || control.classList.contains("cc-remove-btn")) {
+              control.style.color = hasCost ? "#5f5200" : "";
+            }
+          });
         };
         if (input.dataset.bound === "true") {
           renderCostNote();
@@ -3685,9 +3695,3 @@
 
 </body>
 </html>
-
-
-
-
-
-<script>(function(){function syncCostControlHighlights(){document.querySelectorAll(".js-cc-cost[data-cost-id]").forEach(function(input){if(!(input instanceof HTMLInputElement)) return;var raw=String(input.value||"").trim();var normalized=raw.replace(/[$,\\s]/g,"");var hasCost=normalized!==""&&!Number.isNaN(Number(normalized));var itemEl=input.closest(".js-cc-check-item");if(!(itemEl instanceof HTMLElement)) return;itemEl.classList.toggle("has-cost",hasCost);itemEl.querySelectorAll(".cc-cost-input, .cc-date-input, .cc-edit-btn, .cc-remove-btn").forEach(function(control){if(!(control instanceof HTMLElement)) return;control.style.background=hasCost?"rgba(255, 244, 79, 0.95)":"";control.style.borderColor=hasCost?"#c9a800":"";control.style.boxShadow=hasCost?"inset 0 0 0 1px rgba(201, 168, 0, 0.28)":"";if(control.classList.contains("cc-edit-btn")||control.classList.contains("cc-remove-btn")){control.style.color=hasCost?"#5f5200":"";}});});}syncCostControlHighlights();document.addEventListener("input",syncCostControlHighlights,true);document.addEventListener("change",syncCostControlHighlights,true);new MutationObserver(syncCostControlHighlights).observe(document.documentElement,{childList:true,subtree:true});})();</script>
