@@ -711,6 +711,47 @@
     margin: 8px 0 26px;
   }
 
+  .cc-section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+
+  .cc-section-head .section-title {
+    margin: 0;
+  }
+
+  .cc-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .cc-utility-btn {
+    border: 1px solid #1a6bbf;
+    border-radius: 999px;
+    background: rgba(26, 107, 191, 0.1);
+    color: #1a4d8f;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 6px 12px;
+    cursor: pointer;
+  }
+
+  .cc-utility-btn:hover {
+    filter: brightness(0.98);
+    background: rgba(26, 107, 191, 0.16);
+  }
+
+  .cc-toolbar-status {
+    font-size: 0.78rem;
+    color: #5d6978;
+  }
+
   .cc-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -1133,7 +1174,15 @@
     </section>
 
     <section class="command-center">
-      <h2 class="section-title">Dad-Level Trip Command Center</h2>
+      <div class="cc-section-head">
+        <h2 class="section-title">Dad-Level Trip Command Center</h2>
+        <div class="cc-toolbar">
+          <button type="button" class="cc-utility-btn" id="cc-export-data">Export Data</button>
+          <button type="button" class="cc-utility-btn" id="cc-import-data">Import Data</button>
+          <input type="file" id="cc-import-file" accept="application/json" hidden>
+          <span class="cc-toolbar-status" id="cc-backup-status" aria-live="polite"></span>
+        </div>
+      </div>
       <div class="cc-grid">
         <article class="cc-card cc-card--flight" data-card-id="flight">
           <div class="cc-card-header">
@@ -2129,6 +2178,20 @@
     const CC_COST_NOTES_STORAGE_KEY = "ukTripCCCostNotesV1";
     const CC_LINKS_STORAGE_KEY = "ukTripCCLinksV1";
     const CC_DATES_STORAGE_KEY = "ukTripCCDatesV1";
+    const COMMAND_CENTER_BACKUP_STORAGE_KEYS = [
+      COST_STORAGE_KEY,
+      CUSTOM_COSTS_STORAGE_KEY,
+      COMMAND_CHECKLIST_STORAGE_KEY,
+      COMMAND_REMOVED_STORAGE_KEY,
+      COMMAND_TEXT_STORAGE_KEY,
+      COMMAND_CUSTOM_ITEMS_STORAGE_KEY,
+      COMMAND_ATTENTION_STORAGE_KEY,
+      CC_COSTS_STORAGE_KEY,
+      CC_COST_NOTES_STORAGE_KEY,
+      CC_LINKS_STORAGE_KEY,
+      CC_DATES_STORAGE_KEY,
+      "ukTripCCOrderV1"
+    ];
     const EMPTY_IMAGE_PLACEHOLDER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800'><rect width='1200' height='800' fill='white'/></svg>";
     const STAY_COLOR_BY_TOWN = {
       London: "#d1a900",
@@ -3413,6 +3476,77 @@
       localStorage.setItem(CC_DATES_STORAGE_KEY, JSON.stringify(ccDates));
     }
 
+    function initializeCommandCenterBackup() {
+      const exportBtn = document.getElementById("cc-export-data");
+      const importBtn = document.getElementById("cc-import-data");
+      const fileInput = document.getElementById("cc-import-file");
+      const statusEl = document.getElementById("cc-backup-status");
+
+      function setBackupStatus(message, isError) {
+        if (!(statusEl instanceof HTMLElement)) return;
+        statusEl.textContent = message || "";
+        statusEl.style.color = isError ? "#b23b3b" : "#5d6978";
+      }
+
+      function buildBackupPayload() {
+        const storage = {};
+        COMMAND_CENTER_BACKUP_STORAGE_KEYS.forEach((key) => {
+          const value = localStorage.getItem(key);
+          if (value !== null) storage[key] = value;
+        });
+        return {
+          version: 1,
+          exportedAt: new Date().toISOString(),
+          storage
+        };
+      }
+
+      exportBtn?.addEventListener("click", () => {
+        const payload = buildBackupPayload();
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const stamp = new Date().toISOString().slice(0, 19).replace(/[T:]/g, "-");
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `uk-trip-command-center-backup-${stamp}.json`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+        setBackupStatus("Backup exported.", false);
+      });
+
+      importBtn?.addEventListener("click", () => {
+        if (fileInput instanceof HTMLInputElement) {
+          fileInput.value = "";
+          fileInput.click();
+        }
+      });
+
+      fileInput?.addEventListener("change", async () => {
+        const file = fileInput.files?.[0];
+        if (!file) return;
+        try {
+          const text = await file.text();
+          const payload = JSON.parse(text);
+          if (!payload || typeof payload !== "object" || !payload.storage || typeof payload.storage !== "object") {
+            throw new Error("Invalid backup file.");
+          }
+          COMMAND_CENTER_BACKUP_STORAGE_KEYS.forEach((key) => {
+            if (Object.prototype.hasOwnProperty.call(payload.storage, key) && typeof payload.storage[key] === "string") {
+              localStorage.setItem(key, payload.storage[key]);
+            } else {
+              localStorage.removeItem(key);
+            }
+          });
+          setBackupStatus("Backup imported. Reloading...", false);
+          window.setTimeout(() => window.location.reload(), 300);
+        } catch (_) {
+          setBackupStatus("Import failed. Choose a valid backup JSON file.", true);
+        }
+      });
+    }
+
     function initializeDragReorder() {
       const CC_ORDER_STORAGE_KEY = "ukTripCCOrderV1";
       let savedOrders = {};
@@ -3687,6 +3821,7 @@
     initializeCommandChecklist();
     initializeDateInputs();
     initializeDragReorder();
+    initializeCommandCenterBackup();
     buildRouteMap();
     buildDayMaps();
     setupPoiCarousels();
