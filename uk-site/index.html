@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UK Family Trip Itinerary | April 2-12, 2025</title>
+<title>UK Family Trip Itinerary | April 2-12, 2026</title>
 <link rel="icon" type="image/svg+xml" href="images/favicon-uk-round.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -82,6 +82,65 @@
     font-family: "Libre Baskerville", serif;
     font-size: clamp(1.45rem, 2.2vw, 2rem);
     color: var(--brand);
+  }
+
+  .ideas-panel {
+    margin-top: 32px;
+    padding-bottom: 36px;
+  }
+
+  .ideas-cards-grid {
+    display: grid;
+    gap: 16px;
+  }
+
+  .ideas-card {
+    border: 2px dashed #b8a96a;
+    border-radius: 16px;
+    background: linear-gradient(180deg, #fffdf4 0%, #fff9e6 100%);
+    padding: 18px 20px;
+    box-shadow: 0 8px 18px rgba(120, 90, 0, 0.08);
+  }
+
+  .ideas-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px 12px;
+    margin-bottom: 14px;
+  }
+
+  .ideas-pill {
+    display: inline-block;
+    border: 3px solid #7a5c00;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #c9a227 0%, #7a5c00 100%);
+    color: #ffffff;
+    padding: 10px 20px;
+    font-weight: 900;
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 10px 22px rgba(122, 92, 0, 0.35);
+  }
+
+  .ideas-subtitle {
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    font-style: italic;
+  }
+
+  .ideas-list {
+    margin: 0;
+    padding-left: 20px;
+    display: grid;
+    gap: 10px;
+  }
+
+  .ideas-list li {
+    font-size: 0.97rem;
+    color: #2a384a;
+    line-height: 1.5;
   }
 
   .stay-summary {
@@ -804,10 +863,7 @@
   }
 
   .cc-check-item.has-cost {
-    background: linear-gradient(90deg, rgba(255, 244, 79, 0.92) 0%, rgba(255, 244, 79, 0.92) 100%);
-    box-shadow: inset 0 0 0 1px rgba(201, 168, 0, 0.35);
-    border-radius: 8px;
-    padding: 6px 8px;
+    /* row-level highlight removed — only the cost input box itself turns yellow */
   }
 
   .cc-check-item.has-note {
@@ -1188,7 +1244,20 @@
   }
 
   .hotel-entry-title { font-size: 0.93rem; font-weight: 700; color: #155c35; }
-  .hotel-entry-dates { font-size: 0.77rem; color: #2a7a4e; font-weight: 600; }
+  .hotel-entry-dates { font-size: 0.77rem; color: #2a7a4e; font-weight: 600; flex: 1; }
+  .hotel-clear-btn {
+    margin-left: auto;
+    font-size: 0.72rem;
+    padding: 2px 9px;
+    border: 1px solid #c0a080;
+    border-radius: 4px;
+    background: #fff8f0;
+    color: #a05020;
+    cursor: pointer;
+    line-height: 1.5;
+    flex: 0 0 auto;
+  }
+  .hotel-clear-btn:hover { background: #ffe0c0; border-color: #a05020; }
 
   .hotel-entry-fields { display: grid; gap: 8px; }
 
@@ -1349,7 +1418,7 @@
           <ul class="cc-checklist">
             <li class="cc-check-item js-cc-check-item" data-check-id="flight-outbound">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text">Outbound: Thu Apr 2, 3:07pm EWR &rarr; Fri Apr 3, 6:55am LHR (1h 55m IAD connection)</span>
+              <span class="cc-check-text">Outbound: Wed Apr 2, 6:40pm JFK &rarr; Thu Apr 3, 6:50am LHR — BA 174 (7h 10m, direct)</span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-outbound" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-outbound" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
@@ -1358,12 +1427,21 @@
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="flight-return">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text">Return: Sun Apr 12, 8:30am LHR &rarr; 3:07pm JFK (2h 5m YYZ connection)</span>
+              <span class="cc-check-text">Return Leg 1: Sat Apr 11, 8:10pm LHR &rarr; 10:35pm BOS — BA 239 (7h 25m, direct)</span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-return" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-return" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
               </span>
               <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-return" placeholder="$0.00" aria-label="Cost">
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="flight-bos-jfk">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text">Return Leg 2: Sun Apr 12, 11:34am BOS &rarr; 12:59pm JFK — AA 4721 / American Eagle (1h 25m, direct)</span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-bos-jfk" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-bos-jfk" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-bos-jfk" placeholder="$0.00" aria-label="Cost">
             </li>
           </ul>
         </article>
@@ -1378,39 +1456,57 @@
           <ul class="cc-checklist">
             <li class="cc-check-item js-cc-check-item" data-check-id="hotel-london-main">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text">Book London base early (South Bank / Westminster): Apr 3-6</span>
+              <span class="cc-check-text">Book London base (South Bank / Westminster): Apr 3–6 (3 nights)</span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="hotel-london-main" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-london-main" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
               </span>
               <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-london-main" placeholder="$0.00" aria-label="Cost">
             </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="hotel-edinburgh-1">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text">Book Edinburgh (Royal Mile / New Town) — 1st stay: Apr 6–7 (1 night, arrive evening Apr 6)</span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="hotel-edinburgh-1" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-edinburgh-1" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-edinburgh-1" placeholder="$0.00" aria-label="Cost">
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="hotel-portree">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text">Book Portree, Isle of Skye: Apr 7–9 (2 nights — NOT included in Rabbies tour price, book separately)</span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="hotel-portree" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-portree" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-portree" placeholder="$0.00" aria-label="Cost">
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="hotel-edinburgh-2">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text">Book Edinburgh (Royal Mile / New Town) — 2nd stay: Apr 9–10 (1 night, arrive back ~7pm Apr 9)</span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="hotel-edinburgh-2" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-edinburgh-2" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-edinburgh-2" placeholder="$0.00" aria-label="Cost">
+            </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="hotel-london-return">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text">Book London return night (South Bank / Westminster): Apr 11</span>
+              <span class="cc-check-text">Book London return (South Bank / Westminster): Apr 10–11 (1 night, arrive afternoon Apr 10)</span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="hotel-london-return" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-london-return" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
               </span>
               <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-london-return" placeholder="$0.00" aria-label="Cost">
             </li>
-            <li class="cc-check-item js-cc-check-item" data-check-id="hotel-edinburgh">
+            <li class="cc-check-item js-cc-check-item" data-check-id="hotel-boston">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text">Book Edinburgh base early (Royal Mile / New Town): Apr 7-9</span>
+              <span class="cc-check-text">Book Boston overnight layover (near Logan Airport): Apr 11–12 (1 night, arrive BOS ~10:35pm Apr 11)</span>
               <span class="cc-link-wrap">
-                <input type="url" class="cc-link-input js-cc-link" data-link-id="hotel-edinburgh" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-edinburgh" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="hotel-boston" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-boston" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
               </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-edinburgh" placeholder="$0.00" aria-label="Cost">
-            </li>
-            <li class="cc-check-item js-cc-check-item" data-check-id="hotel-highlands">
-              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text">Reserve Highlands transit base early if self-driving (Inverness/Fort William): Apr 10</span>
-              <span class="cc-link-wrap">
-                <input type="url" class="cc-link-input js-cc-link" data-link-id="hotel-highlands" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-highlands" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
-              </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-highlands" placeholder="$0.00" aria-label="Cost">
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-boston" placeholder="$0.00" aria-label="Cost">
             </li>
           </ul>
         </article>
@@ -1425,7 +1521,7 @@
         </article>
         <article class="cc-card cc-card--booking" data-card-id="booking">
           <div class="cc-card-header">
-            <h3>Tours to Consider</h3>
+            <h3>Tours</h3>
             <div class="cc-card-total">
               <span class="cc-card-total-label">Total</span>
               <span class="cc-card-total-value js-cc-card-total" data-total-card="booking">$0.00</span>
@@ -1459,23 +1555,77 @@
               </span>
               <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-london-eye" placeholder="$0.00" aria-label="Cost">
             </li>
-            <li class="cc-check-item js-cc-check-item" data-check-id="link-edinburgh-castle">
-              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text"><a href="https://www.edinburghcastle.scot/" target="_blank" rel="noopener noreferrer">Edinburgh Castle</a></span>
-              <span class="cc-link-wrap">
-                <input type="url" class="cc-link-input js-cc-link" data-link-id="link-edinburgh-castle" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-edinburgh-castle" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
-              </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-edinburgh-castle" placeholder="$0.00" aria-label="Cost">
-            </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-lner">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text"><a href="https://www.lner.co.uk/" target="_blank" rel="noopener noreferrer">LNER train bookings</a></span>
+              <span class="cc-check-text"><a href="https://www.lner.co.uk/" target="_blank" rel="noopener noreferrer">LNER: London Kings Cross → Edinburgh (Apr 6, 9:03am) — £257.60 / 5 pax</a></span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="link-lner" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="link-lner" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
               </span>
               <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-lner" placeholder="$0.00" aria-label="Cost">
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="link-rabbies">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text"><a href="https://www.rabbies.com/en-us/tour/the-isle-of-skye-3-day-tour-from-edinburgh" target="_blank" rel="noopener noreferrer">Rabbie's: Isle of Skye 3-day tour (Apr 7–9) — from $344/person</a></span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="link-rabbies" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-rabbies" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-rabbies" placeholder="$0.00" aria-label="Cost">
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="link-lumo">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text"><a href="https://www.lumo.co.uk/" target="_blank" rel="noopener noreferrer">Lumo: Edinburgh → London Kings Cross (Apr 10, 8:26am) — £234.15 / 5 pax</a></span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="link-lumo" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-lumo" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-lumo" placeholder="$0.00" aria-label="Cost">
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="link-bletchley">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text"><a href="https://www.bletchleypark.org.uk/" target="_blank" rel="noopener noreferrer">Bletchley Park — Ideas section</a></span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="link-bletchley" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-bletchley" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-bletchley" placeholder="$0.00" aria-label="Cost">
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="link-national-rail">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text"><a href="https://www.nationalrail.co.uk/destinations/trains-from-london-to-bletchley/" target="_blank" rel="noopener noreferrer">National Rail: London to Bletchley — Ideas section</a></span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="link-national-rail" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-national-rail" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-national-rail" placeholder="$0.00" aria-label="Cost">
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="link-evan-evans">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text"><a href="https://evanevanstours.com/tours/day-tours-from-london/warwick-castle-shakespeares-birthplace-oxford-the-cotswolds/" target="_blank" rel="noopener noreferrer">Evan Evans: Stratford guided day tour — Ideas section</a></span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="link-evan-evans" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-evan-evans" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-evan-evans" placeholder="$0.00" aria-label="Cost">
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="link-timberbush">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text"><a href="https://www.timberbush-tours.co.uk/our-tours/from-edinburgh/2-day-tours/loch-ness-inverness-highlands" target="_blank" rel="noopener noreferrer">Timberbush: Highlands/Inverness 2-day tour — Ideas section</a></span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="link-timberbush" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-timberbush" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-timberbush" placeholder="$0.00" aria-label="Cost">
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="link-edinburgh-castle">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text"><a href="https://www.edinburghcastle.scot/" target="_blank" rel="noopener noreferrer">Edinburgh Castle tickets — Ideas section</a></span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="link-edinburgh-castle" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-edinburgh-castle" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+              </span>
+              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-edinburgh-castle" placeholder="$0.00" aria-label="Cost">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-booking">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
@@ -1485,51 +1635,6 @@
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="link-booking" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
               </span>
               <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-booking" placeholder="$0.00" aria-label="Cost">
-            </li>
-            <li class="cc-check-item js-cc-check-item" data-check-id="link-bletchley">
-              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text"><a href="https://www.bletchleypark.org.uk/" target="_blank" rel="noopener noreferrer">Bletchley Park</a></span>
-              <span class="cc-link-wrap">
-                <input type="url" class="cc-link-input js-cc-link" data-link-id="link-bletchley" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-bletchley" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
-              </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-bletchley" placeholder="$0.00" aria-label="Cost">
-            </li>
-            <li class="cc-check-item js-cc-check-item" data-check-id="link-national-rail">
-              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text"><a href="https://www.nationalrail.co.uk/destinations/trains-from-london-to-bletchley/" target="_blank" rel="noopener noreferrer">National Rail: London to Bletchley</a></span>
-              <span class="cc-link-wrap">
-                <input type="url" class="cc-link-input js-cc-link" data-link-id="link-national-rail" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-national-rail" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
-              </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-national-rail" placeholder="$0.00" aria-label="Cost">
-            </li>
-            <li class="cc-check-item js-cc-check-item" data-check-id="link-evan-evans">
-              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text"><a href="https://evanevanstours.com/tours/day-tours-from-london/warwick-castle-shakespeares-birthplace-oxford-the-cotswolds/" target="_blank" rel="noopener noreferrer">Evan Evans: Stratford guided day tour</a></span>
-              <span class="cc-link-wrap">
-                <input type="url" class="cc-link-input js-cc-link" data-link-id="link-evan-evans" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-evan-evans" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
-              </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-evan-evans" placeholder="$0.00" aria-label="Cost">
-            </li>
-            <li class="cc-check-item js-cc-check-item" data-check-id="link-timberbush">
-              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text"><a href="https://www.timberbush-tours.co.uk/our-tours/from-edinburgh/2-day-tours/loch-ness-inverness-highlands" target="_blank" rel="noopener noreferrer">Timberbush: Highlands/Inverness 2-day tour</a></span>
-              <span class="cc-link-wrap">
-                <input type="url" class="cc-link-input js-cc-link" data-link-id="link-timberbush" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-timberbush" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
-              </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-timberbush" placeholder="$0.00" aria-label="Cost">
-            </li>
-            <li class="cc-check-item js-cc-check-item" data-check-id="link-rabbies">
-              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text"><a href="https://www.rabbies.com/en-us/tour/the-isle-of-skye-3-day-tour-from-edinburgh" target="_blank" rel="noopener noreferrer">Rabbie's: Isle of Skye 3-day tour</a></span>
-              <span class="cc-link-wrap">
-                <input type="url" class="cc-link-input js-cc-link" data-link-id="link-rabbies" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-rabbies" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
-              </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-rabbies" placeholder="$0.00" aria-label="Cost">
             </li>
           </ul>
         </article>
@@ -1564,6 +1669,115 @@
       <div class="cost-summary" id="cost-summary"></div>
     </section>
 
+    <section class="ideas-panel">
+      <h2 class="section-title">Ideas of Things to Do</h2>
+      <div class="ideas-cards-grid">
+
+        <div class="ideas-card">
+          <div class="ideas-head">
+            <span class="ideas-pill">💡 Ideas</span>
+            <h3 class="day-title">White Cliffs of Dover</h3>
+            <span class="ideas-subtitle">Coastal add-on — pair with Stonehenge day or standalone</span>
+          </div>
+          <ul class="ideas-list">
+            <li>Take the train from London St Pancras International to Dover Priory (~1h 20m). <a href="https://www.nationalrail.co.uk/" target="_blank" rel="noopener noreferrer">National Rail London – Dover</a>.</li>
+            <li>Walk the <strong>White Cliffs of Dover</strong> trail for classic chalk-cliff views over the English Channel.</li>
+            <li>Optional: visit <strong>Dover Castle</strong> and its wartime tunnels.</li>
+            <li>Return to London by train for the evening.</li>
+          </ul>
+        </div>
+
+        <div class="ideas-card">
+          <div class="ideas-head">
+            <span class="ideas-pill">💡 Ideas</span>
+            <h3 class="day-title">Stratford-upon-Avon Day Trip</h3>
+            <span class="ideas-subtitle">Displaced from April 6 — find it a new home!</span>
+          </div>
+          <ul class="ideas-list">
+            <li>Travel no-car to <strong>Bletchley Park</strong> by train from London Euston. <a href="https://www.nationalrail.co.uk/destinations/trains-from-london-to-bletchley/" target="_blank" rel="noopener noreferrer">National Rail London – Bletchley planning</a>.</li>
+            <li>Guided no-car option for <strong>Stratford-upon-Avon</strong>: book coach + guide from London. <a href="https://evanevanstours.com/tours/day-tours-from-london/warwick-castle-shakespeares-birthplace-oxford-the-cotswolds/" target="_blank" rel="noopener noreferrer">Evan Evans Stratford day tour</a>.</li>
+            <li>Tour the <strong>Royal Shakespeare Theatre</strong>.</li>
+            <li>Stop by <strong>Anne Hathaway's Cottage</strong>.</li>
+            <li>Take a <strong>River Avon walk</strong>.</li>
+            <li>Return to London by rail/coach — dinner at <strong>Rock &amp; Sole Plaice</strong> (famous fish and chips near Covent Garden).</li>
+          </ul>
+        </div>
+
+        <div class="ideas-card">
+          <div class="ideas-head">
+            <span class="ideas-pill">💡 Ideas</span>
+            <h3 class="day-title">Edinburgh Castle &amp; Old Town</h3>
+            <span class="ideas-subtitle">Displaced from April 7</span>
+          </div>
+          <ul class="ideas-list">
+            <li>Visit <strong>Edinburgh Castle</strong> in the morning.</li>
+            <li>Walk the <strong>Royal Mile</strong> toward Holyrood Palace.</li>
+            <li>Optional hike up <strong>Arthur's Seat</strong>.</li>
+            <li>Dinner in <strong>Old Town</strong>.</li>
+          </ul>
+        </div>
+
+        <div class="ideas-card">
+          <div class="ideas-head">
+            <span class="ideas-pill">💡 Ideas</span>
+            <h3 class="day-title">Stirling Day Trip</h3>
+            <span class="ideas-subtitle">Displaced from April 8</span>
+          </div>
+          <ul class="ideas-list">
+            <li>Day trip to <strong>Stirling Castle</strong>.</li>
+            <li>See the <strong>Wallace Monument</strong> area.</li>
+            <li>Visit the <strong>Bannockburn Heritage Centre</strong>.</li>
+            <li>Return to Edinburgh for the evening.</li>
+          </ul>
+        </div>
+
+        <div class="ideas-card">
+          <div class="ideas-head">
+            <span class="ideas-pill">💡 Ideas</span>
+            <h3 class="day-title">Highlands Drive</h3>
+            <span class="ideas-subtitle">Displaced from April 9</span>
+          </div>
+          <ul class="ideas-list">
+            <li>No-car guided option: book a 2-day Highlands + Inverness tour from Edinburgh. <a href="https://www.timberbush-tours.co.uk/our-tours/from-edinburgh/2-day-tours/loch-ness-inverness-highlands" target="_blank" rel="noopener noreferrer">Timberbush 2-day Highlands/Inverness tour</a>.</li>
+            <li>Visit <strong>Loch Ness</strong> and <strong>Urquhart Castle</strong>.</li>
+            <li>Continue through <strong>Glencoe Valley</strong>.</li>
+            <li>Overnight in <strong>Inverness or Fort William</strong> area.</li>
+          </ul>
+        </div>
+
+        <div class="ideas-card">
+          <div class="ideas-head">
+            <span class="ideas-pill">💡 Ideas</span>
+            <h3 class="day-title">Skye Morning &amp; Return to London</h3>
+            <span class="ideas-subtitle">Displaced from April 10</span>
+          </div>
+          <ul class="ideas-list">
+            <li>No-car guided option for Skye + Eilean Donan from Edinburgh. <a href="https://www.rabbies.com/en-us/tour/the-isle-of-skye-3-day-tour-from-edinburgh" target="_blank" rel="noopener noreferrer">Rabbie's 3-day Skye tour</a>.</li>
+            <li>Quick scenic stop at <strong>Old Man of Storr</strong>.</li>
+            <li>Return toward Edinburgh on guided tour transport, then connect by evening train.</li>
+            <li>Take an evening <strong>LNER train from Edinburgh to London</strong>.</li>
+          </ul>
+        </div>
+
+        <div class="ideas-card">
+          <div class="ideas-head">
+            <span class="ideas-pill">💡 Ideas</span>
+            <h3 class="day-title">Rabbies Tour Highlights — Visit Independently</h3>
+            <span class="ideas-subtitle">These sites are covered by the Rabbies 3-day tour (Apr 7–9). Listed here if you ever want to revisit them self-guided.</span>
+          </div>
+          <ul class="ideas-list">
+            <li><strong>Stirling Castle</strong> (Day 6) — Paid admission via Historic Environment Scotland. <a href="https://www.stirlingcastle.scot/visit-us/tickets/" target="_blank" rel="noopener noreferrer">Book tickets</a>.</li>
+            <li><strong>Eilean Donan Castle</strong> (Days 6 &amp; 8) — Exterior viewpoints free; interior entry paid. <a href="https://www.eileandonancastle.com/visit" target="_blank" rel="noopener noreferrer">Eilean Donan tickets</a>.</li>
+            <li><strong>Glencoe</strong> (Day 6) — Roadside viewpoints free; some car parks and NTS facilities are paid.</li>
+            <li><strong>Old Man of Storr</strong> (Day 7) — Trail access free; car park at the trailhead is commonly paid.</li>
+            <li><strong>Dunvegan Castle</strong> (Day 7) — Paid admission (castle and gardens). <a href="https://www.dunvegancastle.com/visit/" target="_blank" rel="noopener noreferrer">Dunvegan Castle tickets</a>.</li>
+            <li><strong>Urquhart Castle / Loch Ness</strong> (Day 8) — Paid admission via Historic Environment Scotland. <a href="https://www.historicenvironment.scot/visit-a-place/places/urquhart-castle/" target="_blank" rel="noopener noreferrer">Urquhart Castle tickets</a>.</li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
     <footer>Designed as a true chronological itinerary with two images per unique bullet item.</footer>
   </div>
 
@@ -1576,23 +1790,49 @@
         title: "New York to London Flight",
         date: "April 2-3",
         items: [
-          { text: "Leave from 303 E. 83rd St, NY, NY to Newark Liberty Airport (EWR). Typical transfer is about 70-95 min; plan around 80 min plus terminal buffer.", page: "303_E_83rd_St_NYC", caption: "Depart from 303 E. 83rd St" },
-          { text: "Depart New York (EWR) at 3:07pm on United, 1 stop via IAD.", page: "Newark_Liberty_International_Airport", caption: "Newark to London flight", defaultCost: 1534.5 },
-          { text: "Connection at Washington Dulles (IAD), about 1h 55m.", page: "Washington_Dulles_International_Airport", caption: "IAD connection" },
-          { text: "Arrive London Heathrow at 6:55am on April 3.", page: "London_Heathrow_Arrival", caption: "Arrive London Heathrow" },
-          { text: "Light arrival day near South Bank to reset after overnight travel.", page: "South_Bank", caption: "London arrival morning" }
+          { text: "Leave from 303 E. 83rd St, NY, NY to John F. Kennedy International Airport (JFK). Allow 45–75 min depending on traffic; give yourself extra buffer.", page: "303_E_83rd_St_NYC", caption: "Depart from 303 E. 83rd St" },
+          { text: "Depart New York (JFK) at 6:40pm on British Airways BA 174, direct to London Heathrow. Boeing 777, Economy. 7 hr 10 min overnight flight. $3,474 total for 5 passengers (round trip).", page: "John_F._Kennedy_International_Airport", caption: "JFK departure — BA 174", defaultCost: 3474 }
         ]
       },
       {
         day: 2,
-        title: "Royal and Historic London",
+        title: "Museum Day and West End Highlights",
         date: "April 3",
+        items: [
+          { text: "Arrive London Heathrow (LHR) at 6:50am on April 3. British Airways Terminal 5.", page: "London_Heathrow_Arrival", caption: "Arrive London Heathrow" },
+          { text: "Start at the British Museum when galleries open.", page: "British_Museum", caption: "British Museum" },
+          { text: "Browse Forbidden Planet London Megastore for comics and collectibles.", page: "Forbidden_Planet_London_Megastore", caption: "Forbidden Planet London" },
+          { text: "Finish the West End sweep with an evening stroll down Oxford Street.", page: "Oxford_Street", caption: "Oxford Street" },
+          { text: "Explore Soho streets and food spots.", page: "Soho", caption: "Soho" },
+          { text: "See the John Snow cholera pump on Broadwick Street in Soho.", page: "John_Snow_cholera_pump", caption: "John Snow cholera pump" },
+          { text: "Take in the lights and screens at Piccadilly Circus.", page: "Piccadilly_Circus", caption: "Piccadilly Circus" },
+          { text: "Walk through Leicester Square.", page: "Leicester_Square", caption: "Leicester Square" },
+          { text: "Visit the National Gallery.", page: "National_Gallery", caption: "The National Gallery" },
+          { text: "Step into Trafalgar Square for iconic city views.", page: "Trafalgar_Square", caption: "Trafalgar Square" },
+          { text: "Dinner: eat classic pub food at Ye Olde Cheshire Cheese. <a href=\"https://ye-olde-cheshire-cheese.co.uk/\" target=\"_blank\" rel=\"noopener noreferrer\">Ye Olde Cheshire Cheese site</a>.", page: "Ye_Olde_Cheshire_Cheese", caption: "Ye Olde Cheshire Cheese dinner" }
+        ]
+      },
+      {
+        day: 3,
+        title: "Greenwich and Stonehenge Day Trip",
+        date: "April 4",
+        items: [
+          { text: "Visit the Royal Observatory Greenwich and stand on the Prime Meridian line.", page: "Royal_Observatory_Greenwich", caption: "Royal Observatory Greenwich" },
+          { text: "Take a no-car Stonehenge excursion from London (coach tour or rail + local tour) and spend the core afternoon at the stones.", page: "Stonehenge", caption: "Stonehenge day trip" },
+          { text: "Return to London for dinner at Dishoom Covent Garden. <a href=\"https://www.dishoom.com/menu/all-day-main/\" target=\"_blank\" rel=\"noopener noreferrer\">Dishoom all-day menu</a>.", page: "Dishoom_Covent_Garden", caption: "Dishoom dinner" }
+        ]
+      },
+      {
+        day: 4,
+        title: "Royal and Historic London",
+        date: "April 5",
         items: [
           { text: "Watch the Changing of the Guard at Buckingham Palace.", page: "Buckingham_Palace", caption: "Buckingham Palace" },
           { text: "Stroll through St James's Park between palace and Westminster.", page: "St_James's_Park", caption: "St James's Park" },
           { text: "Tour Westminster Abbey.", page: "Westminster_Abbey", caption: "Westminster Abbey" },
           { text: "Photo stop at Big Ben and Parliament.", page: "Big_Ben", caption: "Big Ben" },
           { text: "Ride the London Eye for skyline views over Westminster and the Thames.", page: "London_Eye", caption: "London Eye" },
+          { text: "Walk the South Bank and enjoy the riverside atmosphere.", page: "South_Bank", caption: "South Bank" },
           { text: "Continue east along the South Bank to Tate Modern.", page: "Tate_Modern", caption: "Tate Modern" },
           { text: "Stop at Shakespeare's Globe nearby.", page: "Shakespeare's_Globe", caption: "Shakespeare's Globe" },
           { text: "Visit the Tower of London and Crown Jewels.", page: "Tower_of_London", caption: "Tower of London" },
@@ -1600,110 +1840,89 @@
         ]
       },
       {
-        day: 3,
-        title: "Museum Day and West End Highlights",
-        date: "April 4",
-        items: [
-          { text: "Start at the British Museum when galleries open.", page: "British_Museum", caption: "British Museum" },
-          { text: "Visit the National Gallery.", page: "National_Gallery", caption: "The National Gallery" },
-          { text: "Step into Trafalgar Square for iconic city views.", page: "Trafalgar_Square", caption: "Trafalgar Square" },
-          { text: "Walk through Leicester Square.", page: "Leicester_Square", caption: "Leicester Square" },
-          { text: "Take in the lights and screens at Piccadilly Circus.", page: "Piccadilly_Circus", caption: "Piccadilly Circus" },
-          { text: "Browse Forbidden Planet London Megastore for comics and collectibles.", page: "Forbidden_Planet_London_Megastore", caption: "Forbidden Planet London" },
-          { text: "See the John Snow cholera pump on Broadwick Street in Soho.", page: "John_Snow_cholera_pump", caption: "John Snow cholera pump" },
-          { text: "Explore Soho streets and food spots.", page: "Soho", caption: "Soho" },
-          { text: "Finish the West End sweep with an evening stroll down Oxford Street.", page: "Oxford_Street", caption: "Oxford Street" },
-          { text: "Dinner: eat classic pub food at Ye Olde Cheshire Cheese. <a href=\"https://ye-olde-cheshire-cheese.co.uk/\" target=\"_blank\" rel=\"noopener noreferrer\">Ye Olde Cheshire Cheese site</a>.", page: "Ye_Olde_Cheshire_Cheese", caption: "Ye Olde Cheshire Cheese dinner" }
-        ]
-      },
-      {
-        day: 4,
-        title: "Greenwich and Stonehenge Day Trip",
-        date: "April 5",
-        items: [
-          { text: "Visit the Royal Observatory Greenwich and stand on the Prime Meridian line.", page: "Royal_Observatory_Greenwich", caption: "Royal Observatory Greenwich" },
-          { text: "Take a no-car Stonehenge excursion from London (coach tour or rail + local tour) and spend the core afternoon at the stones.", page: "Stonehenge", caption: "Stonehenge day trip" },
-          { text: "If you want a coastal add-on, make the White Cliffs of Dover a scenic stop for classic chalk-cliff views over the Channel before returning to London.", page: "White_Cliffs_of_Dover", caption: "White Cliffs of Dover" },
-          { text: "Return to London for dinner at Dishoom Covent Garden. <a href=\"https://www.dishoom.com/menu/all-day-main/\" target=\"_blank\" rel=\"noopener noreferrer\">Dishoom all-day menu</a>.", page: "Dishoom_Covent_Garden", caption: "Dishoom dinner" }
-        ]
-      },
-      {
         day: 5,
-        title: "Stratford-upon-Avon",
+        title: "Train to Edinburgh",
         date: "April 6",
         items: [
-          { text: "Travel no-car to Bletchley Park by train from London Euston. <a href=\"https://www.nationalrail.co.uk/destinations/trains-from-london-to-bletchley/\" target=\"_blank\" rel=\"noopener noreferrer\">National Rail London - Bletchley planning</a>.", page: "Bletchley_Park", caption: "Bletchley Park" },
-          { text: "Guided no-car option for Stratford: book coach + guide from London. <a href=\"https://evanevanstours.com/tours/day-tours-from-london/warwick-castle-shakespeares-birthplace-oxford-the-cotswolds/\" target=\"_blank\" rel=\"noopener noreferrer\">Evan Evans Stratford day tour</a>.", page: "Shakespeare's_Birthplace", caption: "Shakespeare's Birthplace" },
-          { text: "Tour the Royal Shakespeare Theatre.", page: "Royal_Shakespeare_Theatre", caption: "Royal Shakespeare Theatre" },
-          { text: "Stop by Anne Hathaway's Cottage.", page: "Anne_Hathaway's_Cottage", caption: "Anne Hathaway's Cottage" },
-          { text: "Take a River Avon walk.", page: "River_Avon,_Warwickshire", caption: "River Avon" },
-          { text: "Return to London by rail/coach for final night.", page: "London", caption: "London evening return" },
-          { text: "Dinner: try famous fish and chips at Rock & Sole Plaice.", page: "Rock_and_Sole_Plaice", caption: "Rock & Sole Plaice dinner" }
+          { text: "Depart <strong>London Kings Cross</strong> at <strong>9:03am</strong> on LNER direct to Edinburgh Waverley. 4h 29m, Standard class. £257.60 for 5 passengers.", page: "LNER", caption: "Kings Cross — LNER 9:03am", defaultCost: 257.60 },
+          { text: "Arrive <strong>Edinburgh Waverley</strong> at <strong>1:32pm</strong>. Check into hotel near the Royal Mile.", page: "Royal_Mile", caption: "Arrive Edinburgh Waverley" },
+          { text: "Explore <strong>Grassmarket</strong> and Victoria Street in the afternoon.", page: "Grassmarket", caption: "Grassmarket" },
+          { text: "Enjoy a relaxed pub dinner in Edinburgh.", page: "Edinburgh", caption: "Edinburgh night" }
         ]
       },
       {
         day: 6,
-        title: "Train to Edinburgh",
+        title: "Rabbies Tour Day 1 — Edinburgh to Skye",
         date: "April 7",
         items: [
-          { text: "Take the LNER train from London to Edinburgh.", page: "LNER", caption: "LNER northbound" },
-          { text: "Check into hotel near Royal Mile.", page: "Royal_Mile", caption: "Royal Mile" },
-          { text: "Explore Grassmarket and Victoria Street.", page: "Grassmarket", caption: "Grassmarket" },
-          { text: "Enjoy a relaxed pub dinner.", page: "Edinburgh", caption: "Edinburgh night" }
+          { text: "Pick up at <strong>8:30am</strong> from Gate J &amp; K, Edinburgh Bus Station, St Andrew Square, EH1 3DQ. <a href=\"https://www.rabbies.com/en-us/tour/the-isle-of-skye-3-day-tour-from-edinburgh\" target=\"_blank\" rel=\"noopener noreferrer\">Rabbie's Isle of Skye 3-Day Tour</a>. Max 16 people, luxury mini coach, expert local guide.", page: "Edinburgh", caption: "Edinburgh Bus Station pickup" },
+          { text: "Head west through the Lowlands, passing the majestic <strong>Stirling Castle</strong> and <strong>Doune Castle</strong>, renowned for its film and TV appearances.", page: "Stirling_Castle", caption: "Stirling &amp; Doune Castles" },
+          { text: "Cross the ancient geological fault line into <strong>Trossachs National Park</strong> — rugged mountain peaks and forest-filled glens replace the flat Lowland plains. Quick break by a shimmering loch or in a charming Highland village.", page: "Trossachs_National_Park", caption: "Trossachs National Park" },
+          { text: "Continue north across the wild <strong>Black Mount and Rannoch Moor</strong> into <strong>Glencoe</strong>, one of Scotland's most dramatic and storied natural landscapes.", page: "Glencoe,_Highland", caption: "Glencoe" },
+          { text: "Lunch break at <strong>Fort William</strong>, at the foot of Ben Nevis, the UK's highest mountain.", page: "Fort_William,_Highland", caption: "Fort William lunch stop" },
+          { text: "Travel along the <strong>Great Glen</strong> with sweeping views of the <strong>Five Sisters of Kintail</strong> mountain range.", page: "Scottish_Highlands", caption: "Great Glen &amp; Five Sisters" },
+          { text: "Photo stop at the iconic <strong>Eilean Donan Castle</strong>, perched on a small island on Loch Duich — one of Scotland's most photographed castles.", page: "Eilean_Donan", caption: "Eilean Donan Castle" },
+          { text: "Cross the bridge onto the <strong>Isle of Skye</strong> with stunning views of the Red and Black Cuillins. Arrive in <strong>Portree</strong> in the early evening — explore the charming harbour town at leisure. <em>Accommodation not included; book separately via Rabbie's or independently.</em>", page: "Portree", caption: "Arrive Portree, Skye" }
         ]
       },
       {
         day: 7,
-        title: "Edinburgh Castle and Old Town",
+        title: "Rabbies Tour Day 2 — Exploring Skye",
         date: "April 8",
         items: [
-          { text: "Visit Edinburgh Castle in the morning.", page: "Edinburgh_Castle", caption: "Edinburgh Castle" },
-          { text: "Walk the Royal Mile toward Holyrood Palace.", page: "Holyrood_Palace", caption: "Royal Mile to Holyrood" },
-          { text: "Optional hike up Arthur's Seat.", page: "Arthur's_Seat", caption: "Arthur's Seat" },
-          { text: "Dinner in Old Town.", page: "Old_Town,_Edinburgh", caption: "Old Town" }
+          { text: "Full day on Skye with your driver-guide, who tailors the route to the day's weather and conditions. Every horizon on this island conceals something astoundingly beautiful.", page: "Isle_of_Skye", caption: "Isle of Skye" },
+          { text: "Head north along the <strong>Trotternish Ridge</strong> to the <strong>Old Man of Storr</strong> — a sharp sandstone pinnacle visible for miles and one of Skye's most iconic landmarks.", page: "Old_Man_of_Storr", caption: "Old Man of Storr" },
+          { text: "Continue to <strong>Kilt Rock</strong>, a dramatic sea cliff with striking columnar basalt formations plunging into the water below.", page: "Kilt_Rock", caption: "Kilt Rock" },
+          { text: "Explore the <strong>Quiraing</strong> mountain pass — a fantasy landscape of surreal rock formations, dramatic cliffs, and vast open spaces with an overwhelming sense of wilderness.", page: "Quiraing", caption: "Quiraing" },
+          { text: "Afternoon lunch break in one of the island's towns to recharge for the second half of the day.", page: "Isle_of_Skye", caption: "Lunch on Skye" },
+          { text: "Late afternoon: guide may visit <strong>Dunvegan Castle</strong> — steeped in MacLeod clan legend and history — or lead you to another hidden gem at their discretion.", page: "Dunvegan_Castle", caption: "Dunvegan Castle" },
+          { text: "Return to <strong>Portree</strong> in the early evening. Dinner along the picturesque harbour, or seek out a pub hosting traditional Scottish music. <em>Accommodation not included.</em>", page: "Portree", caption: "Evening in Portree" }
         ]
       },
       {
         day: 8,
-        title: "Stirling Day Trip",
+        title: "Rabbies Tour Day 3 — Eilean Donan, Loch Ness &amp; Return to Edinburgh",
         date: "April 9",
         items: [
-          { text: "Take a day trip to Stirling Castle.", page: "Stirling_Castle", caption: "Stirling Castle" },
-          { text: "See the Wallace Monument area.", page: "National_Wallace_Monument", caption: "Wallace Monument" },
-          { text: "Visit the Bannockburn Heritage Centre.", page: "Battle_of_Bannockburn", caption: "Bannockburn" },
-          { text: "Return to Edinburgh for evening.", page: "Edinburgh", caption: "Return to Edinburgh" }
+          { text: "Depart Portree, travelling south past the <strong>Cuillin Hills</strong> and <strong>Sligachan Bridge</strong> back to the Scottish mainland.", page: "Cuillin", caption: "Cuillin Hills departure" },
+          { text: "Stop at <strong>Eilean Donan Castle</strong> for a closer look — explore its chambers and artifacts of the MacKenzie and MacRae clans, or stroll along the loch with a coffee from the café.", page: "Eilean_Donan", caption: "Eilean Donan Castle" },
+          { text: "Travel past the rugged <strong>Five Sisters of Kintail</strong> peaks to the charming village of <strong>Fort Augustus</strong>, nestled on the southern shore of <strong>Loch Ness</strong>.", page: "Urquhart_Castle", caption: "Fort Augustus &amp; Loch Ness" },
+          { text: "Lunch break at Fort Augustus. Stroll the <strong>Caledonian Canal</strong> and watch boats navigate its locks — or wander to the banks of Loch Ness for a chance monster sighting.", page: "Caledonian_Canal", caption: "Caledonian Canal" },
+          { text: "Journey south through the broad peaks of <strong>Cairngorms National Park</strong> with scenic photo stops along the way.", page: "Scottish_Highlands", caption: "Cairngorms National Park" },
+          { text: "Refreshment break in <strong>Pitlochry</strong>, nestled among the towering forests of Perthshire.", page: "Scottish_Highlands", caption: "Pitlochry, Perthshire" },
+          { text: "Final stretch south through the <strong>Kingdom of Fife</strong> farmlands, with a view of the UNESCO-listed <strong>Forth Rail Bridge</strong> on the approach to Edinburgh.", page: "Forth_Bridge", caption: "Forth Rail Bridge" },
+          { text: "Drop off in <strong>Edinburgh at approximately 7:00pm</strong>.", page: "Edinburgh", caption: "Return to Edinburgh" }
         ]
       },
       {
         day: 9,
-        title: "Highlands Drive",
+        title: "Return Train — Edinburgh to London",
         date: "April 10",
         items: [
-          { text: "No-car guided option: book a 2-day Highlands + Inverness tour with transport from Edinburgh. <a href=\"https://www.timberbush-tours.co.uk/our-tours/from-edinburgh/2-day-tours/loch-ness-inverness-highlands\" target=\"_blank\" rel=\"noopener noreferrer\">Timberbush 2-day Highlands/Inverness tour</a>.", page: "Scottish_Highlands", caption: "Road into the Highlands" },
-          { text: "Visit Loch Ness and Urquhart Castle.", page: "Urquhart_Castle", caption: "Urquhart Castle" },
-          { text: "Continue through Glencoe Valley.", page: "Glencoe,_Highland", caption: "Glencoe" },
-          { text: "Overnight in Inverness or Fort William area.", page: "Inverness", caption: "Inverness base" }
+          { text: "Head to <strong>Edinburgh Waverley</strong> for an early departure.", page: "Edinburgh_Waverley_railway_station", caption: "Edinburgh Waverley" },
+          { text: "Depart <strong>Edinburgh Waverley</strong> at <strong>8:26am</strong> on Lumo direct to London Kings Cross. 4h 20m, Standard class. £234.15 for 5 passengers.", page: "Edinburgh_Waverley_railway_station", caption: "Edinburgh — Lumo 8:26am", defaultCost: 234.15 },
+          { text: "Arrive <strong>London Kings Cross</strong> at <strong>12:46pm</strong>. Afternoon free in London.", page: "London", caption: "Arrive Kings Cross" }
         ]
       },
       {
         day: 10,
-        title: "Skye Morning and Return to London",
+        title: "London — Last Day &amp; Departure to Boston",
         date: "April 11",
         items: [
-          { text: "No-car guided option for Skye + Eilean Donan from Edinburgh. <a href=\"https://www.rabbies.com/en-us/tour/the-isle-of-skye-3-day-tour-from-edinburgh\" target=\"_blank\" rel=\"noopener noreferrer\">Rabbie's 3-day Skye tour</a>.", page: "Eilean_Donan", caption: "Eilean Donan" },
-          { text: "Quick scenic stop at Old Man of Storr.", page: "Old_Man_of_Storr", caption: "Old Man of Storr" },
-          { text: "Return toward Edinburgh on guided tour transport, then connect by evening train.", page: "A9_road_(Scotland)", caption: "Drive south to Edinburgh" },
-          { text: "Take an evening LNER train from Edinburgh to London.", page: "Edinburgh_Waverley_railway_station", caption: "Edinburgh to London train" }
+          { text: "Morning and early afternoon free in London — last chance to revisit a favourite spot or pick up anything you missed.", page: "London", caption: "London last morning" },
+          { text: "Head to Heathrow (LHR) by ~6:00pm — allow ~75 min from central London via Heathrow Express or taxi.", page: "London_Heathrow_Departure", caption: "Transfer to Heathrow" },
+          { text: "Depart London Heathrow (LHR) at 8:10pm on British Airways BA 239 to Boston Logan (BOS). Boeing 777, Economy. 7 hr 25 min flight.", page: "London_Heathrow_Departure", caption: "LHR departure — BA 239" },
+          { text: "Arrive Boston Logan (BOS) at 10:35pm. 12 hr 59 min overnight layover in Boston — hotel near airport recommended.", page: "Boston_Logan_International_Airport", caption: "Arrive Boston Logan" }
         ]
       },
       {
         day: 11,
-        title: "London Departure to New York",
+        title: "Boston Layover — Home to New York",
         date: "April 12",
         items: [
-          { text: "Leave central London very early for Heathrow.", page: "London_Heathrow_Departure", caption: "Early transfer to Heathrow" },
-          { text: "Arrive by 5:30am for check-in and security.", page: "London_Heathrow_Departure", caption: "Heathrow departure terminal" },
-          { text: "Flight departs London at 8:30am, connects via Toronto (YYZ) for about 2h 5m, and arrives New York (JFK) at 3:07pm.", page: "Airplane", caption: "London to New York flight", defaultCost: 1534.5 }
+          { text: "Overnight layover at a hotel near Boston Logan. Morning free to rest before the final leg home.", page: "Boston_Logan_International_Airport", caption: "Boston overnight layover" },
+          { text: "Depart Boston Logan (BOS) at 11:34am on American Eagle AA 4721 (operated by Republic Airways). Embraer 175, Economy. 1 hr 25 min flight.", page: "Boston_Logan_International_Airport", caption: "BOS departure — AA 4721" },
+          { text: "Arrive John F. Kennedy International Airport (JFK) at 12:59pm. Welcome home!", page: "John_F._Kennedy_International_Airport", caption: "Arrive JFK — home!" }
         ]
       }
 
@@ -1714,13 +1933,13 @@
       2: { town: "London", country: "England" },
       3: { town: "London", country: "England" },
       4: { town: "London", country: "England" },
-      5: { town: "London", country: "England" },
-      6: { town: "Edinburgh", country: "Scotland" },
-      7: { town: "Edinburgh", country: "Scotland" },
+      5: { town: "Edinburgh", country: "Scotland" },
+      6: { town: "Portree, Isle of Skye", country: "Scotland" },
+      7: { town: "Portree, Isle of Skye", country: "Scotland" },
       8: { town: "Edinburgh", country: "Scotland" },
-      9: { town: "Inverness / Fort William area", country: "Scotland" },
+      9: { town: "London", country: "England" },
       10: { town: "London", country: "England" },
-      11: { town: "London", country: "England" }
+      11: { town: "Boston / New York", country: "USA" }
     };
 
     const visitTimes = {
@@ -1854,95 +2073,84 @@
 
     const dayTransportPlans = {
       1: [
-        { mode: "NJ Transit / Amtrak / rideshare", bufferMin: 80, note: "Transfer from Upper East Side to EWR; typical total 70-95 min." },
-        { mode: "Airplane", bufferMin: 0, note: "Long-haul departure segment." },
-        { mode: "Airplane + terminal transfer", bufferMin: 115, note: "Connection window at IAD." },
-        { mode: "Heathrow Express + Tube/Taxi", bufferMin: 75, note: "Immigration + transfer into central London." },
-        { mode: "Walk", bufferMin: 20, note: "Short local movement on arrival day." }
+        { mode: "Rideshare / taxi", bufferMin: 75, note: "Transfer from Upper East Side to JFK; allow 45–75 min depending on traffic." },
+        { mode: "Airplane (BA 174)", bufferMin: 0, note: "JFK to LHR direct, 7h 10m overnight. Departs 6:40pm, arrives 6:50am Apr 3." }
       ],
       2: [
-        { mode: "Tube + walk", bufferMin: 35, note: "Morning transfer from hotel." },
+        { mode: "Heathrow Express + Tube/Taxi", bufferMin: 75, note: "Immigration + transfer into central London from Terminal 5." },
+        { mode: "Tube + walk", bufferMin: 30, note: "Hotel to Bloomsbury — British Museum opens 10am." },
+        { mode: "Walk", bufferMin: 10, note: "South on Shaftesbury Avenue — Forbidden Planet is steps from British Museum." },
+        { mode: "Walk", bufferMin: 12, note: "West along New Oxford Street to Oxford Street." },
+        { mode: "Walk", bufferMin: 5, note: "South-east from Oxford Street into Soho." },
+        { mode: "Walk", bufferMin: 2, note: "Same block — John Snow pump on Broadwick Street." },
+        { mode: "Walk", bufferMin: 5, note: "South from Soho to Piccadilly Circus." },
+        { mode: "Walk", bufferMin: 6, note: "East from Piccadilly Circus to Leicester Square." },
+        { mode: "Walk", bufferMin: 4, note: "South from Leicester Square to National Gallery." },
+        { mode: "Walk", bufferMin: 2, note: "Adjacent — Trafalgar Square." },
+        { mode: "Walk", bufferMin: 20, note: "East along the Strand to Fleet Street — Ye Olde Cheshire Cheese." }
+      ],
+      3: [
+        { mode: "DLR + walk", bufferMin: 40, note: "Central London to Greenwich Observatory." },
+        { mode: "Coach tour or rail + local transfer", bufferMin: 120, note: "Greenwich to Stonehenge area transfer; prebook tour/train timings." },
+        { mode: "Coach/rail return + Tube", bufferMin: 140, note: "Stonehenge return to central London for dinner." }
+      ],
+      4: [
+        { mode: "Tube + walk", bufferMin: 35, note: "Hotel to Buckingham Palace for Changing of Guard." },
         { mode: "Walk", bufferMin: 15, note: "Nearby park segment." },
         { mode: "Walk", bufferMin: 20, note: "Westminster cluster transfer." },
         { mode: "Walk", bufferMin: 10, note: "Photo stop nearby." },
-        { mode: "Walk", bufferMin: 15, note: "Cross to South Bank for timed London Eye slot." },
+        { mode: "Walk", bufferMin: 15, note: "Cross Westminster Bridge to South Bank for London Eye." },
+        { mode: "Walk", bufferMin: 20, note: "South Bank walk and riverside atmosphere." },
         { mode: "Walk", bufferMin: 20, note: "Continue east on the South Bank to Tate Modern." },
         { mode: "Walk", bufferMin: 12, note: "Short riverside transfer to Globe area." },
         { mode: "Walk + Tube", bufferMin: 25, note: "South Bank to Tower district." },
         { mode: "Walk", bufferMin: 20, note: "Riverside skyline segment." }
       ],
-      3: [
-        { mode: "Tube + walk", bufferMin: 30, note: "Hotel to Bloomsbury museum district." },
-        { mode: "Tube + walk", bufferMin: 25, note: "Bloomsbury to Trafalgar gallery district." },
-        { mode: "Walk", bufferMin: 10, note: "Adjacent square stop." },
-        { mode: "Walk", bufferMin: 10, note: "Very short West End transfer." },
-        { mode: "Walk", bufferMin: 10, note: "Short move to Piccadilly." },
-        { mode: "Walk", bufferMin: 10, note: "Piccadilly to Shaftesbury Avenue." },
-        { mode: "Walk", bufferMin: 10, note: "Shaftesbury Avenue to Broadwick Street." },
-        { mode: "Walk", bufferMin: 10, note: "Short Soho neighborhood transfer." },
-        { mode: "Walk + Tube", bufferMin: 20, note: "Soho to Oxford Street evening stroll." },
-        { mode: "Tube + walk", bufferMin: 20, note: "Oxford Street to Fleet Street pub dinner stop." }
-      ],
-      4: [
-        { mode: "DLR + walk", bufferMin: 40, note: "Central London to Greenwich Observatory." },
-        { mode: "Coach tour or rail + local transfer", bufferMin: 120, note: "Greenwich to Stonehenge area transfer; prebook tour/train timings." },
-        { mode: "Coach/rail return + Tube", bufferMin: 140, note: "Stonehenge return to central London for dinner." }
-      ],
       5: [
-        { mode: "Train (Avanti/National Rail)", bufferMin: 55, note: "London Euston to Bletchley no-car transfer." },
-        { mode: "Guided coach tour", bufferMin: 90, note: "Coach transfer to Stratford stop cluster." },
-        { mode: "Walk", bufferMin: 12, note: "Town-center transfer." },
-        { mode: "Walk/short taxi", bufferMin: 20, note: "Local movement in Stratford." },
-        { mode: "Walk", bufferMin: 10, note: "Riverside segment." },
-        { mode: "Coach or rail return", bufferMin: 125, note: "Guided tour coach or train back to London." },
-        { mode: "Walk/Tube", bufferMin: 20, note: "Transfer to dinner stop near Covent Garden." }
+        { mode: "Tube/taxi to Kings Cross", bufferMin: 40, note: "Allow time to reach London Kings Cross for 9:03am LNER departure." },
+        { mode: "Train (LNER — Lumo)", bufferMin: 0, note: "Kings Cross 9:03am → Edinburgh Waverley 1:32pm. 4h 29m direct." },
+        { mode: "Walk/taxi", bufferMin: 25, note: "Waverley station to hotel near Royal Mile." },
+        { mode: "Walk", bufferMin: 20, note: "Evening local movement in Old Town." }
       ],
       6: [
-        { mode: "Train (LNER)", bufferMin: 270, note: "London to Edinburgh rail journey." },
-        { mode: "Walk/taxi", bufferMin: 25, note: "Station to hotel transfer." },
-        { mode: "Walk", bufferMin: 15, note: "Compact Old Town area." },
-        { mode: "Walk", bufferMin: 20, note: "Evening local movement." }
+        { mode: "Rabbie's mini coach (guided)", bufferMin: 0, note: "Pickup 8:30am Edinburgh Bus Station, St Andrew Square. All transport managed by tour." },
+        { mode: "Rabbie's mini coach (guided)", bufferMin: 0, note: "Trossachs, Glencoe, Fort William lunch, Great Glen." },
+        { mode: "Rabbie's mini coach (guided)", bufferMin: 0, note: "Eilean Donan photo stop, cross to Skye, arrive Portree early evening." }
       ],
       7: [
-        { mode: "Walk/taxi", bufferMin: 20, note: "Hotel to castle approach." },
-        { mode: "Walk", bufferMin: 25, note: "Royal Mile route." },
-        { mode: "Walk", bufferMin: 35, note: "Hike buffer for Arthur's Seat." },
-        { mode: "Walk", bufferMin: 20, note: "Dinner transfer." }
+        { mode: "Rabbie's mini coach (guided)", bufferMin: 0, note: "Full-day Skye exploration — Trotternish, Old Man of Storr, Kilt Rock, Quiraing, Dunvegan. All transport managed by tour." }
       ],
       8: [
-        { mode: "Train or car", bufferMin: 55, note: "Edinburgh to Stirling." },
-        { mode: "Bus/taxi", bufferMin: 20, note: "Castle to monument area." },
-        { mode: "Car/taxi", bufferMin: 25, note: "Monument to Bannockburn." },
-        { mode: "Train or car", bufferMin: 55, note: "Return to Edinburgh." }
+        { mode: "Rabbie's mini coach (guided)", bufferMin: 0, note: "Depart Portree. Eilean Donan, Fort Augustus/Loch Ness, Cairngorms, Pitlochry, Forth Bridge. Drop off Edinburgh ~7pm." }
       ],
       9: [
-        { mode: "Guided tour coach", bufferMin: 45, note: "Board coach in Edinburgh; guide handles routing." },
-        { mode: "Guided tour coach", bufferMin: 80, note: "Highlands route segment by tour vehicle." },
-        { mode: "Guided tour coach", bufferMin: 90, note: "Loch Ness to Glencoe segment on tour." },
-        { mode: "Guided tour coach", bufferMin: 75, note: "Transfer to overnight base with tour group." }
+        { mode: "Walk/taxi to Waverley", bufferMin: 30, note: "Head to Edinburgh Waverley for 8:26am Lumo departure." },
+        { mode: "Train (Lumo)", bufferMin: 0, note: "Edinburgh Waverley 8:26am → London Kings Cross 12:46pm. 4h 20m direct." },
+        { mode: "Tube/taxi", bufferMin: 30, note: "Kings Cross to hotel/central London." }
       ],
       10: [
-        { mode: "Guided tour coach", bufferMin: 55, note: "Morning stop via Skye tour route." },
-        { mode: "Guided tour coach", bufferMin: 75, note: "Scenic transfer managed by guide/driver." },
-        { mode: "Guided tour coach", bufferMin: 240, note: "Long southbound segment back toward Edinburgh." },
-        { mode: "Train (LNER)", bufferMin: 270, note: "Evening Edinburgh to London." }
+        { mode: "Walk/Tube/taxi", bufferMin: 30, note: "Morning free in London." },
+        { mode: "Heathrow Express or taxi", bufferMin: 75, note: "Leave central London by ~6pm for 8:10pm LHR departure. Heathrow Express from Paddington ~15 min." },
+        { mode: "Airplane (BA 239)", bufferMin: 0, note: "LHR to BOS, 7h 25m. Departs 8:10pm, arrives 10:35pm." }
       ],
       11: [
-        { mode: "Taxi/ride share", bufferMin: 60, note: "Pre-dawn airport transfer." },
-        { mode: "Airport process", bufferMin: 180, note: "Bag drop, security, boarding buffer." },
-        { mode: "Airplane", bufferMin: 0, note: "LHR to JFK travel segment via YYZ." }
+        { mode: "Hotel shuttle / taxi", bufferMin: 45, note: "Boston airport hotel to BOS terminal. Be at airport by 10:00am." },
+        { mode: "Airport process", bufferMin: 90, note: "Bag drop, security, boarding buffer at BOS." },
+        { mode: "Airplane (AA 4721)", bufferMin: 0, note: "BOS to JFK, 1h 25m. Departs 11:34am, arrives 12:59pm." }
       ]
     };
 
     const dayLogisticsNotes = {
-      5: "No-car option: prebook Bletchley rail + Stratford guided coach tour; verify same-day return timing to London.",
-      9: "No-car option: board a prebooked Highlands guided tour from Edinburgh (coach + guide included).",
-      10: "If using guided Skye/Highlands tour transport, confirm Edinburgh arrival time before evening LNER train.",
-      11: "8:30am flight: leave central London around 4:30am to comfortably reach Heathrow by 5:30am."
+      2: "Arrive LHR at 6:50am on April 3. Heathrow Express from Terminal 5 to Paddington (~15 min), then Tube or taxi to central London.",
+      5: "LNER 9:03am from London Kings Cross — book at lner.co.uk. Arrive Edinburgh Waverley 1:32pm.",
+      9: "Lumo 8:26am from Edinburgh Waverley — book at lumo.co.uk. Arrive London Kings Cross 12:46pm.",
+      10: "BA 239 departs LHR at 8:10pm — leave central London by ~6:00pm. Heathrow Express from Paddington ~15 min.",
+      11: "Overnight layover in Boston. AA 4721 departs BOS 11:34am, arrives JFK 12:59pm — be at airport by 10:00am."
     };
 
     const poiCoordinates = {
       "303_E_83rd_St_NYC": [40.7759, -73.9528],
+      "John_F._Kennedy_International_Airport": [40.6413, -73.7781],
       Newark_Liberty_International_Airport: [40.6895, -74.1745],
       Washington_Dulles_International_Airport: [38.9531, -77.4565],
       London_Heathrow_Arrival: [51.4700, -0.4543],
@@ -2366,6 +2574,7 @@
     let routeMapState = null;
     const dayMapInstances = {};
     const dayMapHotelLayers = {};
+    const dayMapRouteLineLayers = {};
     let hotelCheckinData = {};
 
     function renderStaySummary() {
@@ -2466,7 +2675,7 @@
               <div class="day-head">
                 <span class="day-pill">
                   <span class="day-pill-main">Day ${day.day}</span>
-                  <span class="day-pill-weekday">${getWeekdayForDay(day)}</span>
+                  <span class="day-pill-weekday">${formatDayFilterDate(day)}</span>
                 </span>
                 <h3 class="day-title">${day.title}</h3>
                 <span class="day-date">${day.date}</span>
@@ -2870,6 +3079,7 @@
     function getPaidMixedReviewItems() {
       const items = [];
       itinerary.forEach((day) => {
+        if (day.day === 6 || day.day === 7 || day.day === 8) return; // Rabbies tour days — see Ideas section
         day.items.forEach((item, itemIndex) => {
           const meta = poiMeta[item.page] || { researchedCost: "Cost unknown; verify manually." };
           const costType = getCostType(meta.researchedCost);
@@ -2877,6 +3087,8 @@
           const weekday = getWeekdayForDay(day);
           const dayLabel = `Day ${day.day}${weekday ? ` (${weekday}, ${day.date})` : ` (${day.date})`}`;
           items.push({
+            dayNum: day.day,
+            itemIndex,
             id: `review-${getItemKey(day, item, itemIndex)}`,
             page: item.page,
             text: `${dayLabel}: ${item.caption}`,
@@ -2885,6 +3097,8 @@
           });
         });
       });
+      // Guarantee chronological order by day, then by position within the day
+      items.sort((a, b) => a.dayNum - b.dayNum || a.itemIndex - b.itemIndex);
       return items;
     }
 
@@ -2954,6 +3168,25 @@
         if (!topMapSelectedDays.has(day.day)) return;
         const stay = dayStayPlan[day.day] || { town: "Unknown" };
         const town = stay.town || "Unknown";
+
+        // Prepend hotel check-in as the first waypoint for this day
+        HOTEL_STAY_DEFS.forEach((def) => {
+          const saved = hotelCheckinData[def.id] || {};
+          if (!saved.lat || !saved.lng) return;
+          const eff = getEffectiveDef(def, saved);
+          if (eff.checkInDay === day.day) {
+            routeStops.push({
+              day: day.day,
+              order: 0,
+              label: `\uD83C\uDFE8 Check-in: ${saved.name || def.label}`,
+              page: def.id,
+              coords: [saved.lat, saved.lng],
+              time: "Hotel check-in",
+              town
+            });
+          }
+        });
+
         day.items.forEach((item, itemIndex) => {
           const coords = poiCoordinates[item.page];
           if (!coords || !isTopMapStop(item.page, coords)) return;
@@ -3227,6 +3460,7 @@
           delete commandAttentionState[id];
         }
         localStorage.setItem(COMMAND_ATTENTION_STORAGE_KEY, JSON.stringify(commandAttentionState));
+        updateFlightTotal();
       }
 
       let ccLinks = {};
@@ -3325,15 +3559,9 @@
           const normalized = raw.replace(/[$,\s]/g, "");
           const hasCost = normalized !== "" && !Number.isNaN(Number(normalized));
           itemEl.classList.toggle("has-cost", hasCost);
-          itemEl.querySelectorAll(".cc-cost-input, .cc-date-input, .cc-edit-btn, .cc-remove-btn").forEach((control) => {
-            if (!(control instanceof HTMLElement)) return;
-            control.style.background = hasCost ? "rgba(255, 244, 79, 0.95)" : "";
-            control.style.borderColor = hasCost ? "#c9a800" : "";
-            control.style.boxShadow = hasCost ? "inset 0 0 0 1px rgba(201, 168, 0, 0.28)" : "";
-            if (control.classList.contains("cc-edit-btn") || control.classList.contains("cc-remove-btn")) {
-              control.style.color = hasCost ? "#5f5200" : "";
-            }
-          });
+          input.style.background = hasCost ? "rgba(255, 244, 79, 0.95)" : "";
+          input.style.borderColor = hasCost ? "#c9a800" : "";
+          input.style.boxShadow = hasCost ? "0 0 0 2px rgba(201, 168, 0, 0.35)" : "";
         };
         if (input.dataset.bound === "true") {
           renderCostNote();
@@ -3382,7 +3610,7 @@
         if (id && commandTextOverrides[id]) {
           setEditableCommandText(itemEl, commandTextOverrides[id]);
         }
-        const supportsAttentionStar = cardId === "review" || cardId === "hotel" || cardId === "booking";
+        const supportsAttentionStar = cardId === "review" || cardId === "hotel" || cardId === "booking" || cardId === "flight";
         if (supportsAttentionStar && !itemEl.querySelector(".js-cc-attention-star")) {
           const starBtn = document.createElement("button");
           starBtn.type = "button";
@@ -3577,6 +3805,8 @@
           if (!(input instanceof HTMLInputElement)) return;
           const itemEl = input.closest(".js-cc-check-item");
           if (itemEl instanceof HTMLElement && itemEl.hidden) return;
+          const starBtn = itemEl?.querySelector(".js-cc-attention-star");
+          if (starBtn && !starBtn.classList.contains("is-active")) return;
           const val = parseFloat(input.value.replace(/[$,\s]/g, ""));
           if (!isNaN(val)) sum += val;
         });
@@ -3852,15 +4082,14 @@
         });
 
         const dayLine = dayStops.map((stop) => stop.coords);
-        L.polyline(dayLine, {
-          color: "#d81d2c",
-          weight: 5,
-          opacity: 0.9
-        }).addTo(map);
+        dayMapRouteLineLayers[day.day] = L.layerGroup().addTo(map);
+        if (dayLine.length >= 2) {
+          L.polyline(dayLine, { color: "#d81d2c", weight: 5, opacity: 0.9 }).addTo(dayMapRouteLineLayers[day.day]);
+        }
 
         if (dayLine.length === 1) {
           map.setView(dayLine[0], 13);
-        } else {
+        } else if (dayLine.length > 1) {
           map.fitBounds(dayLine, { padding: [24, 24] });
         }
       });
@@ -3987,40 +4216,60 @@
         label: "London \u2013 Main Stay",
         suggestedArea: "e.g. Premier Inn London Southwark",
         plannedCheckIn: "Apr 3",
-        plannedCheckOut: "Apr 7",
+        plannedCheckOut: "Apr 6",
         checkInDay: 2,
-        checkOutDay: 6,
-        affectedDays: [2, 3, 4, 5]
+        checkOutDay: 5,
+        affectedDays: [2, 3, 4]
       },
       {
-        id: "checkin-edinburgh",
-        label: "Edinburgh",
+        id: "checkin-edinburgh-1",
+        label: "Edinburgh \u2013 1st Night (pre-Skye)",
         suggestedArea: "e.g. Hotel on Royal Mile",
-        plannedCheckIn: "Apr 7",
-        plannedCheckOut: "Apr 10",
-        checkInDay: 6,
-        checkOutDay: 9,
-        affectedDays: [6, 7, 8]
+        plannedCheckIn: "Apr 6",
+        plannedCheckOut: "Apr 7",
+        checkInDay: 5,
+        checkOutDay: 6,
+        affectedDays: [5]
       },
       {
-        id: "checkin-highlands",
-        label: "Highlands (Inverness / Fort William)",
-        suggestedArea: "e.g. Inverness City Hotel",
-        plannedCheckIn: "Apr 10",
-        plannedCheckOut: "Apr 11",
-        checkInDay: 9,
-        checkOutDay: 10,
-        affectedDays: [9]
+        id: "checkin-portree",
+        label: "Portree, Isle of Skye",
+        suggestedArea: "e.g. Portree Hotel or Bosville Hotel",
+        plannedCheckIn: "Apr 7",
+        plannedCheckOut: "Apr 9",
+        checkInDay: 6,
+        checkOutDay: 8,
+        affectedDays: [6, 7]
+      },
+      {
+        id: "checkin-edinburgh-2",
+        label: "Edinburgh \u2013 2nd Night (post-Skye)",
+        suggestedArea: "e.g. Hotel on Royal Mile",
+        plannedCheckIn: "Apr 9",
+        plannedCheckOut: "Apr 10",
+        checkInDay: 8,
+        checkOutDay: 9,
+        affectedDays: [8]
       },
       {
         id: "checkin-london-return",
         label: "London \u2013 Return Night",
         suggestedArea: "e.g. Premier Inn London Southwark",
+        plannedCheckIn: "Apr 10",
+        plannedCheckOut: "Apr 11",
+        checkInDay: 9,
+        checkOutDay: 10,
+        affectedDays: [9, 10]
+      },
+      {
+        id: "checkin-boston",
+        label: "Boston \u2013 Logan Airport Layover",
+        suggestedArea: "e.g. Hilton Boston Logan Airport",
         plannedCheckIn: "Apr 11",
         plannedCheckOut: "Apr 12",
         checkInDay: 10,
         checkOutDay: 11,
-        affectedDays: [10, 11]
+        affectedDays: [10]
       }
     ];
 
@@ -4084,6 +4333,7 @@
             <div class="hotel-entry-header">
               <span class="hotel-entry-title">\uD83C\uDFE8 ${def.label}</span>
               <span class="hotel-entry-dates" id="hotel-dates-label-${def.id}">${datesLabel}</span>
+              <button type="button" class="hotel-clear-btn js-hotel-clear" data-hotel-id="${def.id}" title="Clear all fields for this hotel">Clear</button>
             </div>
             <div class="hotel-entry-fields">
               <div class="hotel-field-row">
@@ -4098,7 +4348,7 @@
                 <label class="hotel-field-label" for="hotel-cin-${def.id}">Check-In</label>
                 <input type="date" class="hotel-field-input js-hotel-checkin${checkInVal ? " has-value" : ""}" id="hotel-cin-${def.id}" data-hotel-id="${def.id}" value="${checkInVal}">
                 <label class="hotel-field-label" for="hotel-cout-${def.id}">Check-Out</label>
-                <input type="date" class="hotel-field-input js-hotel-checkout${checkOutVal ? " has-value" : ""}" id="hotel-cout-${def.id}" data-hotel-id="${def.id}" value="${checkOutVal}">
+                <input type="date" class="hotel-field-input js-hotel-checkout${checkOutVal ? " has-value" : ""}" id="hotel-cout-${def.id}" data-hotel-id="${def.id}" value="${checkOutVal}"${checkInVal ? ` min="${checkInVal}"` : ""}>
               </div>
             </div>
             <div class="hotel-geo-status ${geoStatusClass}" id="geo-status-${def.id}">${geoStatusText}</div>
@@ -4134,6 +4384,108 @@
       return icon;
     }
 
+    // Builds a Map of "YYYY-MM-DD" -> day number from the itinerary array.
+    // Single-date days (e.g. "April 3") take priority over range days (e.g. "April 2-3")
+    // so that April 3 resolves to Day 2 (London arrival) rather than Day 1 (flight).
+    function buildDateDayMap() {
+      const MONTHS = { January:1, February:2, March:3, April:4, May:5, June:6,
+                       July:7, August:8, September:9, October:10, November:11, December:12 };
+      const toIso = (monthName, d) => {
+        const m = MONTHS[monthName];
+        if (!m) return null;
+        return `2026-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+      };
+      const map = new Map();
+      // Pass 1 – ranges (lower priority)
+      itinerary.forEach((dayObj) => {
+        const r = (dayObj.date || "").trim().match(/^(\w+)\s+(\d+)-(\d+)$/);
+        if (!r) return;
+        for (let d = parseInt(r[2], 10); d <= parseInt(r[3], 10); d++) {
+          const iso = toIso(r[1], d);
+          if (iso && !map.has(iso)) map.set(iso, dayObj.day);
+        }
+      });
+      // Pass 2 – single dates (higher priority, overwrite ranges)
+      itinerary.forEach((dayObj) => {
+        const s = (dayObj.date || "").trim().match(/^(\w+)\s+(\d+)$/);
+        if (!s) return;
+        const iso = toIso(s[1], parseInt(s[2], 10));
+        if (iso) map.set(iso, dayObj.day);
+      });
+      return map;
+    }
+
+    // Returns effective { checkInDay, checkOutDay, affectedDays } for a hotel stay.
+    // If the user has entered ISO check-in / check-out dates those are resolved to day
+    // numbers via buildDateDayMap(); otherwise the hardcoded HOTEL_STAY_DEFS values are used.
+    function getEffectiveDef(def, saved) {
+      const dateDayMap = buildDateDayMap();
+      let checkInDay  = def.checkInDay;
+      let checkOutDay = def.checkOutDay;
+      if (saved.checkIn  && dateDayMap.has(saved.checkIn))  checkInDay  = dateDayMap.get(saved.checkIn);
+      if (saved.checkOut && dateDayMap.has(saved.checkOut)) checkOutDay = dateDayMap.get(saved.checkOut);
+      // affectedDays = every day from check-in through the night before check-out
+      const lo = Math.min(checkInDay, checkOutDay);
+      const hi = Math.max(checkInDay, checkOutDay);
+      const affectedDays = [];
+      for (let d = lo; d < hi; d++) affectedDays.push(d);
+      if (!affectedDays.length) affectedDays.push(checkInDay);
+      return { checkInDay, checkOutDay, affectedDays };
+    }
+
+    // Redraws every per-day route polyline, prepending the hotel check-in coord
+    // as the first waypoint on the day the guest arrives.
+    function refreshDayRouteLines() {
+      itinerary.forEach((day) => {
+        const lineLayer = dayMapRouteLineLayers[day.day];
+        if (!lineLayer) return;
+        lineLayer.clearLayers();
+
+        const dayStopCoords = day.items
+          .map((item) => poiCoordinates[item.page])
+          .filter((coords) => Array.isArray(coords));
+
+        // Find the hotel relevant to this day.
+        // Check-in day  → insert after any arrival item (airport/station).
+        // Other nights  → hotel is where the day starts, so prepend it.
+        let hotelCoords = null;
+        let isCheckInDay = false;
+        HOTEL_STAY_DEFS.forEach((def) => {
+          const saved = hotelCheckinData[def.id] || {};
+          if (!saved.lat || !saved.lng) return;
+          const eff = getEffectiveDef(def, saved);
+          if (eff.checkInDay === day.day) {
+            hotelCoords = [saved.lat, saved.lng];
+            isCheckInDay = true;
+          } else if (!hotelCoords && eff.affectedDays.includes(day.day)) {
+            hotelCoords = [saved.lat, saved.lng];
+          }
+        });
+
+        let line;
+        if (hotelCoords) {
+          if (isCheckInDay) {
+            // Arriving from transport — slot hotel after any arrival item
+            const firstPageKey = (day.items[0] && day.items[0].page) || "";
+            const isArrival = /arrival|heathrow|airport|waverley|station/i.test(firstPageKey);
+            if (isArrival && dayStopCoords.length > 0) {
+              line = [dayStopCoords[0], hotelCoords, ...dayStopCoords.slice(1)];
+            } else {
+              line = [hotelCoords, ...dayStopCoords];
+            }
+          } else {
+            // Already staying here — hotel is the departure point for the day
+            line = [hotelCoords, ...dayStopCoords];
+          }
+        } else {
+          line = dayStopCoords;
+        }
+        if (line.length >= 2) {
+          L.polyline(line, { color: "#d81d2c", weight: 5, opacity: 0.9 }).addTo(lineLayer);
+        }
+      });
+    }
+
     function refreshHotelMarkersOnAllMaps() {
       // Clear all existing hotel layers
       Object.values(dayMapHotelLayers).forEach((layer) => layer.clearLayers());
@@ -4143,11 +4495,12 @@
         const saved = hotelCheckinData[def.id] || {};
         if (!saved.lat || !saved.lng) return;
         const coords = [saved.lat, saved.lng];
-        const name = saved.name || def.label;
-        const icon = createHotelMapMarker(name, def);
+        const name   = saved.name || def.label;
+        const icon   = createHotelMapMarker(name, def);
+        const eff    = getEffectiveDef(def, saved);
 
-        // Add to each affected day map
-        def.affectedDays.forEach((dayNum) => {
+        // Add to each affected day map (resolved dynamically from entered dates)
+        eff.affectedDays.forEach((dayNum) => {
           const hotelLayer = dayMapHotelLayers[dayNum];
           if (!hotelLayer) return;
           const marker = L.marker(coords, { icon }).addTo(hotelLayer);
@@ -4157,8 +4510,10 @@
 
         // Add to main route map
         if (routeMapState && routeMapState.hotelLayer) {
-          const marker = L.marker(coords, { icon }).addTo(routeMapState.hotelLayer);
-          marker.bindPopup(`<strong>\uD83C\uDFE8 ${escapeHtml(name)}</strong><br>${def.label}<br><small>Planned: ${def.plannedCheckIn} \u2013 ${def.plannedCheckOut}</small>`);
+          const ciLabel = saved.checkIn  ? formatHotelDate(saved.checkIn)  : def.plannedCheckIn;
+          const coLabel = saved.checkOut ? formatHotelDate(saved.checkOut) : def.plannedCheckOut;
+          const marker  = L.marker(coords, { icon }).addTo(routeMapState.hotelLayer);
+          marker.bindPopup(`<strong>\uD83C\uDFE8 ${escapeHtml(name)}</strong><br>${def.label}<br><small>${ciLabel} \u2013 ${coLabel}</small>`);
         }
       });
     }
@@ -4175,13 +4530,16 @@
         const hasInfo = saved.name || saved.address || saved.checkIn || saved.checkOut;
         if (!hasInfo) return;
 
-        const name = escapeHtml(saved.name || def.label);
-        const address = escapeHtml(saved.address || "");
+        // Resolve which day cards the banners belong in based on entered dates
+        const eff = getEffectiveDef(def, saved);
+
+        const name             = escapeHtml(saved.name || def.label);
+        const address          = escapeHtml(saved.address || "");
         const checkInFormatted = formatHotelDate(saved.checkIn);
         const checkOutFormatted = formatHotelDate(saved.checkOut);
 
         // Check-OUT banner (order 1 = shown first on day)
-        const outDay = def.checkOutDay;
+        const outDay = eff.checkOutDay;
         if (!dayBanners[outDay]) dayBanners[outDay] = [];
         dayBanners[outDay].push({
           order: 1,
@@ -4197,7 +4555,7 @@
         });
 
         // Check-IN banner (order 2 = shown after check-out on same day)
-        const inDay = def.checkInDay;
+        const inDay = eff.checkInDay;
         if (!dayBanners[inDay]) dayBanners[inDay] = [];
         dayBanners[inDay].push({
           order: 2,
@@ -4241,6 +4599,22 @@
       const grid = document.getElementById("hotel-checkin-grid");
       if (!grid) return;
 
+      grid.querySelectorAll(".js-hotel-clear").forEach((btn) => {
+        if (btn.dataset.bound === "true") return;
+        btn.dataset.bound = "true";
+        btn.addEventListener("click", () => {
+          const hotelId = btn.getAttribute("data-hotel-id");
+          if (!hotelId) return;
+          delete hotelCheckinData[hotelId];
+          saveHotelCheckinData();
+          renderHotelCheckinGrid();
+          refreshHotelMarkersOnAllMaps();
+          refreshDayRouteLines();
+          refreshRouteMap();
+          renderHotelCheckInOutBanners();
+        });
+      });
+
       grid.querySelectorAll(".js-hotel-name, .js-hotel-address, .js-hotel-checkin, .js-hotel-checkout").forEach((input) => {
         if (input.dataset.bound === "true") return;
         input.dataset.bound = "true";
@@ -4261,6 +4635,18 @@
           } else if (input.classList.contains("js-hotel-checkin")) {
             hotelCheckinData[hotelId].checkIn = input.value;
             updateHotelDatesLabel(hotelId, def);
+            // Keep checkout picker in sync: prevent any date before the new check-in
+            const checkoutInput = document.getElementById(`hotel-cout-${hotelId}`);
+            if (checkoutInput) {
+              checkoutInput.min = input.value;
+              // If saved checkout is now before the new check-in, wipe it
+              if (checkoutInput.value && checkoutInput.value < input.value) {
+                checkoutInput.value = "";
+                checkoutInput.classList.remove("has-value");
+                hotelCheckinData[hotelId].checkOut = "";
+                updateHotelDatesLabel(hotelId, def);
+              }
+            }
           } else if (input.classList.contains("js-hotel-checkout")) {
             hotelCheckinData[hotelId].checkOut = input.value;
             updateHotelDatesLabel(hotelId, def);
@@ -4294,6 +4680,8 @@
         saveHotelCheckinData();
         if (statusEl) { statusEl.textContent = ""; statusEl.className = "hotel-geo-status"; }
         refreshHotelMarkersOnAllMaps();
+        refreshDayRouteLines();
+        refreshRouteMap();
         return;
       }
 
@@ -4323,6 +4711,8 @@
       }
 
       refreshHotelMarkersOnAllMaps();
+      refreshDayRouteLines();
+      refreshRouteMap();
     }
 
     function initializeHotelCheckIns() {
@@ -4334,7 +4724,11 @@
         const saved = hotelCheckinData[def.id] || {};
         return saved.lat && saved.lng;
       });
-      if (hasSavedCoords) refreshHotelMarkersOnAllMaps();
+      if (hasSavedCoords) {
+        refreshHotelMarkersOnAllMaps();
+        refreshDayRouteLines();
+        refreshRouteMap();
+      }
 
       renderHotelCheckInOutBanners();
     }
