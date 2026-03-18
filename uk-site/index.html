@@ -1069,7 +1069,8 @@
   .cc-cost-input--gbp:focus { border-color: #2e8b57; box-shadow: 0 0 0 2px rgba(46, 139, 87, 0.18); }
   .cc-cost-input[readonly] { background: rgba(200,200,200,0.35) !important; border-color: #b0b8c0 !important; box-shadow: none !important; color: #6b7b8d; cursor: default; }
   .cc-cost-input--gbp[readonly] { background: rgba(200,200,200,0.35) !important; border-color: #b0b8c0 !important; box-shadow: none !important; color: #6b7b8d; cursor: default; }
-  .cc-cost-col-label { font-size: 0.7rem; font-weight: 700; color: #7a8fa8; letter-spacing: 0.03em; flex: 0 0 auto; margin-right: -4px; }
+  .cc-cost-pair { display: inline-flex; align-items: center; gap: 3px; flex: 0 0 auto; }
+  .cc-cost-col-label { font-size: 0.7rem; font-weight: 700; color: #7a8fa8; letter-spacing: 0.03em; }
   .cc-exchange-label { display: inline-flex; align-items: center; gap: 3px; font-size: 0.82rem; font-weight: 600; color: #2e5a8a; white-space: nowrap; }
   .cc-exchange-input { width: 58px; padding: 2px 5px; border: 1px solid #c0ccda; border-radius: 5px; font-size: 0.82rem; font-family: inherit; color: #324559; background: rgba(255,255,255,0.9); }
   .cc-exchange-input:focus { outline: none; border-color: #1a6bbf; box-shadow: 0 0 0 2px rgba(26,107,191,0.18); }
@@ -1493,8 +1494,7 @@
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-outbound" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-outbound" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-outbound" aria-label="Cost USD">
-              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="flight-outbound" aria-label="Cost GBP">
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-outbound" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="flight-outbound" aria-label="Cost GBP"></div>
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="flight-return">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
@@ -1503,8 +1503,7 @@
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-return" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-return" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-return" aria-label="Cost USD">
-              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="flight-return" aria-label="Cost GBP">
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-return" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="flight-return" aria-label="Cost GBP"></div>
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="flight-bos-jfk">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
@@ -1513,8 +1512,7 @@
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-bos-jfk" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-bos-jfk" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-bos-jfk" aria-label="Cost USD">
-              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="flight-bos-jfk" aria-label="Cost GBP">
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-bos-jfk" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="flight-bos-jfk" aria-label="Cost GBP"></div>
             </li>
           </ul>
         </article>
@@ -1534,8 +1532,7 @@
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="hotel-london-main" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-london-main" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-london-main" aria-label="Cost USD">
-              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="hotel-london-main" aria-label="Cost GBP">
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-london-main" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="hotel-london-main" aria-label="Cost GBP"></div>
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="hotel-edinburgh-1">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
@@ -1544,8 +1541,7 @@
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="hotel-edinburgh-1" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-edinburgh-1" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-edinburgh-1" aria-label="Cost USD">
-              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="hotel-edinburgh-1" aria-label="Cost GBP">
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-edinburgh-1" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="hotel-edinburgh-1" aria-label="Cost GBP"></div>
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="hotel-portree">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
@@ -1554,8 +1550,7 @@
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="hotel-portree" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-portree" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-portree" aria-label="Cost USD">
-              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="hotel-portree" aria-label="Cost GBP">
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-portree" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="hotel-portree" aria-label="Cost GBP"></div>
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="hotel-edinburgh-2">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
@@ -1564,8 +1559,7 @@
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="hotel-edinburgh-2" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-edinburgh-2" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-edinburgh-2" aria-label="Cost USD">
-              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="hotel-edinburgh-2" aria-label="Cost GBP">
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-edinburgh-2" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="hotel-edinburgh-2" aria-label="Cost GBP"></div>
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="hotel-london-return">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
@@ -1574,8 +1568,7 @@
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="hotel-london-return" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-london-return" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-london-return" aria-label="Cost USD">
-              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="hotel-london-return" aria-label="Cost GBP">
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-london-return" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="hotel-london-return" aria-label="Cost GBP"></div>
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="hotel-boston">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
@@ -1584,8 +1577,7 @@
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="hotel-boston" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-boston" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-boston" aria-label="Cost USD">
-              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="hotel-boston" aria-label="Cost GBP">
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-boston" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="hotel-boston" aria-label="Cost GBP"></div>
             </li>
           </ul>
         </article>
@@ -1614,8 +1606,7 @@
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="link-tower-london" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="link-tower-london" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-tower-london" aria-label="Cost USD">
-              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-tower-london" aria-label="Cost GBP">
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-tower-london" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-tower-london" aria-label="Cost GBP"></div>
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-westminster">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
@@ -1624,8 +1615,7 @@
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="link-westminster" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="link-westminster" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-westminster" aria-label="Cost USD">
-              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-westminster" aria-label="Cost GBP">
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-westminster" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-westminster" aria-label="Cost GBP"></div>
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-london-eye">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
@@ -1634,8 +1624,7 @@
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="link-london-eye" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="link-london-eye" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-london-eye" aria-label="Cost USD">
-              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-london-eye" aria-label="Cost GBP">
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-london-eye" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-london-eye" aria-label="Cost GBP"></div>
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-lner">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
@@ -1644,8 +1633,7 @@
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="link-lner" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="link-lner" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-lner" aria-label="Cost USD">
-              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-lner" aria-label="Cost GBP">
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-lner" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-lner" aria-label="Cost GBP"></div>
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-rabbies">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
@@ -1654,8 +1642,7 @@
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="link-rabbies" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="link-rabbies" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-rabbies" aria-label="Cost USD">
-              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-rabbies" aria-label="Cost GBP">
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-rabbies" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-rabbies" aria-label="Cost GBP"></div>
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-lumo">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
@@ -1664,8 +1651,7 @@
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="link-lumo" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="link-lumo" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-lumo" aria-label="Cost USD">
-              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-lumo" aria-label="Cost GBP">
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-lumo" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-lumo" aria-label="Cost GBP"></div>
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-bletchley">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
@@ -1674,8 +1660,7 @@
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="link-bletchley" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="link-bletchley" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-bletchley" aria-label="Cost USD">
-              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-bletchley" aria-label="Cost GBP">
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-bletchley" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-bletchley" aria-label="Cost GBP"></div>
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-national-rail">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
@@ -1684,8 +1669,7 @@
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="link-national-rail" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="link-national-rail" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-national-rail" aria-label="Cost USD">
-              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-national-rail" aria-label="Cost GBP">
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-national-rail" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-national-rail" aria-label="Cost GBP"></div>
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-evan-evans">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
@@ -1694,8 +1678,7 @@
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="link-evan-evans" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="link-evan-evans" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-evan-evans" aria-label="Cost USD">
-              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-evan-evans" aria-label="Cost GBP">
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-evan-evans" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-evan-evans" aria-label="Cost GBP"></div>
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-timberbush">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
@@ -1704,8 +1687,7 @@
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="link-timberbush" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="link-timberbush" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-timberbush" aria-label="Cost USD">
-              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-timberbush" aria-label="Cost GBP">
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-timberbush" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-timberbush" aria-label="Cost GBP"></div>
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-edinburgh-castle">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
@@ -1714,8 +1696,7 @@
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="link-edinburgh-castle" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="link-edinburgh-castle" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-edinburgh-castle" aria-label="Cost USD">
-              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-edinburgh-castle" aria-label="Cost GBP">
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-edinburgh-castle" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-edinburgh-castle" aria-label="Cost GBP"></div>
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-booking">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
@@ -1724,8 +1705,7 @@
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="link-booking" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="link-booking" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-booking" aria-label="Cost USD">
-              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-booking" aria-label="Cost GBP">
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-booking" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-booking" aria-label="Cost GBP"></div>
             </li>
           </ul>
         </article>
@@ -3261,8 +3241,7 @@
             <input type="url" class="cc-link-input js-cc-link" data-link-id="${item.id}" value="${escapeHtml(item.defaultUrl)}" placeholder="Paste URL" aria-label="Relevant URL">
             <a class="cc-link-open js-cc-link-open" data-link-open-id="${item.id}" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
           </span>
-          <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="${item.id}" aria-label="Cost USD">
-          <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="${item.id}" aria-label="Cost GBP">
+          <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="${item.id}" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="${item.id}" aria-label="Cost GBP"></div>
         </li>
       `).join("");
     }
@@ -3611,8 +3590,7 @@
             <input type="url" class="cc-link-input js-cc-link" data-link-id="${id}" placeholder="Paste URL" aria-label="Relevant URL">
             <a class="cc-link-open js-cc-link-open" data-link-open-id="${id}" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
           </span>
-          <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="${id}" aria-label="Cost USD">
-          <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="${id}" aria-label="Cost GBP">
+          <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="${id}" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="${id}" aria-label="Cost GBP"></div>
         `;
         return itemEl;
       }
