@@ -1067,8 +1067,8 @@
   .cc-cost-input:focus { outline: none; border-color: #1a6bbf; box-shadow: 0 0 0 2px rgba(26, 107, 191, 0.18); }
   .cc-cost-input--gbp { background: rgba(240, 255, 244, 0.9); border-color: #7ecfa0; color: #1a4d2e; }
   .cc-cost-input--gbp:focus { border-color: #2e8b57; box-shadow: 0 0 0 2px rgba(46, 139, 87, 0.18); }
-  .cc-cost-input[readonly] { background: rgba(200,200,200,0.35) !important; border-color: #b0b8c0 !important; box-shadow: none !important; color: #6b7b8d; cursor: default; }
-  .cc-cost-input--gbp[readonly] { background: rgba(200,200,200,0.35) !important; border-color: #b0b8c0 !important; box-shadow: none !important; color: #6b7b8d; cursor: default; }
+  .cc-cost-input.is-computed { background: rgba(200,200,200,0.35); border-color: #b0b8c0; color: #6b7b8d; }
+  .cc-cost-input--gbp.is-computed { background: rgba(200,200,200,0.35); border-color: #b0b8c0; color: #6b7b8d; }
   .cc-cost-pair { display: inline-flex; align-items: center; gap: 3px; flex: 0 0 auto; }
   .cc-cost-col-label { font-size: 0.7rem; font-weight: 700; color: #7a8fa8; letter-spacing: 0.03em; }
   .cc-exchange-label { display: inline-flex; align-items: center; gap: 3px; font-size: 0.82rem; font-weight: 600; color: #2e5a8a; white-space: nowrap; }
@@ -3640,24 +3640,24 @@
         const gbpEl = document.querySelector(`.js-cc-cost-gbp[data-cost-gbp-id="${id}"]`);
         const setActive = (el) => {
           if (!el) return;
+          el.classList.remove("is-computed");
           el.style.background = "rgba(255, 244, 79, 0.95)";
           el.style.borderColor = "#c9a800";
           el.style.boxShadow = "0 0 0 2px rgba(201, 168, 0, 0.35)";
-          el.removeAttribute("readonly");
         };
         const setComputed = (el) => {
           if (!el) return;
+          el.classList.add("is-computed");
           el.style.background = "";
           el.style.borderColor = "";
           el.style.boxShadow = "";
-          el.setAttribute("readonly", "true");
         };
         const setNeutral = (el) => {
           if (!el) return;
+          el.classList.remove("is-computed");
           el.style.background = "";
           el.style.borderColor = "";
           el.style.boxShadow = "";
-          el.removeAttribute("readonly");
         };
         if (source === "usd") { setActive(usdEl); setComputed(gbpEl); }
         else if (source === "gbp") { setComputed(usdEl); setActive(gbpEl); }
@@ -3815,13 +3815,11 @@
         input.dataset.bound = "true";
 
         input.addEventListener("focus", () => {
-          if (input.hasAttribute("readonly")) return;
           const pos = input.value.length;
           input.setSelectionRange(pos, pos);
         });
 
         input.addEventListener("input", () => {
-          if (input.hasAttribute("readonly")) { input.value = ccCosts[id] || "$"; return; }
           if (!input.value.trim()) input.value = "$";
           const raw = String(input.value || "").trim();
           const isPlaceholder = raw === "$";
@@ -3861,7 +3859,6 @@
         });
 
         input.addEventListener("blur", () => {
-          if (input.hasAttribute("readonly")) return;
           const didEval = evaluateCostExpression();
           if (!didEval) {
             const raw = String(input.value || "").trim();
@@ -3939,16 +3936,11 @@
         input.dataset.bound = "true";
 
         input.addEventListener("focus", () => {
-          if (input.hasAttribute("readonly")) return;
           const pos = input.value.length;
           input.setSelectionRange(pos, pos);
         });
 
         input.addEventListener("input", () => {
-          if (input.hasAttribute("readonly")) {
-            input.value = ccCostsGbp[id] || "£";
-            return;
-          }
           if (!input.value.trim()) input.value = "£";
           const raw = String(input.value || "").trim();
           const isPlaceholder = raw === "£";
@@ -3984,7 +3976,6 @@
         });
 
         input.addEventListener("blur", () => {
-          if (input.hasAttribute("readonly")) return;
           const didEval = evaluateGbpExpression();
           if (!didEval) {
             const raw = String(input.value || "").trim();
