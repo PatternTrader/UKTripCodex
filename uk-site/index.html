@@ -3872,6 +3872,10 @@
               const num = parseFloat(stripped);
               fillComputedGbp(id, num);
               applyPairHighlight(id, "usd");
+            } else {
+              ccCostSource[id] = "usd";
+              localStorage.setItem(CC_COST_SOURCE_KEY, JSON.stringify(ccCostSource));
+              applyPairHighlight(id, "usd");
             }
             // Clear note if not a math expression
             if (!stripped.includes("+") && ccCostNotes[id]) {
@@ -3994,6 +3998,10 @@
               applyPairHighlight(id, "gbp");
               autofillTodayForId(id);
               updateFlightTotal();
+            } else {
+              ccCostSource[id] = "gbp";
+              localStorage.setItem(CC_COST_SOURCE_KEY, JSON.stringify(ccCostSource));
+              applyPairHighlight(id, "gbp");
             }
             if (!stripped.includes("+") && ccCostNotes[id]) {
               delete ccCostNotes[id];
