@@ -4321,7 +4321,8 @@
       if (!(costInput instanceof HTMLElement)) return;
       const id = costInput.getAttribute("data-cost-id");
       if (!id) return;
-      const existing = costInput.parentElement?.querySelector(`.js-cc-date[data-date-id="${id}"]`);
+      const itemEl = costInput.closest(".js-cc-check-item");
+      const existing = itemEl?.querySelector(`.js-cc-date[data-date-id="${id}"]`);
       if (existing) return;
 
       let ccDates = {};
@@ -4339,7 +4340,8 @@
         localStorage.setItem(CC_DATES_STORAGE_KEY, JSON.stringify(ccDates));
       });
       dateInput.addEventListener("click", (e) => e.stopPropagation());
-      costInput.insertAdjacentElement("afterend", dateInput);
+      const pairEl = costInput.closest(".cc-cost-pair") || costInput;
+      pairEl.insertAdjacentElement("afterend", dateInput);
     }
 
     function initializeDateInputs() {
