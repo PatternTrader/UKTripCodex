@@ -5550,6 +5550,7 @@
       }
       if (seeded) { localStorage.setItem("ukTripCCCostsGbpV1", JSON.stringify(gbp)); window._fbSaveAll?.(); }
       // Re-initialize all UI sections that read from localStorage
+      // Merge seeded food defaults into gbp so we can force-update DOM inputs below
       try { if (typeof initializeCostState === "function") initializeCostState(); } catch (_) {}
       try { if (typeof renderCostSheet === "function") renderCostSheet(); } catch (_) {}
       try { if (typeof bindCostInputs === "function") bindCostInputs(); } catch (_) {}
@@ -5559,6 +5560,22 @@
       try { if (typeof initializeDragReorder === "function") initializeDragReorder(); } catch (_) {}
       try { if (typeof initializeHotelCheckIns === "function") initializeHotelCheckIns(); } catch (_) {}
       try { if (typeof renderBudgetPie === "function") renderBudgetPie(); } catch (_) {}
+      // Force-update food GBP DOM inputs directly — bypasses closure timing issues
+      const _fDefaults = { breakfast: "£40", lunch: "£50", dinner: "£50" };
+      let _fGbp = {};
+      try { _fGbp = JSON.parse(localStorage.getItem("ukTripCCCostsGbpV1") || "{}"); } catch (_e) {}
+      document.querySelectorAll(".js-cc-cost-gbp[data-cost-gbp-id]").forEach((inp) => {
+        const fid = inp.getAttribute("data-cost-gbp-id");
+        if (!fid || !fid.startsWith("food-")) return;
+        const fkey = Object.keys(_fDefaults).find((k) => fid.endsWith(k));
+        if (fkey && (!_fGbp[fid] || _fGbp[fid] === "£")) {
+          inp.value = _fDefaults[fkey];
+          _fGbp[fid] = _fDefaults[fkey];
+        } else if (_fGbp[fid]) {
+          inp.value = _fGbp[fid];
+        }
+      });
+      localStorage.setItem("ukTripCCCostsGbpV1", JSON.stringify(_fGbp));
     }
 
     // ── UI helpers ────────────────────────────────────────────────────────────
