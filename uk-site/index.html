@@ -862,6 +862,34 @@
     background: rgba(26, 107, 191, 0.16);
   }
 
+  .cc-utility-btn--import {
+    background: #16a34a;
+    border-color: #15803d;
+    color: #fff;
+    font-size: 0.88rem;
+    padding: 8px 16px;
+    box-shadow: 0 2px 8px rgba(22, 163, 74, 0.35);
+  }
+  .cc-utility-btn--import:hover {
+    background: #15803d;
+    filter: none;
+    box-shadow: 0 3px 12px rgba(22, 163, 74, 0.5);
+  }
+
+  .cc-utility-btn--export {
+    background: #0e7490;
+    border-color: #0c6483;
+    color: #fff;
+    font-size: 0.88rem;
+    padding: 8px 16px;
+    box-shadow: 0 2px 8px rgba(14, 116, 144, 0.35);
+  }
+  .cc-utility-btn--export:hover {
+    background: #0c6483;
+    filter: none;
+    box-shadow: 0 3px 12px rgba(14, 116, 144, 0.5);
+  }
+
   .cc-toolbar-status {
     font-size: 0.78rem;
     color: #5d6978;
@@ -1459,8 +1487,8 @@
       <div class="cc-section-head">
         <h2 class="section-title">Dad-Level Trip Command Center</h2>
         <div class="cc-toolbar">
-          <button type="button" class="cc-utility-btn" id="cc-import-data">Import Costs</button>
-          <button type="button" class="cc-utility-btn" id="cc-export-data">Export Costs</button>
+          <button type="button" class="cc-utility-btn cc-utility-btn--import" id="cc-import-data">📥 Import Costs</button>
+          <button type="button" class="cc-utility-btn cc-utility-btn--export" id="cc-export-data">📤 Export Costs</button>
           <input type="file" id="cc-import-file" accept="application/json" hidden>
           <label class="cc-exchange-label" title="Exchange rate: 1 US dollar = X British pounds">$1&nbsp;=&nbsp;£<input type="number" id="cc-exchange-rate-inverse" class="cc-exchange-input" value="0.79" min="0.0001" step="0.0001" aria-label="USD to GBP exchange rate"></label>
           <label class="cc-exchange-label" title="Exchange rate: 1 British pound = X US dollars">£1&nbsp;=&nbsp;$<input type="number" id="cc-exchange-rate" class="cc-exchange-input" value="1.27" min="0.01" step="0.01" aria-label="GBP to USD exchange rate"></label>
