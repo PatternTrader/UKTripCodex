@@ -1065,6 +1065,14 @@
     flex: 0 0 auto;
   }
   .cc-cost-input:focus { outline: none; border-color: #1a6bbf; box-shadow: 0 0 0 2px rgba(26, 107, 191, 0.18); }
+  .cc-cost-input--gbp { background: rgba(240, 255, 244, 0.9); border-color: #7ecfa0; color: #1a4d2e; }
+  .cc-cost-input--gbp:focus { border-color: #2e8b57; box-shadow: 0 0 0 2px rgba(46, 139, 87, 0.18); }
+  .cc-cost-input[readonly] { background: rgba(200,200,200,0.35) !important; border-color: #b0b8c0 !important; box-shadow: none !important; color: #6b7b8d; cursor: default; }
+  .cc-cost-input--gbp[readonly] { background: rgba(200,200,200,0.35) !important; border-color: #b0b8c0 !important; box-shadow: none !important; color: #6b7b8d; cursor: default; }
+  .cc-cost-col-label { font-size: 0.7rem; font-weight: 700; color: #7a8fa8; letter-spacing: 0.03em; flex: 0 0 auto; margin-right: -4px; }
+  .cc-exchange-label { display: inline-flex; align-items: center; gap: 3px; font-size: 0.82rem; font-weight: 600; color: #2e5a8a; white-space: nowrap; }
+  .cc-exchange-input { width: 58px; padding: 2px 5px; border: 1px solid #c0ccda; border-radius: 5px; font-size: 0.82rem; font-family: inherit; color: #324559; background: rgba(255,255,255,0.9); }
+  .cc-exchange-input:focus { outline: none; border-color: #1a6bbf; box-shadow: 0 0 0 2px rgba(26,107,191,0.18); }
 
   .cc-card-header {
     display: flex;
@@ -1453,6 +1461,7 @@
           <button type="button" class="cc-utility-btn" id="cc-export-data">Export Data</button>
           <button type="button" class="cc-utility-btn" id="cc-import-data">Import Data</button>
           <input type="file" id="cc-import-file" accept="application/json" hidden>
+          <label class="cc-exchange-label" title="Exchange rate: 1 British pound = X US dollars">£1&nbsp;=&nbsp;$<input type="number" id="cc-exchange-rate" class="cc-exchange-input" value="1.27" min="0.01" step="0.01" aria-label="GBP to USD exchange rate"></label>
           <span class="cc-toolbar-status" id="cc-backup-status" aria-live="polite"></span>
         </div>
       </div>
@@ -1482,27 +1491,30 @@
               <span class="cc-check-text">Outbound: Wed Apr 2, 6:40pm JFK &rarr; Thu Apr 3, 6:50am LHR — BA 174 (7h 10m, direct)</span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-outbound" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-outbound" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-outbound" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-outbound" placeholder="$0.00" aria-label="Cost">
+              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-outbound" aria-label="Cost USD">
+              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="flight-outbound" aria-label="Cost GBP">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="flight-return">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text">Return Leg 1: Sat Apr 11, 8:10pm LHR &rarr; 10:35pm BOS — BA 239 (7h 25m, direct)</span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-return" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-return" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-return" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-return" placeholder="$0.00" aria-label="Cost">
+              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-return" aria-label="Cost USD">
+              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="flight-return" aria-label="Cost GBP">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="flight-bos-jfk">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text">Return Leg 2: Sun Apr 12, 11:34am BOS &rarr; 12:59pm JFK — AA 4721 / American Eagle (1h 25m, direct)</span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-bos-jfk" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-bos-jfk" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-bos-jfk" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-bos-jfk" placeholder="$0.00" aria-label="Cost">
+              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-bos-jfk" aria-label="Cost USD">
+              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="flight-bos-jfk" aria-label="Cost GBP">
             </li>
           </ul>
         </article>
@@ -1520,54 +1532,60 @@
               <span class="cc-check-text">Book London base (South Bank / Westminster): Apr 3–6 (3 nights)</span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="hotel-london-main" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-london-main" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-london-main" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-london-main" placeholder="$0.00" aria-label="Cost">
+              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-london-main" aria-label="Cost USD">
+              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="hotel-london-main" aria-label="Cost GBP">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="hotel-edinburgh-1">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text">Book Edinburgh (Royal Mile / New Town) — 1st stay: Apr 6–7 (1 night, arrive evening Apr 6)</span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="hotel-edinburgh-1" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-edinburgh-1" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-edinburgh-1" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-edinburgh-1" placeholder="$0.00" aria-label="Cost">
+              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-edinburgh-1" aria-label="Cost USD">
+              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="hotel-edinburgh-1" aria-label="Cost GBP">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="hotel-portree">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text">Book Portree, Isle of Skye: Apr 7–9 (2 nights — NOT included in Rabbies tour price, book separately)</span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="hotel-portree" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-portree" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-portree" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-portree" placeholder="$0.00" aria-label="Cost">
+              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-portree" aria-label="Cost USD">
+              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="hotel-portree" aria-label="Cost GBP">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="hotel-edinburgh-2">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text">Book Edinburgh (Royal Mile / New Town) — 2nd stay: Apr 9–10 (1 night, arrive back ~7pm Apr 9)</span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="hotel-edinburgh-2" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-edinburgh-2" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-edinburgh-2" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-edinburgh-2" placeholder="$0.00" aria-label="Cost">
+              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-edinburgh-2" aria-label="Cost USD">
+              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="hotel-edinburgh-2" aria-label="Cost GBP">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="hotel-london-return">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text">Book London return (South Bank / Westminster): Apr 10–11 (1 night, arrive afternoon Apr 10)</span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="hotel-london-return" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-london-return" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-london-return" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-london-return" placeholder="$0.00" aria-label="Cost">
+              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-london-return" aria-label="Cost USD">
+              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="hotel-london-return" aria-label="Cost GBP">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="hotel-boston">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text">Book Boston overnight layover (near Logan Airport): Apr 11–12 (1 night, arrive BOS ~10:35pm Apr 11)</span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="hotel-boston" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-boston" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-boston" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-boston" placeholder="$0.00" aria-label="Cost">
+              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="hotel-boston" aria-label="Cost USD">
+              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="hotel-boston" aria-label="Cost GBP">
             </li>
           </ul>
         </article>
@@ -1594,108 +1612,120 @@
               <span class="cc-check-text"><a href="https://www.historicroyalpalaces.com/tower-of-london/" target="_blank" rel="noopener noreferrer">Tower of London tickets</a></span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="link-tower-london" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-tower-london" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-tower-london" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-tower-london" placeholder="$0.00" aria-label="Cost">
+              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-tower-london" aria-label="Cost USD">
+              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-tower-london" aria-label="Cost GBP">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-westminster">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text"><a href="https://www.westminster-abbey.org/" target="_blank" rel="noopener noreferrer">Westminster Abbey</a></span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="link-westminster" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-westminster" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-westminster" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-westminster" placeholder="$0.00" aria-label="Cost">
+              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-westminster" aria-label="Cost USD">
+              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-westminster" aria-label="Cost GBP">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-london-eye">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text"><a href="https://www.londoneye.com/tickets-and-prices/" target="_blank" rel="noopener noreferrer">London Eye tickets</a></span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="link-london-eye" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-london-eye" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-london-eye" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-london-eye" placeholder="$0.00" aria-label="Cost">
+              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-london-eye" aria-label="Cost USD">
+              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-london-eye" aria-label="Cost GBP">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-lner">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text"><a href="https://www.lner.co.uk/" target="_blank" rel="noopener noreferrer">LNER: London Kings Cross → Edinburgh (Apr 6, 9:03am) — £257.60 / 5 pax</a></span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="link-lner" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-lner" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-lner" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-lner" placeholder="$0.00" aria-label="Cost">
+              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-lner" aria-label="Cost USD">
+              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-lner" aria-label="Cost GBP">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-rabbies">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text"><a href="https://www.rabbies.com/en-us/tour/the-isle-of-skye-3-day-tour-from-edinburgh" target="_blank" rel="noopener noreferrer">Rabbie's: Isle of Skye 3-day tour (Apr 7–9) — from $344/person</a></span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="link-rabbies" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-rabbies" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-rabbies" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-rabbies" placeholder="$0.00" aria-label="Cost">
+              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-rabbies" aria-label="Cost USD">
+              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-rabbies" aria-label="Cost GBP">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-lumo">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text"><a href="https://www.lumo.co.uk/" target="_blank" rel="noopener noreferrer">Lumo: Edinburgh → London Kings Cross (Apr 10, 8:26am) — £234.15 / 5 pax</a></span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="link-lumo" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-lumo" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-lumo" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-lumo" placeholder="$0.00" aria-label="Cost">
+              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-lumo" aria-label="Cost USD">
+              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-lumo" aria-label="Cost GBP">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-bletchley">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text"><a href="https://www.bletchleypark.org.uk/" target="_blank" rel="noopener noreferrer">Bletchley Park — Ideas section</a></span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="link-bletchley" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-bletchley" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-bletchley" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-bletchley" placeholder="$0.00" aria-label="Cost">
+              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-bletchley" aria-label="Cost USD">
+              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-bletchley" aria-label="Cost GBP">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-national-rail">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text"><a href="https://www.nationalrail.co.uk/destinations/trains-from-london-to-bletchley/" target="_blank" rel="noopener noreferrer">National Rail: London to Bletchley — Ideas section</a></span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="link-national-rail" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-national-rail" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-national-rail" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-national-rail" placeholder="$0.00" aria-label="Cost">
+              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-national-rail" aria-label="Cost USD">
+              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-national-rail" aria-label="Cost GBP">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-evan-evans">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text"><a href="https://evanevanstours.com/tours/day-tours-from-london/warwick-castle-shakespeares-birthplace-oxford-the-cotswolds/" target="_blank" rel="noopener noreferrer">Evan Evans: Stratford guided day tour — Ideas section</a></span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="link-evan-evans" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-evan-evans" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-evan-evans" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-evan-evans" placeholder="$0.00" aria-label="Cost">
+              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-evan-evans" aria-label="Cost USD">
+              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-evan-evans" aria-label="Cost GBP">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-timberbush">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text"><a href="https://www.timberbush-tours.co.uk/our-tours/from-edinburgh/2-day-tours/loch-ness-inverness-highlands" target="_blank" rel="noopener noreferrer">Timberbush: Highlands/Inverness 2-day tour — Ideas section</a></span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="link-timberbush" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-timberbush" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-timberbush" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-timberbush" placeholder="$0.00" aria-label="Cost">
+              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-timberbush" aria-label="Cost USD">
+              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-timberbush" aria-label="Cost GBP">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-edinburgh-castle">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text"><a href="https://www.edinburghcastle.scot/" target="_blank" rel="noopener noreferrer">Edinburgh Castle tickets — Ideas section</a></span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="link-edinburgh-castle" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-edinburgh-castle" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-edinburgh-castle" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-edinburgh-castle" placeholder="$0.00" aria-label="Cost">
+              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-edinburgh-castle" aria-label="Cost USD">
+              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-edinburgh-castle" aria-label="Cost GBP">
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="link-booking">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
               <span class="cc-check-text"><a href="https://www.booking.com/" target="_blank" rel="noopener noreferrer">Hotel search (Booking.com)</a></span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="link-booking" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-booking" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="link-booking" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-booking" placeholder="$0.00" aria-label="Cost">
+              <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="link-booking" aria-label="Cost USD">
+              <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="link-booking" aria-label="Cost GBP">
             </li>
           </ul>
         </article>
@@ -2650,7 +2680,10 @@
     const COMMAND_CUSTOM_ITEMS_STORAGE_KEY = "ukTripCommandCustomItemsV1";
     const COMMAND_ATTENTION_STORAGE_KEY = "ukTripCommandAttentionV1";
     const CC_COSTS_STORAGE_KEY = "ukTripCCCostsV1";
+    const CC_COSTS_GBP_STORAGE_KEY = "ukTripCCCostsGbpV1";
     const CC_COST_NOTES_STORAGE_KEY = "ukTripCCCostNotesV1";
+    const CC_COST_SOURCE_KEY = "ukTripCCCostSourceV1";
+    const CC_EXCHANGE_RATE_KEY = "ukTripCCExchangeRateV1";
     const CC_LINKS_STORAGE_KEY = "ukTripCCLinksV1";
     const CC_DATES_STORAGE_KEY = "ukTripCCDatesV1";
     const COMMAND_CENTER_BACKUP_STORAGE_KEYS = [
@@ -2663,7 +2696,10 @@
       COMMAND_CUSTOM_ITEMS_STORAGE_KEY,
       COMMAND_ATTENTION_STORAGE_KEY,
       CC_COSTS_STORAGE_KEY,
+      CC_COSTS_GBP_STORAGE_KEY,
       CC_COST_NOTES_STORAGE_KEY,
+      CC_COST_SOURCE_KEY,
+      CC_EXCHANGE_RATE_KEY,
       CC_LINKS_STORAGE_KEY,
       CC_DATES_STORAGE_KEY,
       "ukTripCCOrderV1"
@@ -2849,7 +2885,7 @@
 
     function getItemKey(day, item, itemIndex) {
       const safeCaption = item.caption.replace(/[^a-z0-9]+/gi, "_").toLowerCase();
-      return `d${day.day}_i${itemIndex}_${safeCaption}`;
+      return `d${day.day}_${safeCaption}`;
     }
 
     function getTransportEntry(dayNumber, itemIndex) {
@@ -3223,9 +3259,10 @@
           <span class="cc-check-text">${escapeHtml(item.text)}<span class="cc-review-meta">${escapeHtml(item.detail)}</span></span>
           <span class="cc-link-wrap">
             <input type="url" class="cc-link-input js-cc-link" data-link-id="${item.id}" value="${escapeHtml(item.defaultUrl)}" placeholder="Paste URL" aria-label="Relevant URL">
-            <a class="cc-link-open js-cc-link-open" data-link-open-id="${item.id}" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+            <a class="cc-link-open js-cc-link-open" data-link-open-id="${item.id}" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
           </span>
-          <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="${item.id}" placeholder="$0.00" aria-label="Cost">
+          <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="${item.id}" aria-label="Cost USD">
+          <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="${item.id}" aria-label="Cost GBP">
         </li>
       `).join("");
     }
@@ -3572,9 +3609,10 @@
           <span class="cc-check-text">${escapeHtml(text)}</span>
           <span class="cc-link-wrap">
             <input type="url" class="cc-link-input js-cc-link" data-link-id="${id}" placeholder="Paste URL" aria-label="Relevant URL">
-            <a class="cc-link-open js-cc-link-open" data-link-open-id="${id}" href="#" target="_blank" rel="noopener noreferrer" hidden>Open</a>
+            <a class="cc-link-open js-cc-link-open" data-link-open-id="${id}" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
           </span>
-          <input type="text" class="cc-cost-input js-cc-cost" data-cost-id="${id}" placeholder="$0.00" aria-label="Cost">
+          <span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="${id}" aria-label="Cost USD">
+          <span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="${id}" aria-label="Cost GBP">
         `;
         return itemEl;
       }
@@ -3604,8 +3642,100 @@
       let ccCosts = {};
       try { ccCosts = JSON.parse(localStorage.getItem(CC_COSTS_STORAGE_KEY) || "{}"); } catch (_) {}
 
+      let ccCostsGbp = {};
+      try { ccCostsGbp = JSON.parse(localStorage.getItem(CC_COSTS_GBP_STORAGE_KEY) || "{}"); } catch (_) {}
+
       let ccCostNotes = {};
       try { ccCostNotes = JSON.parse(localStorage.getItem(CC_COST_NOTES_STORAGE_KEY) || "{}"); } catch (_) {}
+
+      let ccCostSource = {};
+      try { ccCostSource = JSON.parse(localStorage.getItem(CC_COST_SOURCE_KEY) || "{}"); } catch (_) {}
+
+      const getExchangeRate = () => {
+        const rateEl = document.getElementById("cc-exchange-rate");
+        const val = rateEl ? parseFloat(rateEl.value) : NaN;
+        return (!isNaN(val) && val > 0) ? val : 1.27;
+      };
+
+      function applyPairHighlight(id, source) {
+        const usdEl = document.querySelector(`.js-cc-cost[data-cost-id="${id}"]`);
+        const gbpEl = document.querySelector(`.js-cc-cost-gbp[data-cost-gbp-id="${id}"]`);
+        const setActive = (el) => {
+          if (!el) return;
+          el.style.background = "rgba(255, 244, 79, 0.95)";
+          el.style.borderColor = "#c9a800";
+          el.style.boxShadow = "0 0 0 2px rgba(201, 168, 0, 0.35)";
+          el.removeAttribute("readonly");
+        };
+        const setComputed = (el) => {
+          if (!el) return;
+          el.style.background = "";
+          el.style.borderColor = "";
+          el.style.boxShadow = "";
+          el.setAttribute("readonly", "true");
+        };
+        const setNeutral = (el) => {
+          if (!el) return;
+          el.style.background = "";
+          el.style.borderColor = "";
+          el.style.boxShadow = "";
+          el.removeAttribute("readonly");
+        };
+        if (source === "usd") { setActive(usdEl); setComputed(gbpEl); }
+        else if (source === "gbp") { setComputed(usdEl); setActive(gbpEl); }
+        else { setNeutral(usdEl); setNeutral(gbpEl); }
+        const itemEl = (usdEl || gbpEl)?.closest(".js-cc-check-item");
+        if (itemEl instanceof HTMLElement) {
+          itemEl.classList.toggle("has-cost", source === "usd" || source === "gbp");
+        }
+      }
+
+      function fillComputedGbp(id, usdNumeric) {
+        const gbpEl = document.querySelector(`.js-cc-cost-gbp[data-cost-gbp-id="${id}"]`);
+        if (!gbpEl) return;
+        const rate = getExchangeRate();
+        gbpEl.value = (!isNaN(usdNumeric) && usdNumeric > 0) ? "£" + (usdNumeric / rate).toFixed(2) : "£";
+      }
+
+      function fillComputedUsd(id, gbpNumeric) {
+        const usdEl = document.querySelector(`.js-cc-cost[data-cost-id="${id}"]`);
+        if (!usdEl) return;
+        const rate = getExchangeRate();
+        if (!isNaN(gbpNumeric) && gbpNumeric > 0) {
+          const usdVal = "$" + (gbpNumeric * rate).toFixed(2);
+          usdEl.value = usdVal;
+          ccCosts[id] = usdVal;
+        } else {
+          usdEl.value = "$";
+          delete ccCosts[id];
+        }
+        localStorage.setItem(CC_COSTS_STORAGE_KEY, JSON.stringify(ccCosts));
+      }
+
+      // Re-sync all pairs when exchange rate changes
+      const rateInputEl = document.getElementById("cc-exchange-rate");
+      if (rateInputEl) {
+        const savedRate = localStorage.getItem(CC_EXCHANGE_RATE_KEY);
+        if (savedRate) rateInputEl.value = savedRate;
+        rateInputEl.addEventListener("input", () => {
+          localStorage.setItem(CC_EXCHANGE_RATE_KEY, rateInputEl.value);
+          document.querySelectorAll(".js-cc-cost[data-cost-id]").forEach((el) => {
+            const cid = el.getAttribute("data-cost-id");
+            if (!cid) return;
+            const src = ccCostSource[cid];
+            if (src === "usd") {
+              const num = parseFloat(String(el.value || "").replace(/[$,\s]/g, ""));
+              fillComputedGbp(cid, num);
+            } else if (src === "gbp") {
+              const gbpEl = document.querySelector(`.js-cc-cost-gbp[data-cost-gbp-id="${cid}"]`);
+              if (!gbpEl) return;
+              const num = parseFloat(String(gbpEl.value || "").replace(/[£,\s]/g, ""));
+              fillComputedUsd(cid, num);
+              updateFlightTotal();
+            }
+          });
+        });
+      }
 
       function bindLinkInput(input) {
         const id = input.getAttribute("data-link-id");
@@ -3630,112 +3760,275 @@
         });
       }
 
+      function getOrCreateNoteEl(id, itemEl) {
+        if (!(itemEl instanceof HTMLElement)) return null;
+        let existing = itemEl.querySelector(`.cc-cost-note[data-note-id="${id}"]`);
+        if (existing instanceof HTMLElement) return existing;
+        const note = document.createElement("div");
+        note.className = "cc-cost-note";
+        note.setAttribute("data-note-id", id);
+        note.hidden = true;
+        itemEl.appendChild(note);
+        return note;
+      }
+
+      function renderNoteEl(id, noteEl, input) {
+        const itemEl = input.closest(".js-cc-check-item");
+        if (itemEl instanceof HTMLElement) itemEl.classList.remove("has-note");
+        if (!(noteEl instanceof HTMLElement)) return;
+        const noteText = typeof ccCostNotes[id] === "string" ? ccCostNotes[id].trim() : "";
+        if (!noteText) { noteEl.hidden = true; noteEl.textContent = ""; return; }
+        if (itemEl instanceof HTMLElement) itemEl.classList.add("has-note");
+        noteEl.hidden = false;
+        noteEl.textContent = `Math: ${noteText}`;
+      }
+
       function bindCostInput(input) {
         const id = input.getAttribute("data-cost-id");
         if (!id) return;
-        if (ccCosts[id]) input.value = ccCosts[id];
-        const noteEl = (() => {
-          const itemEl = input.closest(".js-cc-check-item");
-          if (!(itemEl instanceof HTMLElement)) return null;
-          let existing = itemEl.querySelector(`.cc-cost-note[data-note-id="${id}"]`);
-          if (existing instanceof HTMLElement) return existing;
-          const note = document.createElement("div");
-          note.className = "cc-cost-note";
-          note.setAttribute("data-note-id", id);
-          note.hidden = true;
-          itemEl.appendChild(note);
-          return note;
-        })();
 
-        const renderCostNote = () => {
-          const itemEl = input.closest(".js-cc-check-item");
-          if (itemEl instanceof HTMLElement) {
-            itemEl.classList.remove("has-note");
-          }
-          if (!(noteEl instanceof HTMLElement)) return;
-          const noteText = typeof ccCostNotes[id] === "string" ? ccCostNotes[id].trim() : "";
-          if (!noteText) {
-            noteEl.hidden = true;
-            noteEl.textContent = "";
-            return;
-          }
-          if (itemEl instanceof HTMLElement) {
-            itemEl.classList.add("has-note");
-          }
-          noteEl.hidden = false;
-          noteEl.textContent = `Math: ${noteText}`;
-        };
+        // Restore saved value or default to "$"
+        const src = ccCostSource[id];
+        if (src === "gbp" && ccCostsGbp[id]) {
+          // GBP was the source — USD is computed; restore computed USD from ccCosts
+          input.value = ccCosts[id] || "$";
+        } else if (ccCosts[id]) {
+          input.value = ccCosts[id];
+        } else {
+          input.value = "$";
+        }
+
+        const itemEl = input.closest(".js-cc-check-item");
+        const noteEl = getOrCreateNoteEl(id, itemEl);
+
+        const renderCostNote = () => renderNoteEl(id, noteEl, input);
 
         const evaluateCostExpression = () => {
           const raw = String(input.value || "").trim();
-          if (!raw.startsWith("=")) return;
-          const cleaned = raw
-            .slice(1)
-            .replace(/"/g, "")
-            .replace(/\s+/g, "");
-          if (!cleaned) return;
+          // Detect math expression: starts with = OR contains + after stripping $
+          const stripped = raw.startsWith("=") ? raw.slice(1) : raw;
+          const cleaned = stripped.replace(/[$,\s"]/g, "");
+          if (!cleaned.includes("+")) return false;
           const parts = cleaned.split("+");
-          if (!parts.length || parts.some((part) => !part || Number.isNaN(Number(part)))) return;
-          const numbers = parts.map((part) => Number(part));
-          const sum = numbers.reduce((acc, value) => acc + value, 0);
-          const prettyParts = numbers.map((value) => Number.isInteger(value) ? String(value) : value.toFixed(2).replace(/\.00$/, ""));
-          const prettyTotal = Number.isInteger(sum) ? String(sum) : sum.toFixed(2).replace(/\.00$/, "");
-          input.value = sum.toFixed(2);
+          if (!parts.length || parts.some((p) => !p || Number.isNaN(Number(p)))) return false;
+          const numbers = parts.map(Number);
+          const sum = numbers.reduce((a, b) => a + b, 0);
+          const fmt = (v) => "$" + (Number.isInteger(v) ? String(v) : v.toFixed(2).replace(/\.00$/, ""));
+          input.value = "$" + sum.toFixed(2);
           ccCosts[id] = input.value;
-          ccCostNotes[id] = `${prettyParts.join(" + ")} = ${prettyTotal}`;
+          ccCostNotes[id] = `${numbers.map(fmt).join(" + ")} = ${fmt(sum)}`;
           localStorage.setItem(CC_COSTS_STORAGE_KEY, JSON.stringify(ccCosts));
           localStorage.setItem(CC_COST_NOTES_STORAGE_KEY, JSON.stringify(ccCostNotes));
+          ccCostSource[id] = "usd";
+          localStorage.setItem(CC_COST_SOURCE_KEY, JSON.stringify(ccCostSource));
+          fillComputedGbp(id, sum);
+          applyPairHighlight(id, "usd");
+          return true;
         };
 
-        const syncCostHighlight = () => {
-          const itemEl = input.closest(".js-cc-check-item");
-          if (!(itemEl instanceof HTMLElement)) return;
-          const raw = String(input.value || "").trim();
-          const normalized = raw.replace(/[$,\s]/g, "");
-          const hasCost = normalized !== "" && !Number.isNaN(Number(normalized));
-          itemEl.classList.toggle("has-cost", hasCost);
-          input.style.background = hasCost ? "rgba(255, 244, 79, 0.95)" : "";
-          input.style.borderColor = hasCost ? "#c9a800" : "";
-          input.style.boxShadow = hasCost ? "0 0 0 2px rgba(201, 168, 0, 0.35)" : "";
-        };
         if (input.dataset.bound === "true") {
           renderCostNote();
-          syncCostHighlight();
+          applyPairHighlight(id, ccCostSource[id] || null);
+          if (src !== "gbp") fillComputedGbp(id, parseFloat(String(input.value || "").replace(/[$,\s]/g, "")));
           attachDateInputToCostInput(input);
           autofillTodayForCostInput(input);
           return;
         }
         input.dataset.bound = "true";
+
+        input.addEventListener("focus", () => {
+          if (input.hasAttribute("readonly")) return;
+          const pos = input.value.length;
+          input.setSelectionRange(pos, pos);
+        });
+
         input.addEventListener("input", () => {
-          if (!String(input.value || "").trim().startsWith("=") && ccCostNotes[id]) {
-            delete ccCostNotes[id];
+          if (input.hasAttribute("readonly")) { input.value = ccCosts[id] || "$"; return; }
+          if (!input.value.trim()) input.value = "$";
+          const raw = String(input.value || "").trim();
+          const isPlaceholder = raw === "$";
+          if (isPlaceholder) {
+            delete ccCosts[id]; delete ccCostSource[id]; delete ccCostNotes[id];
+            localStorage.setItem(CC_COSTS_STORAGE_KEY, JSON.stringify(ccCosts));
+            localStorage.setItem(CC_COST_SOURCE_KEY, JSON.stringify(ccCostSource));
             localStorage.setItem(CC_COST_NOTES_STORAGE_KEY, JSON.stringify(ccCostNotes));
+            // Also clear GBP source
+            delete ccCostsGbp[id];
+            localStorage.setItem(CC_COSTS_GBP_STORAGE_KEY, JSON.stringify(ccCostsGbp));
+            applyPairHighlight(id, null);
+            const gbpEl = document.querySelector(`.js-cc-cost-gbp[data-cost-gbp-id="${id}"]`);
+            if (gbpEl) gbpEl.value = "£";
+          } else {
+            // Typing in USD box — mark as USD source
+            const stripped = raw.replace(/[$,\s"]/g, "");
+            if (!stripped.includes("+")) {
+              // Not a math expression yet — save live
+              ccCosts[id] = raw;
+              localStorage.setItem(CC_COSTS_STORAGE_KEY, JSON.stringify(ccCosts));
+              ccCostSource[id] = "usd";
+              localStorage.setItem(CC_COST_SOURCE_KEY, JSON.stringify(ccCostSource));
+              const num = parseFloat(stripped);
+              fillComputedGbp(id, num);
+              applyPairHighlight(id, "usd");
+            }
+            // Clear note if not a math expression
+            if (!stripped.includes("+") && ccCostNotes[id]) {
+              delete ccCostNotes[id];
+              localStorage.setItem(CC_COST_NOTES_STORAGE_KEY, JSON.stringify(ccCostNotes));
+            }
           }
-          ccCosts[id] = input.value;
-          localStorage.setItem(CC_COSTS_STORAGE_KEY, JSON.stringify(ccCosts));
           renderCostNote();
-          syncCostHighlight();
           autofillTodayForCostInput(input);
           updateFlightTotal();
         });
-        input.addEventListener("change", () => {
-          evaluateCostExpression();
-          renderCostNote();
-          syncCostHighlight();
-          autofillTodayForCostInput(input);
-          updateFlightTotal();
-        });
+
         input.addEventListener("blur", () => {
-          evaluateCostExpression();
+          if (input.hasAttribute("readonly")) return;
+          const didEval = evaluateCostExpression();
+          if (!didEval) {
+            const raw = String(input.value || "").trim();
+            if (raw && raw !== "$" && !raw.startsWith("$")) {
+              input.value = "$" + raw;
+              ccCosts[id] = input.value;
+              localStorage.setItem(CC_COSTS_STORAGE_KEY, JSON.stringify(ccCosts));
+            }
+          }
           renderCostNote();
-          syncCostHighlight();
+          const num = parseFloat(String(input.value || "").replace(/[$,\s]/g, ""));
+          if (ccCostSource[id] === "usd") fillComputedGbp(id, num);
+          applyPairHighlight(id, ccCostSource[id] || null);
           autofillTodayForCostInput(input);
           updateFlightTotal();
         });
+
         renderCostNote();
-        syncCostHighlight();
+        applyPairHighlight(id, src || null);
+        if (src !== "gbp") {
+          const num = parseFloat(String(input.value || "").replace(/[$,\s]/g, ""));
+          if (!isNaN(num) && num > 0 && src === "usd") fillComputedGbp(id, num);
+        }
         attachDateInputToCostInput(input);
         autofillTodayForCostInput(input);
+      }
+
+      function bindGbpCostInput(input) {
+        const id = input.getAttribute("data-cost-gbp-id");
+        if (!id) return;
+
+        const src = ccCostSource[id];
+        if (src === "gbp" && ccCostsGbp[id]) {
+          input.value = ccCostsGbp[id];
+        } else if (src === "usd" && ccCosts[id]) {
+          // USD was source — GBP is computed; derive display
+          const rate = getExchangeRate();
+          const num = parseFloat(String(ccCosts[id] || "").replace(/[$,\s]/g, ""));
+          input.value = (!isNaN(num) && num > 0) ? "£" + (num / rate).toFixed(2) : "£";
+        } else {
+          input.value = "£";
+        }
+
+        const itemEl = input.closest(".js-cc-check-item");
+        const noteEl = getOrCreateNoteEl(id, itemEl);
+        const renderCostNote = () => renderNoteEl(id, noteEl, input);
+
+        const evaluateGbpExpression = () => {
+          const raw = String(input.value || "").trim();
+          const stripped = raw.startsWith("=") ? raw.slice(1) : raw;
+          const cleaned = stripped.replace(/[£,\s"]/g, "");
+          if (!cleaned.includes("+")) return false;
+          const parts = cleaned.split("+");
+          if (!parts.length || parts.some((p) => !p || Number.isNaN(Number(p)))) return false;
+          const numbers = parts.map(Number);
+          const sum = numbers.reduce((a, b) => a + b, 0);
+          const fmt = (v) => "£" + (Number.isInteger(v) ? String(v) : v.toFixed(2).replace(/\.00$/, ""));
+          input.value = "£" + sum.toFixed(2);
+          ccCostsGbp[id] = input.value;
+          ccCostNotes[id] = `${numbers.map(fmt).join(" + ")} = ${fmt(sum)}`;
+          localStorage.setItem(CC_COSTS_GBP_STORAGE_KEY, JSON.stringify(ccCostsGbp));
+          localStorage.setItem(CC_COST_NOTES_STORAGE_KEY, JSON.stringify(ccCostNotes));
+          ccCostSource[id] = "gbp";
+          localStorage.setItem(CC_COST_SOURCE_KEY, JSON.stringify(ccCostSource));
+          fillComputedUsd(id, sum);
+          applyPairHighlight(id, "gbp");
+          return true;
+        };
+
+        if (input.dataset.bound === "true") {
+          renderCostNote();
+          applyPairHighlight(id, src || null);
+          return;
+        }
+        input.dataset.bound = "true";
+
+        input.addEventListener("focus", () => {
+          if (input.hasAttribute("readonly")) return;
+          const pos = input.value.length;
+          input.setSelectionRange(pos, pos);
+        });
+
+        input.addEventListener("input", () => {
+          if (input.hasAttribute("readonly")) {
+            input.value = ccCostsGbp[id] || "£";
+            return;
+          }
+          if (!input.value.trim()) input.value = "£";
+          const raw = String(input.value || "").trim();
+          const isPlaceholder = raw === "£";
+          if (isPlaceholder) {
+            delete ccCostsGbp[id]; delete ccCostSource[id]; delete ccCostNotes[id];
+            localStorage.setItem(CC_COSTS_GBP_STORAGE_KEY, JSON.stringify(ccCostsGbp));
+            localStorage.setItem(CC_COST_SOURCE_KEY, JSON.stringify(ccCostSource));
+            localStorage.setItem(CC_COST_NOTES_STORAGE_KEY, JSON.stringify(ccCostNotes));
+            delete ccCosts[id];
+            localStorage.setItem(CC_COSTS_STORAGE_KEY, JSON.stringify(ccCosts));
+            applyPairHighlight(id, null);
+            const usdEl = document.querySelector(`.js-cc-cost[data-cost-id="${id}"]`);
+            if (usdEl) usdEl.value = "$";
+            updateFlightTotal();
+          } else {
+            const stripped = raw.replace(/[£,\s"]/g, "");
+            if (!stripped.includes("+")) {
+              ccCostsGbp[id] = raw;
+              localStorage.setItem(CC_COSTS_GBP_STORAGE_KEY, JSON.stringify(ccCostsGbp));
+              ccCostSource[id] = "gbp";
+              localStorage.setItem(CC_COST_SOURCE_KEY, JSON.stringify(ccCostSource));
+              const num = parseFloat(stripped);
+              fillComputedUsd(id, num);
+              applyPairHighlight(id, "gbp");
+              updateFlightTotal();
+            }
+            if (!stripped.includes("+") && ccCostNotes[id]) {
+              delete ccCostNotes[id];
+              localStorage.setItem(CC_COST_NOTES_STORAGE_KEY, JSON.stringify(ccCostNotes));
+            }
+          }
+          renderCostNote();
+        });
+
+        input.addEventListener("blur", () => {
+          if (input.hasAttribute("readonly")) return;
+          const didEval = evaluateGbpExpression();
+          if (!didEval) {
+            const raw = String(input.value || "").trim();
+            if (raw && raw !== "£" && !raw.startsWith("£")) {
+              input.value = "£" + raw;
+              ccCostsGbp[id] = input.value;
+              localStorage.setItem(CC_COSTS_GBP_STORAGE_KEY, JSON.stringify(ccCostsGbp));
+            }
+            if (raw !== "£") {
+              const num = parseFloat(String(input.value || "").replace(/[£,\s]/g, ""));
+              if (!isNaN(num) && ccCostSource[id] === "gbp") {
+                fillComputedUsd(id, num);
+                updateFlightTotal();
+              }
+            }
+          }
+          renderCostNote();
+          applyPairHighlight(id, ccCostSource[id] || null);
+        });
+
+        renderCostNote();
+        applyPairHighlight(id, src || null);
       }
 
       function decorateCommandItem(itemEl) {
@@ -3800,6 +4093,7 @@
         }
         itemEl.querySelectorAll(".js-cc-link[data-link-id]").forEach((input) => bindLinkInput(input));
         itemEl.querySelectorAll(".js-cc-cost[data-cost-id]").forEach((input) => bindCostInput(input));
+        itemEl.querySelectorAll(".js-cc-cost-gbp[data-cost-gbp-id]").forEach((input) => bindGbpCostInput(input));
       }
 
       ["flight", "hotel", "booking", "review"].forEach((cardId) => {
@@ -3924,6 +4218,9 @@
 
       const costInputs = Array.from(document.querySelectorAll(".js-cc-cost[data-cost-id]"));
       costInputs.forEach((input) => bindCostInput(input));
+
+      const gbpCostInputs = Array.from(document.querySelectorAll(".js-cc-cost-gbp[data-cost-gbp-id]"));
+      gbpCostInputs.forEach((input) => bindGbpCostInput(input));
       updateFlightTotal();
     }
 
