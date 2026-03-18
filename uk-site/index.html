@@ -908,6 +908,39 @@
     cursor: wait;
   }
 
+  /* Smart-sync warning row */
+  .cc-sync-status-row {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 14px;
+    background: #fff8e1;
+    border: 1px solid #f59e0b;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-size: 0.82rem;
+    color: #78350f;
+    flex-wrap: wrap;
+  }
+  .cc-sync-actions {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+    flex-wrap: wrap;
+  }
+  .cc-sync-action-btn {
+    padding: 5px 13px;
+    border-radius: 6px;
+    border: 1px solid;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .cc-sync-action-btn--load  { background: #10b981; border-color: #059669; color: #fff; }
+  .cc-sync-action-btn--push  { background: #f97316; border-color: #ea580c; color: #fff; }
+  .cc-sync-action-btn--cancel{ background: none; border-color: #9ca3af; color: #6b7280; }
+
   .cc-toolbar-status {
     font-size: 0.78rem;
     color: #5d6978;
@@ -1715,6 +1748,14 @@
           <label class="cc-exchange-label" title="Exchange rate: 1 British pound = X US dollars">£1&nbsp;=&nbsp;$<input type="number" id="cc-exchange-rate" class="cc-exchange-input" value="1.27" min="0.01" step="0.01" aria-label="GBP to USD exchange rate"></label>
           <span class="cc-toolbar-status" id="cc-backup-status" aria-live="polite"></span>
           <span id="fb-user-status" style="margin-left:auto;font-size:0.78rem;color:#5d6978;display:flex;align-items:center;gap:8px;white-space:nowrap;"></span>
+        </div>
+        <div class="cc-sync-status-row" id="cc-sync-status-row">
+          <span id="cc-sync-timestamps"></span>
+          <div class="cc-sync-actions" id="cc-sync-actions">
+            <button class="cc-sync-action-btn cc-sync-action-btn--load" id="cc-sync-load-cloud">⬇️ Load from Cloud</button>
+            <button class="cc-sync-action-btn cc-sync-action-btn--push" id="cc-sync-push-anyway">⬆️ Push Local Anyway</button>
+            <button class="cc-sync-action-btn cc-sync-action-btn--cancel" id="cc-sync-cancel">✕ Cancel</button>
+          </div>
         </div>
       </div>
       <div class="budget-pie-wrap">
@@ -4771,27 +4812,31 @@
 
       if (syncBtn) {
         syncBtn.addEventListener("click", () => {
-          if (!window._fbSaveAll) {
+          if (!window._fbSmartSync) {
             setBackupStatus("Sign in first to sync.", true);
             return;
           }
-          syncBtn.classList.add("is-syncing");
-          syncBtn.textContent = "☁️ Syncing…";
-          try {
-            window._fbSaveAll();
-            setTimeout(() => {
-              syncBtn.classList.remove("is-syncing");
-              syncBtn.textContent = "☁️ Sync to Cloud";
-              setBackupStatus("✓ Synced to cloud!", false);
-              setTimeout(() => setBackupStatus(""), 3000);
-            }, 1500);
-          } catch (e) {
-            syncBtn.classList.remove("is-syncing");
-            syncBtn.textContent = "☁️ Sync to Cloud";
-            setBackupStatus("Sync failed. Try again.", true);
-          }
+          window._fbSmartSync();
         });
       }
+
+      document.getElementById("cc-sync-load-cloud")?.addEventListener("click", () => {
+        document.getElementById("cc-sync-status-row").style.display = "none";
+        if (window._fbLoadFromCloud) window._fbLoadFromCloud();
+      });
+
+      document.getElementById("cc-sync-push-anyway")?.addEventListener("click", () => {
+        document.getElementById("cc-sync-status-row").style.display = "none";
+        if (window._fbSaveAll) {
+          window._fbSaveAll();
+          setBackupStatus("✓ Pushed to cloud!", false);
+          setTimeout(() => setBackupStatus(""), 3000);
+        }
+      });
+
+      document.getElementById("cc-sync-cancel")?.addEventListener("click", () => {
+        document.getElementById("cc-sync-status-row").style.display = "none";
+      });
 
       function setBackupStatus(message, isError) {
         if (!(statusEl instanceof HTMLElement)) return;
@@ -5748,6 +5793,27 @@
       _saveTimer = setTimeout(saveAllToFirestore, 500);
     }
 
+    // ── Local timestamp key ───────────────────────────────────────────────────
+    const LOCAL_LAST_SAVE_KEY = "ukTripLastCloudSave";
+
+    // ── Format a timestamp as a human-readable relative string ────────────────
+    function fmtTs(ts) {
+      if (!ts) return "unknown";
+      const diff = Date.now() - ts;
+      if (diff < 60000)     return "just now";
+      if (diff < 3600000)   return `${Math.round(diff / 60000)} min ago`;
+      if (diff < 86400000)  return `${Math.round(diff / 3600000)} hr ago`;
+      return new Date(ts).toLocaleString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+    }
+
+    // ── Status helper (works from module scope) ───────────────────────────────
+    function setStatus(msg, isError) {
+      const el = document.getElementById("cc-backup-status");
+      if (!el) return;
+      el.textContent = msg || "";
+      el.style.color = isError ? "#b23b3b" : "#5d6978";
+    }
+
     // ── Gather all state from localStorage and write to Firestore ─────────────
     async function saveAllToFirestore() {
       try {
@@ -5761,8 +5827,64 @@
         }
         payload._lastUpdated = Date.now();
         await setDoc(tripDocRef, payload, { merge: true });
+        localStorage.setItem(LOCAL_LAST_SAVE_KEY, String(payload._lastUpdated));
       } catch (err) {
         console.warn("[Firebase] saveAllToFirestore error:", err);
+      }
+    }
+
+    // ── Smart sync: compare timestamps before pushing ─────────────────────────
+    async function smartSync() {
+      const syncBtn = document.getElementById("cc-sync-cloud");
+      const statusRow = document.getElementById("cc-sync-status-row");
+      const timestampsEl = document.getElementById("cc-sync-timestamps");
+
+      if (syncBtn) { syncBtn.classList.add("is-syncing"); syncBtn.textContent = "☁️ Checking…"; }
+
+      try {
+        const snap = await getDoc(tripDocRef);
+        const cloudTs = snap.exists() ? (snap.data()._lastUpdated || 0) : 0;
+        const localTs = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY) || "0");
+
+        if (syncBtn) { syncBtn.classList.remove("is-syncing"); syncBtn.textContent = "☁️ Sync to Cloud"; }
+
+        if (cloudTs > localTs + 60000) {
+          // Cloud is newer — warn before overwriting
+          if (timestampsEl) {
+            timestampsEl.innerHTML =
+              `⚠️ <strong>Cloud is newer than your local data.</strong>&nbsp;&nbsp;` +
+              `Cloud: <strong>${fmtTs(cloudTs)}</strong>&nbsp;&nbsp;·&nbsp;&nbsp;` +
+              `Local last synced: <strong>${localTs ? fmtTs(localTs) : "never"}</strong>`;
+          }
+          if (statusRow) statusRow.style.display = "flex";
+        } else {
+          // Local is same or newer — safe to push
+          await saveAllToFirestore();
+          if (statusRow) statusRow.style.display = "none";
+          setStatus("✓ Synced to cloud!", false);
+          setTimeout(() => setStatus(""), 3000);
+        }
+      } catch (err) {
+        if (syncBtn) { syncBtn.classList.remove("is-syncing"); syncBtn.textContent = "☁️ Sync to Cloud"; }
+        setStatus("Sync check failed. Try again.", true);
+        console.warn("[Firebase] smartSync error:", err);
+      }
+    }
+
+    // ── Load from Cloud: pull Firestore → localStorage → UI ───────────────────
+    async function loadFromCloud() {
+      try {
+        const snap = await getDoc(tripDocRef);
+        if (snap.exists()) {
+          _snapshotIgnoreNext = true;
+          applyFirestoreData(snap.data());
+          localStorage.setItem(LOCAL_LAST_SAVE_KEY, String(snap.data()._lastUpdated || Date.now()));
+        }
+        setStatus("✓ Loaded latest data from cloud!", false);
+        setTimeout(() => setStatus(""), 3000);
+      } catch (err) {
+        setStatus("Load from cloud failed. Try again.", true);
+        console.warn("[Firebase] loadFromCloud error:", err);
       }
     }
 
@@ -5902,6 +6024,7 @@
         if (snap.exists()) {
           _snapshotIgnoreNext = true;
           applyFirestoreData(snap.data());
+          localStorage.setItem(LOCAL_LAST_SAVE_KEY, String(snap.data()._lastUpdated || Date.now()));
         }
       } catch (err) {
         console.warn("[Firebase] initial getDoc error:", err);
@@ -5919,8 +6042,10 @@
       });
     });
 
-    // ── Expose save function to the non-module script ─────────────────────────
-    window._fbSaveAll = debouncedSave;
+    // ── Expose functions to the non-module script ─────────────────────────────
+    window._fbSaveAll       = debouncedSave;
+    window._fbSmartSync     = smartSync;
+    window._fbLoadFromCloud = loadFromCloud;
 
   </script>
 
