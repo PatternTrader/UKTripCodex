@@ -1463,6 +1463,7 @@
           <button type="button" class="cc-utility-btn" id="cc-import-data">Import Data</button>
           <input type="file" id="cc-import-file" accept="application/json" hidden>
           <label class="cc-exchange-label" title="Exchange rate: 1 British pound = X US dollars">£1&nbsp;=&nbsp;$<input type="number" id="cc-exchange-rate" class="cc-exchange-input" value="1.27" min="0.01" step="0.01" aria-label="GBP to USD exchange rate"></label>
+          <label class="cc-exchange-label" title="Exchange rate: 1 US dollar = X British pounds">$1&nbsp;=&nbsp;£<input type="number" id="cc-exchange-rate-inverse" class="cc-exchange-input" value="0.79" min="0.0001" step="0.0001" aria-label="USD to GBP exchange rate"></label>
           <span class="cc-toolbar-status" id="cc-backup-status" aria-live="polite"></span>
         </div>
       </div>
@@ -3692,26 +3693,51 @@
 
       // Re-sync all pairs when exchange rate changes
       const rateInputEl = document.getElementById("cc-exchange-rate");
+      const rateInverseEl = document.getElementById("cc-exchange-rate-inverse");
+
+      const syncAllPairsFromRate = () => {
+        document.querySelectorAll(".js-cc-cost[data-cost-id]").forEach((el) => {
+          const cid = el.getAttribute("data-cost-id");
+          if (!cid) return;
+          const src = ccCostSource[cid];
+          if (src === "usd") {
+            const num = parseFloat(String(el.value || "").replace(/[$,\s]/g, ""));
+            fillComputedGbp(cid, num);
+          } else if (src === "gbp") {
+            const gbpEl = document.querySelector(`.js-cc-cost-gbp[data-cost-gbp-id="${cid}"]`);
+            if (!gbpEl) return;
+            const num = parseFloat(String(gbpEl.value || "").replace(/[£,\s]/g, ""));
+            fillComputedUsd(cid, num);
+            updateFlightTotal();
+          }
+        });
+      };
+
       if (rateInputEl) {
         const savedRate = localStorage.getItem(CC_EXCHANGE_RATE_KEY);
-        if (savedRate) rateInputEl.value = savedRate;
+        if (savedRate) {
+          rateInputEl.value = savedRate;
+          if (rateInverseEl) rateInverseEl.value = (1 / parseFloat(savedRate)).toFixed(4);
+        }
         rateInputEl.addEventListener("input", () => {
+          const rate = parseFloat(rateInputEl.value);
           localStorage.setItem(CC_EXCHANGE_RATE_KEY, rateInputEl.value);
-          document.querySelectorAll(".js-cc-cost[data-cost-id]").forEach((el) => {
-            const cid = el.getAttribute("data-cost-id");
-            if (!cid) return;
-            const src = ccCostSource[cid];
-            if (src === "usd") {
-              const num = parseFloat(String(el.value || "").replace(/[$,\s]/g, ""));
-              fillComputedGbp(cid, num);
-            } else if (src === "gbp") {
-              const gbpEl = document.querySelector(`.js-cc-cost-gbp[data-cost-gbp-id="${cid}"]`);
-              if (!gbpEl) return;
-              const num = parseFloat(String(gbpEl.value || "").replace(/[£,\s]/g, ""));
-              fillComputedUsd(cid, num);
-              updateFlightTotal();
-            }
-          });
+          if (rateInverseEl && !isNaN(rate) && rate > 0) {
+            rateInverseEl.value = (1 / rate).toFixed(4);
+          }
+          syncAllPairsFromRate();
+        });
+      }
+
+      if (rateInverseEl) {
+        rateInverseEl.addEventListener("input", () => {
+          const inverseRate = parseFloat(rateInverseEl.value);
+          if (!isNaN(inverseRate) && inverseRate > 0) {
+            const rate = (1 / inverseRate).toFixed(6);
+            if (rateInputEl) rateInputEl.value = parseFloat(rate).toFixed(2);
+            localStorage.setItem(CC_EXCHANGE_RATE_KEY, rate);
+            syncAllPairsFromRate();
+          }
         });
       }
 
