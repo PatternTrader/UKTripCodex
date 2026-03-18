@@ -3401,8 +3401,11 @@
         map,
         markersLayer: L.layerGroup().addTo(map),
         routeLayer: L.layerGroup().addTo(map),
-        hotelLayer: L.layerGroup().addTo(map)
+        hotelLayer: L.layerGroup().addTo(map),
+        userMoved: false
       };
+
+      map.on("movestart", () => { routeMapState.userMoved = true; });
 
       renderRouteMapFilters();
       refreshRouteMap();
@@ -3553,8 +3556,10 @@
         statusEl.textContent = getSelectedDaysLabel();
       }
 
+      const userMoved = routeMapState.userMoved;
+
       if (!routeStops.length) {
-        map.setView([54.5, -3.5], 5);
+        if (!userMoved) map.setView([54.5, -3.5], 5);
         return;
       }
 
@@ -3577,15 +3582,17 @@
       });
 
       const routeLine = routeStops.map((stop) => stop.coords);
-      if (routeLine.length > 1) {
-        L.polyline(routeLine, {
-          color: "#d81d2c",
-          weight: 5,
-          opacity: 0.9
-        }).addTo(routeLayer);
-        map.fitBounds(routeLine, { padding: [30, 30] });
+      if (!userMoved) {
+        if (routeLine.length > 1) {
+          L.polyline(routeLine, { color: "#d81d2c", weight: 5, opacity: 0.9 }).addTo(routeLayer);
+          map.fitBounds(routeLine, { padding: [30, 30] });
+        } else {
+          map.setView(routeLine[0], 13);
+        }
       } else {
-        map.setView(routeLine[0], 13);
+        if (routeLine.length > 1) {
+          L.polyline(routeLine, { color: "#d81d2c", weight: 5, opacity: 0.9 }).addTo(routeLayer);
+        }
       }
     }
 
