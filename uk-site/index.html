@@ -2766,6 +2766,7 @@
     let customCostEntries = [];
     let commandChecklistState = {};
     let routeMapState = null;
+    window.routeMapState = routeMapState;
     const dayMapInstances = {};
     const dayMapHotelLayers = {};
     const dayMapRouteLineLayers = {};
@@ -5406,7 +5407,9 @@
     initializeDateInputs();
     initializeDragReorder();
     initializeCommandCenterBackup();
-    buildRouteMap();
+    window.buildRouteMap = buildRouteMap;
+    // Map is built after auth overlay hides (so Leaflet can measure the container)
+    // buildRouteMap() is called from hideOverlay() instead
     buildDayMaps();
     initializeHotelCheckIns();
     setupPoiCarousels();
@@ -5549,6 +5552,13 @@
 
     function hideOverlay() {
       overlay.style.display = "none";
+      // Leaflet can't measure container size while overlay covers the page — reinit map now
+      if (typeof buildRouteMap === "function" && !window._routeMapBuilt) {
+        window._routeMapBuilt = true;
+        buildRouteMap();
+      } else if (window.routeMapState && window.routeMapState.map) {
+        window.routeMapState.map.invalidateSize();
+      }
     }
 
     function showOverlay() {
