@@ -3719,6 +3719,7 @@
           rateInputEl.value = savedRate;
           if (rateInverseEl) rateInverseEl.value = (1 / parseFloat(savedRate)).toFixed(4);
         }
+        rateInputEl.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); rateInputEl.blur(); } });
         rateInputEl.addEventListener("input", () => {
           const rate = parseFloat(rateInputEl.value);
           localStorage.setItem(CC_EXCHANGE_RATE_KEY, rateInputEl.value);
@@ -3730,6 +3731,7 @@
       }
 
       if (rateInverseEl) {
+        rateInverseEl.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); rateInverseEl.blur(); } });
         rateInverseEl.addEventListener("input", () => {
           const inverseRate = parseFloat(rateInverseEl.value);
           if (!isNaN(inverseRate) && inverseRate > 0) {
@@ -3757,6 +3759,7 @@
         }
         if (input.dataset.bound === "true") return;
         input.dataset.bound = "true";
+        input.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); input.blur(); } });
         input.addEventListener("input", () => {
           ccLinks[id] = input.value;
           localStorage.setItem(CC_LINKS_STORAGE_KEY, JSON.stringify(ccLinks));
@@ -3840,6 +3843,7 @@
         }
         input.dataset.bound = "true";
 
+        input.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); input.blur(); } });
         input.addEventListener("focus", () => {
           const pos = input.value.length;
           input.setSelectionRange(pos, pos);
@@ -3966,6 +3970,7 @@
         }
         input.dataset.bound = "true";
 
+        input.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); input.blur(); } });
         input.addEventListener("focus", () => {
           const pos = input.value.length;
           input.setSelectionRange(pos, pos);
