@@ -1470,6 +1470,204 @@
     .hotel-field-row { grid-template-columns: 90px 1fr; }
     .hotel-dates-row { grid-template-columns: 1fr 1fr; }
   }
+
+  /* ============================================================
+     MOBILE STYLES — max-width: 768px
+     ============================================================ */
+  @media (max-width: 768px) {
+
+    /* --- General font size bump for readability --- */
+    body { font-size: 1.02rem; }
+
+    .section-title { font-size: 1.45rem; }
+
+    /* --- Container: use more screen real estate --- */
+    .container { width: min(100%, 96vw); }
+
+    /* --- Hero --- */
+    .hero { padding: 22px 16px; margin: 16px 0 18px; border-radius: 14px; }
+    .hero h1 { font-size: 1.65rem; }
+    .hero p { font-size: 0.97rem; }
+
+    /* --- Section head: stack title + toolbar vertically --- */
+    .cc-section-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .cc-section-head .section-title { margin-bottom: 0; }
+
+    /* --- Toolbar: wrap exchange rate boxes + buttons --- */
+    .cc-toolbar {
+      width: 100%;
+      flex-wrap: wrap;
+      gap: 8px 10px;
+    }
+    .cc-utility-btn--import,
+    .cc-utility-btn--export {
+      flex: 1 1 calc(50% - 6px);
+      min-height: 44px;
+      font-size: 0.92rem;
+      text-align: center;
+      justify-content: center;
+    }
+    .cc-exchange-label {
+      flex: 1 1 calc(50% - 6px);
+      font-size: 0.88rem;
+    }
+    .cc-exchange-input { width: 62px; }
+
+    /* --- Command-center check-item: stacked layout --- */
+    .cc-check-item {
+      flex-wrap: wrap;
+      gap: 6px 8px;
+      align-items: flex-start;
+      padding: 6px 4px;
+    }
+
+    /* Row 1: checkbox + star + text span full width */
+    .cc-check-btn {
+      width: 22px;
+      height: 22px;
+      flex: 0 0 22px;
+      min-height: 44px;          /* pad touch area via line-height trick */
+      border-radius: 5px;
+    }
+    .cc-attention-star {
+      flex: 0 0 auto;
+      min-height: 44px;
+      padding: 10px 10px;
+      font-size: 1rem;
+    }
+    .cc-check-text {
+      flex: 1 1 calc(100% - 80px);
+      min-width: 0;
+      font-size: 0.9rem;
+    }
+
+    /* Row 2: URL input + Visit button full width */
+    .cc-link-wrap {
+      flex: 1 1 100%;
+      order: 2;
+      gap: 6px;
+    }
+    .cc-link-input {
+      flex: 1 1 0;
+      width: 100%;
+      min-height: 36px;
+      font-size: 0.88rem;
+      padding: 5px 8px;
+    }
+    .cc-link-open {
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px;
+      white-space: nowrap;
+      font-size: 0.85rem;
+    }
+
+    /* Row 3: USD + GBP side-by-side, slightly wider boxes */
+    .cc-cost-pair {
+      order: 3;
+      flex: 1 1 100%;
+      gap: 6px;
+    }
+    .cc-cost-input {
+      width: 90px;
+      min-height: 36px;
+      padding: 5px 7px;
+      font-size: 0.88rem;
+    }
+    .cc-cost-col-label { font-size: 0.75rem; }
+
+    /* Row 4: date picker full width */
+    .cc-date-input {
+      order: 4;
+      flex: 1 1 100%;
+      width: 100%;
+      min-height: 36px;
+      padding: 5px 8px;
+      font-size: 0.88rem;
+    }
+
+    /* Row 5: Edit + Remove buttons side by side */
+    .cc-edit-btn,
+    .cc-remove-btn {
+      order: 5;
+      flex: 1 1 calc(50% - 4px);
+      min-height: 44px;
+      font-size: 0.85rem;
+      text-align: center;
+      padding: 10px 8px;
+    }
+
+    /* cc-add-btn: full-width tappable */
+    .cc-add-btn {
+      min-height: 44px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+    }
+
+    /* --- Card totals --- */
+    .cc-card-total {
+      right: 8px;
+      top: -12px;
+      padding: 3px 10px 5px;
+      min-width: 72px;
+    }
+    .cc-card-total--overall {
+      top: -54px;
+      right: 8px;
+    }
+
+    /* --- Budget pie: stack legend below chart --- */
+    .budget-pie-inner {
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .budget-pie-legend {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      justify-content: center;
+    }
+    .budget-pie-legend li { font-size: 0.88rem; }
+
+    /* --- Map heights on phone --- */
+    #route-map { height: 280px; }
+    .day-map { height: 200px; }
+
+    /* --- Day filter chips: wrap and larger tap targets --- */
+    .map-filter-chip {
+      padding: 10px 14px;
+      font-size: 0.88rem;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+    }
+    .map-filter-actions,
+    .map-filter-days {
+      gap: 6px;
+    }
+
+    /* --- Day pill (itinerary day badge) --- */
+    .day-pill { min-width: 120px; padding: 10px 16px; }
+    .day-pill-main { font-size: 1.2rem; }
+
+    /* --- Hotel dates row: stack to 2-column on small screens --- */
+    .hotel-dates-row { grid-template-columns: 90px 1fr; }
+
+    /* --- Utility buttons in toolbar min tap target --- */
+    .cc-utility-btn { min-height: 44px; }
+
+    /* --- Cost add form --- */
+    .cost-add-form { grid-template-columns: 1fr; }
+    .cost-add-btn,
+    .cost-remove-btn { min-height: 44px; }
+
+  }
 </style>
 </head>
 <body>
