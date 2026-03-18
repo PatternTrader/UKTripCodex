@@ -5574,6 +5574,18 @@
         } else if (_fGbp[fid]) {
           inp.value = _fGbp[fid];
         }
+        // Apply yellow/gray highlighting — GBP is active source
+        if (inp.value && inp.value !== "£") {
+          inp.style.background = "rgba(255,244,79,0.95)";
+          inp.style.borderColor = "#c9a800";
+          inp.style.boxShadow = "0 0 0 2px rgba(201,168,0,0.35)";
+          const usdInp = inp.closest(".cc-cost-pair")?.querySelector(".js-cc-cost");
+          if (usdInp) {
+            usdInp.style.background = "rgba(200,200,200,0.35)";
+            usdInp.style.borderColor = "#b0b8c0";
+            usdInp.style.boxShadow = "none";
+          }
+        }
       });
       localStorage.setItem("ukTripCCCostsGbpV1", JSON.stringify(_fGbp));
     }
