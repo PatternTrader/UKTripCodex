@@ -4133,7 +4133,7 @@
         if (id && commandTextOverrides[id]) {
           setEditableCommandText(itemEl, commandTextOverrides[id]);
         }
-        const supportsAttentionStar = cardId === "review" || cardId === "hotel" || cardId === "booking" || cardId === "flight" || cardId === "food";
+        const supportsAttentionStar = cardId === "review" || cardId === "hotel" || cardId === "booking" || cardId === "flight";
         if (supportsAttentionStar && !itemEl.querySelector(".js-cc-attention-star")) {
           const starBtn = document.createElement("button");
           starBtn.type = "button";
