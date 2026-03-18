@@ -3405,10 +3405,10 @@
         userMoved: false
       };
 
-      map.on("movestart", () => { routeMapState.userMoved = true; });
-
       renderRouteMapFilters();
       refreshRouteMap();
+      // Attach AFTER initial render so Leaflet's own init movestart doesn't count
+      setTimeout(() => { map.on("movestart", () => { routeMapState.userMoved = true; }); }, 500);
     }
 
     function getSelectedRouteStops() {
