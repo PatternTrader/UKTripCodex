@@ -1497,6 +1497,7 @@
           <label class="cc-exchange-label" title="Exchange rate: 1 US dollar = X British pounds">$1&nbsp;=&nbsp;£<input type="number" id="cc-exchange-rate-inverse" class="cc-exchange-input" value="0.79" min="0.0001" step="0.0001" aria-label="USD to GBP exchange rate"></label>
           <label class="cc-exchange-label" title="Exchange rate: 1 British pound = X US dollars">£1&nbsp;=&nbsp;$<input type="number" id="cc-exchange-rate" class="cc-exchange-input" value="1.27" min="0.01" step="0.01" aria-label="GBP to USD exchange rate"></label>
           <span class="cc-toolbar-status" id="cc-backup-status" aria-live="polite"></span>
+          <span id="fb-user-status" style="margin-left:auto;font-size:0.78rem;color:#5d6978;display:flex;align-items:center;gap:8px;white-space:nowrap;"></span>
         </div>
       </div>
       <div class="budget-pie-wrap">
@@ -2727,6 +2728,20 @@
       CC_DATES_STORAGE_KEY,
       "ukTripCCOrderV1"
     ];
+
+    // ── Firebase sync: patch localStorage.setItem so any write to a trip key
+    //    automatically triggers the debounced Firestore save (window._fbSaveAll).
+    (function patchLocalStorageForFirebase() {
+      const _TRIP_KEYS = new Set(COMMAND_CENTER_BACKUP_STORAGE_KEYS);
+      const _origSet = localStorage.setItem.bind(localStorage);
+      localStorage.setItem = function(key, value) {
+        _origSet(key, value);
+        if (_TRIP_KEYS.has(key)) {
+          window._fbSaveAll?.();
+        }
+      };
+    })();
+
     const EMPTY_IMAGE_PLACEHOLDER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800'><rect width='1200' height='800' fill='white'/></svg>";
     const STAY_COLOR_BY_TOWN = {
       London: "#d1a900",
@@ -5373,6 +5388,218 @@
     setupPoiCarousels();
     loadWikipediaImages();
     renderBudgetPie();
+  </script>
+
+  <!-- Firebase Auth Overlay -->
+  <div id="fb-auth-overlay" style="position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#1a3a5c,#0d2137);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;">
+    <h1 style="color:#fff;font-size:2rem;margin:0;">UK Trip Codex</h1>
+    <p style="color:rgba(255,255,255,0.7);margin:0;">Family trip planner — sign in to continue</p>
+    <button id="fb-signin-btn" style="display:flex;align-items:center;gap:10px;padding:12px 24px;background:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" height="20">
+      Sign in with Google
+    </button>
+    <div id="fb-auth-error" style="color:#ff6b6b;display:none;text-align:center;max-width:300px;"></div>
+    <button id="fb-signout-btn" style="display:none;color:rgba(255,255,255,0.6);background:none;border:1px solid rgba(255,255,255,0.3);padding:8px 16px;border-radius:6px;cursor:pointer;">Sign out</button>
+  </div>
+
+  <!-- Firebase Integration (module script) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    // ── Allowed email whitelist ───────────────────────────────────────────────
+    // Add family member emails here. If empty, any signed-in Google user is allowed.
+    const ALLOWED_EMAILS = [
+      // "example@gmail.com",
+    ];
+
+    // ── Firebase init ─────────────────────────────────────────────────────────
+    const firebaseConfig = {
+      apiKey: "AIzaSyCsRqCldapy-gt4LoaAip5-MKxyC4m797M",
+      authDomain: "uktrip-fa83c.firebaseapp.com",
+      projectId: "uktrip-fa83c",
+      storageBucket: "uktrip-fa83c.firebasestorage.app",
+      messagingSenderId: "930763572058",
+      appId: "1:930763572058:web:ac001d68f1374685226963"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    // ── Storage key constants (must match the main script) ────────────────────
+    const STORAGE_KEY_MAP = {
+      hotelCheckins:        "ukTripHotelCheckinsV1",
+      costInputs:           "ukTripCostInputsV1",
+      customCostEntries:    "ukTripCustomCostEntriesV1",
+      commandChecklist:     "ukTripCommandChecklistV1",
+      commandRemoved:       "ukTripCommandRemovedV1",
+      commandText:          "ukTripCommandTextV1",
+      commandCustomItems:   "ukTripCommandCustomItemsV1",
+      commandAttention:     "ukTripCommandAttentionV1",
+      ccCosts:              "ukTripCCCostsV1",
+      ccCostsGbp:           "ukTripCCCostsGbpV1",
+      ccCostNotes:          "ukTripCCCostNotesV1",
+      ccCostSource:         "ukTripCCCostSourceV1",
+      ccExchangeRate:       "ukTripCCExchangeRateV1",
+      ccLinks:              "ukTripCCLinksV1",
+      ccDates:              "ukTripCCDatesV1",
+      ccOrder:              "ukTripCCOrderV1"
+    };
+
+    // ── Firestore document reference ──────────────────────────────────────────
+    const tripDocRef = doc(db, "tripData", "shared");
+
+    // ── Debounce helper ───────────────────────────────────────────────────────
+    let _saveTimer = null;
+    function debouncedSave() {
+      clearTimeout(_saveTimer);
+      _saveTimer = setTimeout(saveAllToFirestore, 500);
+    }
+
+    // ── Gather all state from localStorage and write to Firestore ─────────────
+    async function saveAllToFirestore() {
+      try {
+        const payload = {};
+        for (const [field, lsKey] of Object.entries(STORAGE_KEY_MAP)) {
+          const raw = localStorage.getItem(lsKey);
+          if (raw !== null) {
+            try { payload[field] = JSON.parse(raw); }
+            catch (_) { payload[field] = raw; }
+          }
+        }
+        payload._lastUpdated = Date.now();
+        await setDoc(tripDocRef, payload, { merge: true });
+      } catch (err) {
+        console.warn("[Firebase] saveAllToFirestore error:", err);
+      }
+    }
+
+    // ── Apply Firestore data to localStorage (and re-init UI) ─────────────────
+    let _snapshotIgnoreNext = false;
+
+    function applyFirestoreData(data) {
+      if (!data) return;
+      // Write each field back to localStorage so existing code reads it
+      for (const [field, lsKey] of Object.entries(STORAGE_KEY_MAP)) {
+        if (Object.prototype.hasOwnProperty.call(data, field) && data[field] !== undefined) {
+          try {
+            localStorage.setItem(lsKey, JSON.stringify(data[field]));
+          } catch (_) {}
+        }
+      }
+      // Re-initialize all UI sections that read from localStorage
+      try { if (typeof initializeCostState === "function") initializeCostState(); } catch (_) {}
+      try { if (typeof renderCostSheet === "function") renderCostSheet(); } catch (_) {}
+      try { if (typeof bindCostInputs === "function") bindCostInputs(); } catch (_) {}
+      try { if (typeof bindCustomCostControls === "function") bindCustomCostControls(); } catch (_) {}
+      try { if (typeof initializeCommandChecklist === "function") initializeCommandChecklist(); } catch (_) {}
+      try { if (typeof initializeDateInputs === "function") initializeDateInputs(); } catch (_) {}
+      try { if (typeof initializeDragReorder === "function") initializeDragReorder(); } catch (_) {}
+      try { if (typeof initializeHotelCheckIns === "function") initializeHotelCheckIns(); } catch (_) {}
+      try { if (typeof renderBudgetPie === "function") renderBudgetPie(); } catch (_) {}
+    }
+
+    // ── UI helpers ────────────────────────────────────────────────────────────
+    const overlay    = document.getElementById("fb-auth-overlay");
+    const signinBtn  = document.getElementById("fb-signin-btn");
+    const signoutBtn = document.getElementById("fb-signout-btn");
+    const errorDiv   = document.getElementById("fb-auth-error");
+    const userStatus = document.getElementById("fb-user-status");
+
+    function showError(msg) {
+      errorDiv.textContent = msg;
+      errorDiv.style.display = "block";
+      signoutBtn.style.display = "inline-block";
+    }
+
+    function hideOverlay() {
+      overlay.style.display = "none";
+    }
+
+    function showOverlay() {
+      overlay.style.display = "flex";
+      errorDiv.style.display = "none";
+      signoutBtn.style.display = "none";
+    }
+
+    function setUserStatusBar(email) {
+      if (!userStatus) return;
+      userStatus.innerHTML = `<span style="opacity:0.75">Signed in as <strong>${email}</strong></span> <button id="fb-main-signout" style="font-size:0.75rem;padding:3px 10px;background:none;border:1px solid #aaa;border-radius:5px;cursor:pointer;color:#445061;">Sign out</button>`;
+      const mainSignoutBtn = document.getElementById("fb-main-signout");
+      if (mainSignoutBtn) {
+        mainSignoutBtn.addEventListener("click", () => signOut(auth));
+      }
+    }
+
+    function clearUserStatusBar() {
+      if (userStatus) userStatus.innerHTML = "";
+    }
+
+    // ── Sign-in button ────────────────────────────────────────────────────────
+    signinBtn.addEventListener("click", async () => {
+      try {
+        errorDiv.style.display = "none";
+        await signInWithPopup(auth, provider);
+      } catch (err) {
+        showError("Sign-in failed: " + err.message);
+      }
+    });
+
+    signoutBtn.addEventListener("click", () => signOut(auth));
+
+    // ── Auth state listener ───────────────────────────────────────────────────
+    let _unsubSnapshot = null;
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        // Signed out
+        showOverlay();
+        clearUserStatusBar();
+        if (_unsubSnapshot) { _unsubSnapshot(); _unsubSnapshot = null; }
+        return;
+      }
+
+      // Check whitelist
+      const email = user.email || "";
+      if (ALLOWED_EMAILS.length > 0 && !ALLOWED_EMAILS.includes(email)) {
+        showOverlay();
+        showError(`Access denied for ${email}. Contact the trip organizer to be added.`);
+        return;
+      }
+
+      // Allowed — hide overlay, show user in toolbar
+      hideOverlay();
+      setUserStatusBar(email);
+
+      // Load current data from Firestore once
+      try {
+        const snap = await getDoc(tripDocRef);
+        if (snap.exists()) {
+          _snapshotIgnoreNext = true;
+          applyFirestoreData(snap.data());
+        }
+      } catch (err) {
+        console.warn("[Firebase] initial getDoc error:", err);
+      }
+
+      // Subscribe to real-time updates
+      if (_unsubSnapshot) _unsubSnapshot();
+      _unsubSnapshot = onSnapshot(tripDocRef, (snap) => {
+        if (_snapshotIgnoreNext) { _snapshotIgnoreNext = false; return; }
+        if (snap.exists()) {
+          applyFirestoreData(snap.data());
+        }
+      }, (err) => {
+        console.warn("[Firebase] onSnapshot error:", err);
+      });
+    });
+
+    // ── Expose save function to the non-module script ─────────────────────────
+    window._fbSaveAll = debouncedSave;
+
   </script>
 
 </body>
