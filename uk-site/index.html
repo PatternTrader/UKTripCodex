@@ -5529,28 +5529,41 @@
 
     function applyFirestoreData(data) {
       if (!data) return;
-      // Write each field back to localStorage so existing code reads it
+
+      // 1. Write Firestore data to localStorage
       for (const [field, lsKey] of Object.entries(STORAGE_KEY_MAP)) {
         if (Object.prototype.hasOwnProperty.call(data, field) && data[field] !== undefined) {
-          try {
-            localStorage.setItem(lsKey, JSON.stringify(data[field]));
-          } catch (_) {}
+          try { localStorage.setItem(lsKey, JSON.stringify(data[field])); } catch (_) {}
         }
       }
-      // Seed food GBP defaults if not in Firestore data yet
+
+      // 2. Refresh outer-scope variables from localStorage so all bind functions see fresh data
+      try { ccCosts    = JSON.parse(localStorage.getItem(CC_COSTS_STORAGE_KEY)      || "{}"); } catch (_) {}
+      try { ccCostsGbp = JSON.parse(localStorage.getItem(CC_COSTS_GBP_STORAGE_KEY)  || "{}"); } catch (_) {}
+      try { ccCostSource= JSON.parse(localStorage.getItem(CC_COST_SOURCE_KEY)       || "{}"); } catch (_) {}
+      try { ccCostNotes = JSON.parse(localStorage.getItem(CC_COST_NOTES_STORAGE_KEY)|| "{}"); } catch (_) {}
+      try { ccLinks     = JSON.parse(localStorage.getItem(CC_LINKS_STORAGE_KEY)     || "{}"); } catch (_) {}
+
+      // 3. Seed food GBP defaults only for items that have never had any value entered
       const foodDefaults = { breakfast: "£40", lunch: "£50", dinner: "£50" };
-      let gbp = {};
-      try { gbp = JSON.parse(localStorage.getItem("ukTripCCCostsGbpV1") || "{}"); } catch (_) {}
-      let seeded = false;
+      let foodSeeded = false;
       if (typeof getFoodSouvenirsItems === "function") {
         getFoodSouvenirsItems().forEach((item) => {
           const key = Object.keys(foodDefaults).find((k) => item.id.endsWith(k));
-          if (key && !gbp[item.id]) { gbp[item.id] = foodDefaults[key]; seeded = true; }
+          if (key && (!ccCostsGbp[item.id] || ccCostsGbp[item.id] === "£")) {
+            ccCostsGbp[item.id] = foodDefaults[key];
+            if (!ccCostSource[item.id]) ccCostSource[item.id] = "gbp";
+            foodSeeded = true;
+          }
         });
+        if (foodSeeded) {
+          localStorage.setItem(CC_COSTS_GBP_STORAGE_KEY, JSON.stringify(ccCostsGbp));
+          localStorage.setItem(CC_COST_SOURCE_KEY, JSON.stringify(ccCostSource));
+          window._fbSaveAll?.();
+        }
       }
-      if (seeded) { localStorage.setItem("ukTripCCCostsGbpV1", JSON.stringify(gbp)); window._fbSaveAll?.(); }
-      // Re-initialize all UI sections that read from localStorage
-      // Merge seeded food defaults into gbp so we can force-update DOM inputs below
+
+      // 4. Re-initialize UI — bind functions now read the freshly updated outer-scope vars
       try { if (typeof initializeCostState === "function") initializeCostState(); } catch (_) {}
       try { if (typeof renderCostSheet === "function") renderCostSheet(); } catch (_) {}
       try { if (typeof bindCostInputs === "function") bindCostInputs(); } catch (_) {}
@@ -5560,45 +5573,6 @@
       try { if (typeof initializeDragReorder === "function") initializeDragReorder(); } catch (_) {}
       try { if (typeof initializeHotelCheckIns === "function") initializeHotelCheckIns(); } catch (_) {}
       try { if (typeof renderBudgetPie === "function") renderBudgetPie(); } catch (_) {}
-      // Force-update food GBP DOM inputs directly — bypasses closure timing issues
-      const _fDefaults = { breakfast: "£40", lunch: "£50", dinner: "£50" };
-      let _fGbp = {};
-      try { _fGbp = JSON.parse(localStorage.getItem("ukTripCCCostsGbpV1") || "{}"); } catch (_e) {}
-      let _fUsd = {};
-      try { _fUsd = JSON.parse(localStorage.getItem("ukTripCCCostsV1") || "{}"); } catch (_e) {}
-      const _fRate = parseFloat(localStorage.getItem("ukTripCCExchangeRateV1")) || 1.27;
-      document.querySelectorAll(".js-cc-cost-gbp[data-cost-gbp-id]").forEach((inp) => {
-        const fid = inp.getAttribute("data-cost-gbp-id");
-        if (!fid || !fid.startsWith("food-")) return;
-        const fkey = Object.keys(_fDefaults).find((k) => fid.endsWith(k));
-        if (fkey && (!_fGbp[fid] || _fGbp[fid] === "£")) {
-          inp.value = _fDefaults[fkey];
-          _fGbp[fid] = _fDefaults[fkey];
-        } else if (_fGbp[fid]) {
-          inp.value = _fGbp[fid];
-        }
-        // Compute USD equivalent and set it so totals calculate correctly
-        const gbpNum = parseFloat((inp.value || "").replace(/[£,\s]/g, ""));
-        const usdInp = inp.closest(".cc-cost-pair")?.querySelector(".js-cc-cost");
-        if (usdInp && !isNaN(gbpNum)) {
-          const usdVal = (gbpNum * _fRate).toFixed(2);
-          usdInp.value = "$" + usdVal;
-          _fUsd[fid] = "$" + usdVal;
-        }
-        // Apply yellow/gray highlighting — GBP is active source
-        if (inp.value && inp.value !== "£") {
-          inp.style.background = "rgba(255,244,79,0.95)";
-          inp.style.borderColor = "#c9a800";
-          inp.style.boxShadow = "0 0 0 2px rgba(201,168,0,0.35)";
-          if (usdInp) {
-            usdInp.style.background = "rgba(200,200,200,0.35)";
-            usdInp.style.borderColor = "#b0b8c0";
-            usdInp.style.boxShadow = "none";
-          }
-        }
-      });
-      localStorage.setItem("ukTripCCCostsGbpV1", JSON.stringify(_fGbp));
-      localStorage.setItem("ukTripCCCostsV1", JSON.stringify(_fUsd));
       try { if (typeof updateFlightTotal === "function") updateFlightTotal(); } catch (_) {}
     }
 
