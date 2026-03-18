@@ -1074,6 +1074,10 @@
   .cc-card--review h3 { color: #7d1f1f; }
   .cc-card--review .cc-check-item.is-done .cc-check-btn { background: #b23b3b; border-color: #b23b3b; }
 
+  .cc-card--food { border-left: 4px solid #059669; background: #f0fdf4; }
+  .cc-card--food h3 { color: #065f46; }
+  .cc-card--food .cc-check-item.is-done .cc-check-btn { background: #059669; border-color: #059669; }
+
   .cc-review-meta {
     display: block;
     margin-top: 3px;
@@ -1740,13 +1744,23 @@
         </article>
         <article class="cc-card cc-card--review" data-card-id="review">
           <div class="cc-card-header">
-            <h3>Purchases</h3>
+            <h3>Points of Interest</h3>
             <div class="cc-card-total">
               <span class="cc-card-total-label">Total</span>
               <span class="cc-card-total-value js-cc-card-total" data-total-card="review">$0.00</span>
             </div>
           </div>
           <ul class="cc-checklist" id="cc-paid-mixed-review"></ul>
+        </article>
+        <article class="cc-card cc-card--food" data-card-id="food">
+          <div class="cc-card-header">
+            <h3>Food &amp; Souvenirs</h3>
+            <div class="cc-card-total">
+              <span class="cc-card-total-label">Total</span>
+              <span class="cc-card-total-value js-cc-card-total" data-total-card="food">$0.00</span>
+            </div>
+          </div>
+          <ul class="cc-checklist" id="cc-food-souvenirs"></ul>
         </article>
       </div>
     </section>
@@ -3254,6 +3268,46 @@
       return items;
     }
 
+    function getFoodSouvenirsItems() {
+      const categories = [
+        { key: "breakfast",  label: "🍳 Breakfast"  },
+        { key: "lunch",      label: "🥪 Lunch"      },
+        { key: "dinner",     label: "🍽️ Dinner"     },
+        { key: "groceries",  label: "🛒 Groceries"  },
+        { key: "souvenirs",  label: "🎁 Souvenirs"  }
+      ];
+      const items = [];
+      itinerary.forEach((day) => {
+        const weekday = getWeekdayForDay(day);
+        const dayLabel = `Day ${day.day}${weekday ? ` (${weekday}, ${day.date})` : ` (${day.date})`}`;
+        categories.forEach(({ key, label }) => {
+          items.push({
+            dayNum: day.day,
+            id: `food-d${day.day}-${key}`,
+            text: `${dayLabel}: ${label}`
+          });
+        });
+      });
+      return items;
+    }
+
+    function renderFoodSouvenirsChecklist() {
+      const container = document.getElementById("cc-food-souvenirs");
+      if (!container) return;
+      const items = getFoodSouvenirsItems();
+      container.innerHTML = items.map((item) => `
+        <li class="cc-check-item js-cc-check-item" data-check-id="${item.id}">
+          <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+          <span class="cc-check-text">${escapeHtml(item.text)}</span>
+          <span class="cc-link-wrap">
+            <input type="url" class="cc-link-input js-cc-link" data-link-id="${item.id}" value="" placeholder="Paste URL" aria-label="Relevant URL">
+            <a class="cc-link-open js-cc-link-open" data-link-open-id="${item.id}" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
+          </span>
+          <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="${item.id}" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="${item.id}" aria-label="Cost GBP"></div>
+        </li>
+      `).join("");
+    }
+
     function renderPaidMixedReviewChecklist() {
       const container = document.getElementById("cc-paid-mixed-review");
       if (!container) return;
@@ -4079,7 +4133,7 @@
         if (id && commandTextOverrides[id]) {
           setEditableCommandText(itemEl, commandTextOverrides[id]);
         }
-        const supportsAttentionStar = cardId === "review" || cardId === "hotel" || cardId === "booking" || cardId === "flight";
+        const supportsAttentionStar = cardId === "review" || cardId === "hotel" || cardId === "booking" || cardId === "flight" || cardId === "food";
         if (supportsAttentionStar && !itemEl.querySelector(".js-cc-attention-star")) {
           const starBtn = document.createElement("button");
           starBtn.type = "button";
@@ -4137,7 +4191,7 @@
         itemEl.querySelectorAll(".js-cc-cost-gbp[data-cost-gbp-id]").forEach((input) => bindGbpCostInput(input));
       }
 
-      ["flight", "hotel", "booking", "review"].forEach((cardId) => {
+      ["flight", "hotel", "booking", "review", "food"].forEach((cardId) => {
         const card = document.querySelector(`.cc-card[data-card-id="${cardId}"]`);
         const list = card?.querySelector(".cc-checklist");
         if (!(card instanceof HTMLElement) || !(list instanceof HTMLElement)) return;
@@ -4302,7 +4356,8 @@
         { card: "flight",  label: "Flights",   color: "#f97316" },
         { card: "hotel",   label: "Hotels",    color: "#4ade80" },
         { card: "booking", label: "Scotland Tour (incl. Lodging)", color: "#facc15" },
-        { card: "review",  label: "Purchases", color: "#fb923c" }
+        { card: "review",  label: "Points of Interest", color: "#fb923c" },
+        { card: "food",    label: "Food & Souvenirs",   color: "#34d399" }
       ];
 
       const values = SLICES.map((s) => {
@@ -5304,6 +5359,7 @@
     renderStaySummary();
     renderTimeline();
     renderPaidMixedReviewChecklist();
+    renderFoodSouvenirsChecklist();
     renderCostSheet();
     bindCostInputs();
     bindCustomCostControls();
