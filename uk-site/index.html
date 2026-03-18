@@ -3324,17 +3324,6 @@
       const container = document.getElementById("cc-food-souvenirs");
       if (!container) return;
       const items = getFoodSouvenirsItems();
-      // Seed default GBP values for breakfast/lunch/dinner if not already set
-      const foodDefaults = { breakfast: "£40", lunch: "£50", dinner: "£50" };
-      let seeded = false;
-      items.forEach((item) => {
-        const key = Object.keys(foodDefaults).find((k) => item.id.endsWith(k));
-        if (key && !ccCostsGbp[item.id]) {
-          ccCostsGbp[item.id] = foodDefaults[key];
-          seeded = true;
-        }
-      });
-      if (seeded) localStorage.setItem(CC_COSTS_GBP_STORAGE_KEY, JSON.stringify(ccCostsGbp));
       container.innerHTML = items.map((item) => `
         <li class="cc-check-item js-cc-check-item" data-check-id="${item.id}">
           <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
@@ -3752,6 +3741,15 @@
 
       let ccCostsGbp = {};
       try { ccCostsGbp = JSON.parse(localStorage.getItem(CC_COSTS_GBP_STORAGE_KEY) || "{}"); } catch (_) {}
+
+      // Seed default GBP values for food items if not already set
+      const foodDefaults = { breakfast: "£40", lunch: "£50", dinner: "£50" };
+      let foodSeeded = false;
+      getFoodSouvenirsItems().forEach((item) => {
+        const key = Object.keys(foodDefaults).find((k) => item.id.endsWith(k));
+        if (key && !ccCostsGbp[item.id]) { ccCostsGbp[item.id] = foodDefaults[key]; foodSeeded = true; }
+      });
+      if (foodSeeded) localStorage.setItem(CC_COSTS_GBP_STORAGE_KEY, JSON.stringify(ccCostsGbp));
 
       let ccCostNotes = {};
       try { ccCostNotes = JSON.parse(localStorage.getItem(CC_COST_NOTES_STORAGE_KEY) || "{}"); } catch (_) {}
@@ -5415,9 +5413,9 @@
     initializeDragReorder();
     initializeCommandCenterBackup();
     window.buildRouteMap = buildRouteMap;
-    // Map is built after auth overlay hides (so Leaflet can measure the container)
-    // buildRouteMap() is called from hideOverlay() instead
-    buildDayMaps();
+    window.buildDayMaps = buildDayMaps;
+    // Both maps built after auth overlay hides (so Leaflet can measure containers)
+    // buildRouteMap() and buildDayMaps() are called from hideOverlay() instead
     initializeHotelCheckIns();
     setupPoiCarousels();
     loadWikipediaImages();
@@ -5559,12 +5557,11 @@
 
     function hideOverlay() {
       overlay.style.display = "none";
-      // Leaflet can't measure container size while overlay covers the page — reinit map now
-      if (typeof buildRouteMap === "function" && !window._routeMapBuilt) {
-        window._routeMapBuilt = true;
-        buildRouteMap();
-      } else if (window.routeMapState && window.routeMapState.map) {
-        window.routeMapState.map.invalidateSize();
+      // Leaflet can't measure container size while overlay covers the page — build maps now
+      if (!window._mapsBuilt) {
+        window._mapsBuilt = true;
+        if (typeof buildRouteMap === "function") buildRouteMap();
+        if (typeof buildDayMaps === "function") buildDayMaps();
       }
     }
 
