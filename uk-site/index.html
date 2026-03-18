@@ -4374,7 +4374,7 @@
       if (!id) return;
       const itemEl = document.querySelector(`.js-cc-check-item[data-check-id="${id}"]`);
       const dateInput = itemEl?.querySelector(`.js-cc-date[data-date-id="${id}"]`);
-      if (!(dateInput instanceof HTMLInputElement) || dateInput.value) return;
+      if (!(dateInput instanceof HTMLInputElement)) return;
       const today = new Date();
       const iso = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
       dateInput.value = iso;
