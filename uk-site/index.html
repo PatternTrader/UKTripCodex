@@ -4005,7 +4005,9 @@
 
         input.addEventListener("blur", () => {
           const didEval = evaluateGbpExpression();
-          if (!didEval) {
+          if (didEval) {
+            updateFlightTotal();
+          } else {
             const raw = String(input.value || "").trim();
             if (raw && raw !== "£" && !raw.startsWith("£")) {
               input.value = "£" + raw;
