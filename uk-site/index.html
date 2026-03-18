@@ -3397,7 +3397,12 @@
       renderRouteMapFilters();
       refreshRouteMap();
       // Attach AFTER initial render so Leaflet's own init movestart doesn't count
-      setTimeout(() => { map.on("movestart", () => { routeMapState.userMoved = true; }); }, 500);
+      setTimeout(() => {
+        map.on("movestart", () => {
+          if (routeMapState.programmaticFit) { routeMapState.programmaticFit = false; return; }
+          routeMapState.userMoved = true;
+        });
+      }, 500);
     }
 
     function getSelectedRouteStops() {
@@ -3526,6 +3531,8 @@
           } else {
             topMapSelectedDays.add(dayNumber);
           }
+          // Reset so clicking a chip always re-centers the map
+          if (routeMapState) { routeMapState.userMoved = false; routeMapState.programmaticFit = true; }
           renderRouteMapFilters();
           refreshRouteMap();
         });
@@ -5530,6 +5537,18 @@
           } catch (_) {}
         }
       }
+      // Seed food GBP defaults if not in Firestore data yet
+      const foodDefaults = { breakfast: "£40", lunch: "£50", dinner: "£50" };
+      let gbp = {};
+      try { gbp = JSON.parse(localStorage.getItem("ukTripCCCostsGbpV1") || "{}"); } catch (_) {}
+      let seeded = false;
+      if (typeof getFoodSouvenirsItems === "function") {
+        getFoodSouvenirsItems().forEach((item) => {
+          const key = Object.keys(foodDefaults).find((k) => item.id.endsWith(k));
+          if (key && !gbp[item.id]) { gbp[item.id] = foodDefaults[key]; seeded = true; }
+        });
+      }
+      if (seeded) { localStorage.setItem("ukTripCCCostsGbpV1", JSON.stringify(gbp)); window._fbSaveAll?.(); }
       // Re-initialize all UI sections that read from localStorage
       try { if (typeof initializeCostState === "function") initializeCostState(); } catch (_) {}
       try { if (typeof renderCostSheet === "function") renderCostSheet(); } catch (_) {}
