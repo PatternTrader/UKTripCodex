@@ -3951,6 +3951,7 @@
           localStorage.setItem(CC_COST_SOURCE_KEY, JSON.stringify(ccCostSource));
           fillComputedUsd(id, sum);
           applyPairHighlight(id, "gbp");
+          autofillTodayForId(id);
           return true;
         };
 
@@ -3991,6 +3992,7 @@
               const num = parseFloat(stripped);
               fillComputedUsd(id, num);
               applyPairHighlight(id, "gbp");
+              autofillTodayForId(id);
               updateFlightTotal();
             }
             if (!stripped.includes("+") && ccCostNotes[id]) {
@@ -4014,6 +4016,7 @@
               const num = parseFloat(String(input.value || "").replace(/[£,\s]/g, ""));
               if (!isNaN(num) && ccCostSource[id] === "gbp") {
                 fillComputedUsd(id, num);
+                autofillTodayForId(id);
                 updateFlightTotal();
               }
             }
@@ -4367,6 +4370,20 @@
       });
     }
 
+    function autofillTodayForId(id) {
+      if (!id) return;
+      const itemEl = document.querySelector(`.js-cc-check-item[data-check-id="${id}"]`);
+      const dateInput = itemEl?.querySelector(`.js-cc-date[data-date-id="${id}"]`);
+      if (!(dateInput instanceof HTMLInputElement) || dateInput.value) return;
+      const today = new Date();
+      const iso = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+      dateInput.value = iso;
+      let ccDates = {};
+      try { ccDates = JSON.parse(localStorage.getItem(CC_DATES_STORAGE_KEY) || "{}"); } catch (_) {}
+      ccDates[id] = iso;
+      localStorage.setItem(CC_DATES_STORAGE_KEY, JSON.stringify(ccDates));
+    }
+
     function autofillTodayForCostInput(costInput) {
       if (!(costInput instanceof HTMLElement)) return;
       const id = costInput.getAttribute("data-cost-id");
@@ -4374,18 +4391,7 @@
       const raw = String(costInput.value || "").trim();
       const normalized = raw.replace(/[$,\s]/g, "");
       if (!normalized || Number.isNaN(Number(normalized))) return;
-      const dateInput = costInput.parentElement?.querySelector(`.js-cc-date[data-date-id="${id}"]`);
-      if (!(dateInput instanceof HTMLInputElement) || dateInput.value) return;
-      const today = new Date();
-      const yyyy = today.getFullYear();
-      const mm = String(today.getMonth() + 1).padStart(2, "0");
-      const dd = String(today.getDate()).padStart(2, "0");
-      const iso = `${yyyy}-${mm}-${dd}`;
-      dateInput.value = iso;
-      let ccDates = {};
-      try { ccDates = JSON.parse(localStorage.getItem(CC_DATES_STORAGE_KEY) || "{}"); } catch (_) {}
-      ccDates[id] = iso;
-      localStorage.setItem(CC_DATES_STORAGE_KEY, JSON.stringify(ccDates));
+      autofillTodayForId(id);
     }
 
     function initializeCommandCenterBackup() {
