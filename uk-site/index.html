@@ -3884,7 +3884,7 @@
             }
           }
           renderCostNote();
-          autofillTodayForCostInput(input);
+          autofillTodayForCostInput(input, true);
           updateFlightTotal();
         });
 
@@ -3955,7 +3955,7 @@
           localStorage.setItem(CC_COST_SOURCE_KEY, JSON.stringify(ccCostSource));
           fillComputedUsd(id, sum);
           applyPairHighlight(id, "gbp");
-          autofillTodayForId(id);
+          autofillTodayForId(id, true);
           return true;
         };
 
@@ -3996,7 +3996,7 @@
               const num = parseFloat(stripped);
               fillComputedUsd(id, num);
               applyPairHighlight(id, "gbp");
-              autofillTodayForId(id);
+              autofillTodayForId(id, true);
               updateFlightTotal();
             } else {
               ccCostSource[id] = "gbp";
@@ -4026,7 +4026,7 @@
               const num = parseFloat(String(input.value || "").replace(/[£,\s]/g, ""));
               if (!isNaN(num) && ccCostSource[id] === "gbp") {
                 fillComputedUsd(id, num);
-                autofillTodayForId(id);
+                autofillTodayForId(id, true);
                 updateFlightTotal();
               }
             }
@@ -4380,11 +4380,12 @@
       });
     }
 
-    function autofillTodayForId(id) {
+    function autofillTodayForId(id, force = false) {
       if (!id) return;
       const itemEl = document.querySelector(`.js-cc-check-item[data-check-id="${id}"]`);
       const dateInput = itemEl?.querySelector(`.js-cc-date[data-date-id="${id}"]`);
       if (!(dateInput instanceof HTMLInputElement)) return;
+      if (!force && dateInput.value) return;
       const today = new Date();
       const iso = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
       dateInput.value = iso;
@@ -4394,14 +4395,14 @@
       localStorage.setItem(CC_DATES_STORAGE_KEY, JSON.stringify(ccDates));
     }
 
-    function autofillTodayForCostInput(costInput) {
+    function autofillTodayForCostInput(costInput, force = false) {
       if (!(costInput instanceof HTMLElement)) return;
       const id = costInput.getAttribute("data-cost-id");
       if (!id) return;
       const raw = String(costInput.value || "").trim();
       const normalized = raw.replace(/[$,\s]/g, "");
       if (!normalized || Number.isNaN(Number(normalized))) return;
-      autofillTodayForId(id);
+      autofillTodayForId(id, force);
     }
 
     function initializeCommandCenterBackup() {
