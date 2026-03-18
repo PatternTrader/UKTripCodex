@@ -607,6 +607,60 @@
     color: #12395f;
   }
 
+  .budget-pie-wrap {
+    margin-top: 18px;
+    padding: 16px 18px;
+    border: 1px solid #d7dde7;
+    border-radius: 12px;
+    background: #fff;
+  }
+  .budget-pie-title {
+    margin: 0 0 12px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #12395f;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .budget-pie-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+  .budget-pie-legend {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .budget-pie-legend li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: #2a3a4a;
+  }
+  .budget-pie-legend-swatch {
+    width: 13px;
+    height: 13px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .budget-pie-legend-pct {
+    margin-left: 4px;
+    opacity: 0.6;
+    font-size: 0.77rem;
+  }
+  .budget-pie-empty {
+    font-size: 0.82rem;
+    color: #7a8fa6;
+    font-style: italic;
+  }
+
   .map-panel {
     margin-top: 28px;
     border: 1px solid var(--line);
@@ -1402,6 +1456,13 @@
           <span class="cc-toolbar-status" id="cc-backup-status" aria-live="polite"></span>
         </div>
       </div>
+      <div class="budget-pie-wrap">
+        <h3 class="budget-pie-title">Budget Breakdown</h3>
+        <div class="budget-pie-inner">
+          <canvas id="budget-pie" width="220" height="220"></canvas>
+          <ul class="budget-pie-legend" id="budget-pie-legend"></ul>
+        </div>
+      </div>
       <div class="cc-grid">
         <article class="cc-card cc-card--flight" data-card-id="flight">
           <div class="cc-card-header">
@@ -1521,7 +1582,7 @@
         </article>
         <article class="cc-card cc-card--booking" data-card-id="booking">
           <div class="cc-card-header">
-            <h3>Tours</h3>
+            <h3>Scotland Tour (incl. Lodging)</h3>
             <div class="cc-card-total">
               <span class="cc-card-total-label">Total</span>
               <span class="cc-card-total-value js-cc-card-total" data-total-card="booking">$0.00</span>
@@ -1775,6 +1836,20 @@
           </ul>
         </div>
 
+        <div class="ideas-card">
+          <div class="ideas-head">
+            <span class="ideas-pill">💡 Ideas</span>
+            <h3 class="day-title">Forbidden Planet London Megastore</h3>
+            <span class="ideas-subtitle">Dropped from itinerary — worth a visit if you have a free hour</span>
+          </div>
+          <ul class="ideas-list">
+            <li>Flagship pop-culture megastore at 179 Shaftesbury Ave — comics, manga, collectibles, sci-fi merch.</li>
+            <li>Right next to the British Museum area — easy to combine on a morning you're already in Bloomsbury.</li>
+            <li>Free entry — just a retail stop, no booking needed.</li>
+            <li><a href="https://forbiddenplanet.com/store-locations/london-megastore/" target="_blank" rel="noopener noreferrer">Forbidden Planet London store info</a>.</li>
+          </ul>
+        </div>
+
       </div>
     </section>
 
@@ -1789,6 +1864,7 @@
         day: 1,
         title: "New York to London Flight",
         date: "April 2-3",
+        showAllStopsOnTopMap: true,
         items: [
           { text: "Leave from 303 E. 83rd St, NY, NY to John F. Kennedy International Airport (JFK). Allow 45–75 min depending on traffic; give yourself extra buffer.", page: "303_E_83rd_St_NYC", caption: "Depart from 303 E. 83rd St" },
           { text: "Depart New York (JFK) at 6:40pm on British Airways BA 174, direct to London Heathrow. Boeing 777, Economy. 7 hr 10 min overnight flight. $3,474 total for 5 passengers (round trip).", page: "John_F._Kennedy_International_Airport", caption: "JFK departure — BA 174", defaultCost: 3474 }
@@ -1796,30 +1872,37 @@
       },
       {
         day: 2,
-        title: "Museum Day and West End Highlights",
+        title: "Arrival + Stonehenge — LHR → Stonehenge → Hotel",
         date: "April 3",
+        hotelInsertAfterPage: "Stonehenge",
         items: [
-          { text: "Arrive London Heathrow (LHR) at 6:50am on April 3. British Airways Terminal 5.", page: "London_Heathrow_Arrival", caption: "Arrive London Heathrow" },
-          { text: "Start at the British Museum when galleries open.", page: "British_Museum", caption: "British Museum" },
-          { text: "Browse Forbidden Planet London Megastore for comics and collectibles.", page: "Forbidden_Planet_London_Megastore", caption: "Forbidden Planet London" },
-          { text: "Finish the West End sweep with an evening stroll down Oxford Street.", page: "Oxford_Street", caption: "Oxford Street" },
-          { text: "Explore Soho streets and food spots.", page: "Soho", caption: "Soho" },
-          { text: "See the John Snow cholera pump on Broadwick Street in Soho.", page: "John_Snow_cholera_pump", caption: "John Snow cholera pump" },
-          { text: "Take in the lights and screens at Piccadilly Circus.", page: "Piccadilly_Circus", caption: "Piccadilly Circus" },
-          { text: "Walk through Leicester Square.", page: "Leicester_Square", caption: "Leicester Square" },
-          { text: "Visit the National Gallery.", page: "National_Gallery", caption: "The National Gallery" },
-          { text: "Step into Trafalgar Square for iconic city views.", page: "Trafalgar_Square", caption: "Trafalgar Square" },
-          { text: "Dinner: eat classic pub food at Ye Olde Cheshire Cheese. <a href=\"https://ye-olde-cheshire-cheese.co.uk/\" target=\"_blank\" rel=\"noopener noreferrer\">Ye Olde Cheshire Cheese site</a>.", page: "Ye_Olde_Cheshire_Cheese", caption: "Ye Olde Cheshire Cheese dinner" }
+          { text: "🛬 6:30–7:45 AM — Land + exit airport. 6:30 land → 6:45 off plane → 6:45–7:30 immigration → 7:30–7:45 walk out (carry-on only, no baggage claim). You're outside faster than most people.", page: "London_Heathrow_Arrival", caption: "Arrive London Heathrow" },
+          { text: "🚖 8:00 AM — Meet your driver at Arrivals. Driver waiting with carry-on help — quick load and go.", page: "London_Heathrow_Arrival", caption: "Meet driver at LHR" },
+          { text: "🚗 8:00–9:45 AM — Drive to Stonehenge (~1 hr 45 min). Use this time to relax, snack, and let the kids decompress.", page: "Stonehenge", caption: "Stonehenge" },
+          { text: "🪨 9:45–11:15 AM — Stonehenge visit. Shuttle to the stones, walk the loop, audio guide. 75–90 minutes is perfect.", page: "Stonehenge", caption: "Stonehenge" },
+          { text: "🚗 11:15 AM–1:45 PM — Drive to London hotel (~2–2.5 hrs, traffic-dependent).", page: "Hotel_Great_Portland_St", caption: "Drive to London hotel" },
+          { text: "🏨 ~1:45–2:15 PM — Arrive at 134 Great Portland St. Drop bags / check in (or store).", page: "Hotel_Great_Portland_St", caption: "Arrive hotel" },
+          { text: "😴 2:30–4:00 PM — Reset: light rest (max 90-min nap), shower, change clothes. Don't nap longer — it'll wreck your jet lag adjustment.", page: "Hotel_Great_Portland_St", caption: "Afternoon reset" },
+          { text: "🚶 4:30–6:30 PM — Easy stroll down Oxford Street — 5-min walk from the hotel. Window shop, grab a snack, decompress. No agenda required.", page: "Oxford_Street", caption: "Oxford Street stroll" },
+          { text: "🍽️ 6:30–8:00 PM — Dinner near hotel. Simple, nearby — don't travel far.", page: "Hotel_Great_Portland_St", caption: "Dinner near hotel" }
         ]
       },
       {
         day: 3,
-        title: "Greenwich and Stonehenge Day Trip",
+        title: "Thames Cruise + Royal Observatory + West End",
         date: "April 4",
         items: [
-          { text: "Visit the Royal Observatory Greenwich and stand on the Prime Meridian line.", page: "Royal_Observatory_Greenwich", caption: "Royal Observatory Greenwich" },
-          { text: "Take a no-car Stonehenge excursion from London (coach tour or rail + local tour) and spend the core afternoon at the stones.", page: "Stonehenge", caption: "Stonehenge day trip" },
-          { text: "Return to London for dinner at Dishoom Covent Garden. <a href=\"https://www.dishoom.com/menu/all-day-main/\" target=\"_blank\" rel=\"noopener noreferrer\">Dishoom all-day menu</a>.", page: "Dishoom_Covent_Garden", caption: "Dishoom dinner" }
+          { text: "🏨 Depart hotel at 134 Great Portland St. Take the Tube (Great Portland St → Westminster, Victoria line) or a taxi (~15 min) to Westminster Pier.", page: "London_Hotel_Base", caption: "Depart hotel" },
+          { text: "🚶 Westminster Pier — catch the Thames Clipper boat to Greenwich.", page: "Westminster_Pier", caption: "Westminster Pier" },
+          { text: "🚤 Thames Cruise to Greenwich on Thames Clippers (Uber Boat by Thames Clippers) — fastest, easiest option. ~45–60 minutes on the River Thames.", page: "Thames_Clippers", caption: "Thames Cruise to Greenwich" },
+          { text: "Visit the Royal Observatory Greenwich and stand on the Prime Meridian line.", page: "Royal_Observatory_Greenwich", caption: "Royal Observatory & Prime Meridian" },
+          { text: "Boat back to Westminster Pier, then 2-min walk to the National Gallery.", page: "National_Gallery", caption: "The National Gallery" },
+          { text: "Step into Trafalgar Square for iconic city views — right outside the National Gallery.", page: "Trafalgar_Square", caption: "Trafalgar Square" },
+          { text: "5-min walk northeast to Leicester Square — cinema district and buzzing street performers.", page: "Leicester_Square", caption: "Leicester Square" },
+          { text: "5-min walk west to Piccadilly Circus for the iconic neon lights and screens.", page: "Piccadilly_Circus", caption: "Piccadilly Circus" },
+          { text: "5-min walk north into Soho — dense streets full of restaurants, bars, and culture.", page: "Soho", caption: "Soho" },
+          { text: "See the John Snow cholera pump on Broadwick Street — a quiet street-side landmark from the 1854 outbreak.", page: "John_Snow_cholera_pump", caption: "John Snow cholera pump" },
+          { text: "🏨 Walk back to hotel (~15 min north through Soho → Oxford Street → Great Portland St).", page: "London_Hotel_Base", caption: "Return to hotel" }
         ]
       },
       {
@@ -1827,16 +1910,18 @@
         title: "Royal and Historic London",
         date: "April 5",
         items: [
-          { text: "Watch the Changing of the Guard at Buckingham Palace.", page: "Buckingham_Palace", caption: "Buckingham Palace" },
-          { text: "Stroll through St James's Park between palace and Westminster.", page: "St_James's_Park", caption: "St James's Park" },
-          { text: "Tour Westminster Abbey.", page: "Westminster_Abbey", caption: "Westminster Abbey" },
-          { text: "Photo stop at Big Ben and Parliament.", page: "Big_Ben", caption: "Big Ben" },
-          { text: "Ride the London Eye for skyline views over Westminster and the Thames.", page: "London_Eye", caption: "London Eye" },
-          { text: "Walk the South Bank and enjoy the riverside atmosphere.", page: "South_Bank", caption: "South Bank" },
-          { text: "Continue east along the South Bank to Tate Modern.", page: "Tate_Modern", caption: "Tate Modern" },
-          { text: "Stop at Shakespeare's Globe nearby.", page: "Shakespeare's_Globe", caption: "Shakespeare's Globe" },
-          { text: "Visit the Tower of London and Crown Jewels.", page: "Tower_of_London", caption: "Tower of London" },
-          { text: "Walk back toward the river for classic Tower Bridge skyline views.", page: "Tower_Bridge", caption: "Tower Bridge skyline" }
+          { text: "🏨 Depart hotel at 134 Great Portland St. Walk south (~1 mile, ~18 min) or take a short taxi to Buckingham Palace.", page: "London_Hotel_Base", caption: "Depart hotel" },
+          { text: "Watch the Changing of the Guard at Buckingham Palace (11am on select days — check schedule in advance and arrive early for a good spot).", page: "Buckingham_Palace", caption: "Buckingham Palace" },
+          { text: "Stroll east through St James's Park toward Westminster — one of London's most scenic royal parks.", page: "St_James's_Park", caption: "St James's Park" },
+          { text: "Tour Westminster Abbey — burial site of monarchs and national figures.", page: "Westminster_Abbey", caption: "Westminster Abbey" },
+          { text: "Photo stop at Big Ben and the Houses of Parliament — right next door.", page: "Big_Ben", caption: "Big Ben" },
+          { text: "Cross Westminster Bridge to the South Bank and ride the London Eye for panoramic views over the city.", page: "London_Eye", caption: "London Eye" },
+          { text: "Walk east along the South Bank — lively riverside path with great Thames views heading toward Tower Bridge (~2 miles).", page: "South_Bank", caption: "South Bank walk east" },
+          { text: "Cross Tower Bridge to the north bank. Visit the Tower of London and the Crown Jewels.", page: "Tower_of_London", caption: "Tower of London" },
+          { text: "Step back out for the classic Tower Bridge skyline photo from the riverbank.", page: "Tower_Bridge", caption: "Tower Bridge" },
+          { text: "🌿 10-min walk west along the north bank to Sky Garden — free panoramic garden on the 35th floor of 20 Fenchurch St (the 'Walkie Talkie'). Pre-book free tickets at <a href='https://skygarden.london' target='_blank' rel='noopener noreferrer'>skygarden.london</a> — slots go fast.", page: "Sky_Garden_London", caption: "Sky Garden" },
+          { text: "🍽️ Continue west to Ye Olde Cheshire Cheese on Fleet Street for a classic pub dinner. <a href=\"https://ye-olde-cheshire-cheese.co.uk/\" target=\"_blank\" rel=\"noopener noreferrer\">Ye Olde Cheshire Cheese site</a>.", page: "Ye_Olde_Cheshire_Cheese", caption: "Ye Olde Cheshire Cheese dinner" },
+          { text: "🏨 Return to hotel — 5-min walk to St Paul's station then Central line to Oxford Circus (~15 min total), or taxi directly to Great Portland St.", page: "London_Hotel_Base", caption: "Return to hotel" }
         ]
       },
       {
@@ -1844,10 +1929,12 @@
         title: "Train to Edinburgh",
         date: "April 6",
         items: [
+          { text: "🏨 Depart hotel at 134 Great Portland St. Take the Victoria line from Oxford Circus → Kings Cross St Pancras (~6 min). Allow 30 min from hotel to platform.", page: "London_Hotel_Base", caption: "Depart London hotel" },
           { text: "Depart <strong>London Kings Cross</strong> at <strong>9:03am</strong> on LNER direct to Edinburgh Waverley. 4h 29m, Standard class. £257.60 for 5 passengers.", page: "LNER", caption: "Kings Cross — LNER 9:03am", defaultCost: 257.60 },
-          { text: "Arrive <strong>Edinburgh Waverley</strong> at <strong>1:32pm</strong>. Check into hotel near the Royal Mile.", page: "Royal_Mile", caption: "Arrive Edinburgh Waverley" },
-          { text: "Explore <strong>Grassmarket</strong> and Victoria Street in the afternoon.", page: "Grassmarket", caption: "Grassmarket" },
-          { text: "Enjoy a relaxed pub dinner in Edinburgh.", page: "Edinburgh", caption: "Edinburgh night" }
+          { text: "Arrive <strong>Edinburgh Waverley</strong> at <strong>1:32pm</strong>. Walk or take a short taxi (~5 min) to hotel near the Royal Mile.", page: "Edinburgh_Waverley_railway_station", caption: "Arrive Edinburgh Waverley" },
+          { text: "🏨 Check into Edinburgh hotel near the Royal Mile. Drop bags, freshen up — you've been on a train since 9am.", page: "Edinburgh_Hotel_Base", caption: "Check in — Edinburgh hotel" },
+          { text: "Walk downhill through the colourful <strong>Victoria Street</strong> archways and into the historic <strong>Grassmarket</strong> square (~10 min from Royal Mile). Browse shops, grab a coffee.", page: "Grassmarket", caption: "Victoria St & Grassmarket" },
+          { text: "🍺 Relaxed pub dinner in Edinburgh Old Town — you're surrounded by great options right on the doorstep.", page: "Edinburgh_Hotel_Base", caption: "Pub dinner — Old Town" }
         ]
       },
       {
@@ -1896,12 +1983,18 @@
       },
       {
         day: 9,
-        title: "Return Train — Edinburgh to London",
+        title: "Return Train — Edinburgh to London + British Museum + South Bank",
         date: "April 10",
+        hotelInsertAfterPage: "Edinburgh_Waverley_railway_station",
         items: [
-          { text: "Head to <strong>Edinburgh Waverley</strong> for an early departure.", page: "Edinburgh_Waverley_railway_station", caption: "Edinburgh Waverley" },
+          { text: "🏨 Depart Edinburgh hotel. Walk or take a short taxi (~5 min) to Edinburgh Waverley — allow 30 min before departure.", page: "Edinburgh_Hotel_Base", caption: "Depart Edinburgh hotel" },
           { text: "Depart <strong>Edinburgh Waverley</strong> at <strong>8:26am</strong> on Lumo direct to London Kings Cross. 4h 20m, Standard class. £234.15 for 5 passengers.", page: "Edinburgh_Waverley_railway_station", caption: "Edinburgh — Lumo 8:26am", defaultCost: 234.15 },
-          { text: "Arrive <strong>London Kings Cross</strong> at <strong>12:46pm</strong>. Afternoon free in London.", page: "London", caption: "Arrive Kings Cross" }
+          { text: "🏨 Arrive <strong>Kings Cross 12:46pm</strong>. Take the Jubilee or Northern line → Waterloo (~10 min), then a 5-min walk to <strong>65 The Cut, Southwark</strong>. Check in, drop bags, freshen up.", page: "London_Return_Checkin", caption: "Check in — 65 The Cut Airbnb" },
+          { text: "Head north to the <strong>British Museum</strong> in Bloomsbury — free entry, no rush. 2–3 hours.", page: "British_Museum", caption: "British Museum" },
+          { text: "The <strong>South Bank</strong> is right on your doorstep — step out for a relaxed riverside walk east toward Tate Modern.", page: "South_Bank", caption: "South Bank walk" },
+          { text: "Visit <strong>Tate Modern</strong> — free entry, one of the world's great modern art museums. A 10-min walk east along the South Bank.", page: "Tate_Modern", caption: "Tate Modern" },
+          { text: "Stop at <strong>Shakespeare's Globe</strong> right next door — exterior is free, tours available.", page: "Shakespeare's_Globe", caption: "Shakespeare's Globe" },
+          { text: "🏨 5-min walk back west along The Cut to the Airbnb — an easy end to a long travel day.", page: "Airbnb_65_The_Cut", caption: "Return to Airbnb" }
         ]
       },
       {
@@ -1971,8 +2064,8 @@
       Ye_Olde_Cheshire_Cheese: "21:10",
       Dishoom_Covent_Garden: "19:45",
       Rock_and_Sole_Plaice: "20:45",
-      Royal_Observatory_Greenwich: "09:15",
-      Stonehenge: "13:30",
+      Royal_Observatory_Greenwich: "12:00",
+      Stonehenge: "09:45",
       Camden_Market: "13:30",
       Kensington_Palace: "16:30",
       Bletchley_Park: "09:30",
@@ -2077,22 +2170,27 @@
         { mode: "Airplane (BA 174)", bufferMin: 0, note: "JFK to LHR direct, 7h 10m overnight. Departs 6:40pm, arrives 6:50am Apr 3." }
       ],
       2: [
-        { mode: "Heathrow Express + Tube/Taxi", bufferMin: 75, note: "Immigration + transfer into central London from Terminal 5." },
-        { mode: "Tube + walk", bufferMin: 30, note: "Hotel to Bloomsbury — British Museum opens 10am." },
-        { mode: "Walk", bufferMin: 10, note: "South on Shaftesbury Avenue — Forbidden Planet is steps from British Museum." },
-        { mode: "Walk", bufferMin: 12, note: "West along New Oxford Street to Oxford Street." },
-        { mode: "Walk", bufferMin: 5, note: "South-east from Oxford Street into Soho." },
-        { mode: "Walk", bufferMin: 2, note: "Same block — John Snow pump on Broadwick Street." },
-        { mode: "Walk", bufferMin: 5, note: "South from Soho to Piccadilly Circus." },
-        { mode: "Walk", bufferMin: 6, note: "East from Piccadilly Circus to Leicester Square." },
-        { mode: "Walk", bufferMin: 4, note: "South from Leicester Square to National Gallery." },
-        { mode: "Walk", bufferMin: 2, note: "Adjacent — Trafalgar Square." },
-        { mode: "Walk", bufferMin: 20, note: "East along the Strand to Fleet Street — Ye Olde Cheshire Cheese." }
+        { mode: "Walk", bufferMin: 75, note: "Land, immigration, walk out — carry-on only, no baggage claim. Allow 60–75 min." },
+        { mode: "Private driver", bufferMin: 15, note: "Driver waiting at Arrivals — quick load and go." },
+        { mode: "Private car", bufferMin: 105, note: "LHR to Stonehenge — ~1 hr 45 min drive. Relax and decompress." },
+        { mode: "Walk (on-site shuttle + loop)", bufferMin: 90, note: "Stonehenge visit — shuttle to stones, walk the loop, audio guide. 75–90 min." },
+        { mode: "Private car", bufferMin: 150, note: "Stonehenge to 134 Great Portland St — ~2–2.5 hrs, traffic-dependent." },
+        { mode: "Walk", bufferMin: 30, note: "Drop bags / check in (or store). Shower, change." },
+        { mode: "Walk", bufferMin: 90, note: "Afternoon reset — max 90-min nap. Don't go longer." },
+        { mode: "Walk", bufferMin: 120, note: "Oxford Street stroll — 5-min walk from hotel. Easy, no agenda." },
+        { mode: "Walk", bufferMin: 90, note: "Dinner near hotel — stay close, don't travel far." }
       ],
       3: [
-        { mode: "DLR + walk", bufferMin: 40, note: "Central London to Greenwich Observatory." },
-        { mode: "Coach tour or rail + local transfer", bufferMin: 120, note: "Greenwich to Stonehenge area transfer; prebook tour/train timings." },
-        { mode: "Coach/rail return + Tube", bufferMin: 140, note: "Stonehenge return to central London for dinner." }
+        { mode: "Taxi or Tube (Oxford Circus → Westminster)", bufferMin: 20, note: "Hotel to Westminster Pier — taxi easiest." },
+        { mode: "Thames Clippers (Uber Boat)", bufferMin: 60, note: "Westminster Pier → Greenwich Pier. ~45–60 min river cruise." },
+        { mode: "Walk", bufferMin: 30, note: "Greenwich Pier up to the Royal Observatory — uphill walk ~15 min." },
+        { mode: "Thames Clippers return + walk", bufferMin: 60, note: "Boat back to Westminster Pier — ~45 min. 2-min walk to National Gallery." },
+        { mode: "Walk", bufferMin: 2, note: "Adjacent — Trafalgar Square right outside the National Gallery." },
+        { mode: "Walk", bufferMin: 10, note: "North from Trafalgar Square to Piccadilly Circus." },
+        { mode: "Tube + walk", bufferMin: 30, note: "Piccadilly → Holborn/Tottenham Court Road — British Museum." },
+        { mode: "Walk", bufferMin: 5, note: "South on Shaftesbury Avenue into Soho." },
+        { mode: "Walk", bufferMin: 2, note: "Same block — John Snow pump on Broadwick Street." },
+        { mode: "Walk", bufferMin: 6, note: "North from Soho to Leicester Square." }
       ],
       4: [
         { mode: "Tube + walk", bufferMin: 35, note: "Hotel to Buckingham Palace for Changing of Guard." },
@@ -2104,7 +2202,8 @@
         { mode: "Walk", bufferMin: 20, note: "Continue east on the South Bank to Tate Modern." },
         { mode: "Walk", bufferMin: 12, note: "Short riverside transfer to Globe area." },
         { mode: "Walk + Tube", bufferMin: 25, note: "South Bank to Tower district." },
-        { mode: "Walk", bufferMin: 20, note: "Riverside skyline segment." }
+        { mode: "Walk", bufferMin: 20, note: "Riverside skyline segment." },
+        { mode: "Walk", bufferMin: 20, note: "Tower Bridge west toward Fleet Street — Ye Olde Cheshire Cheese for dinner." }
       ],
       5: [
         { mode: "Tube/taxi to Kings Cross", bufferMin: 40, note: "Allow time to reach London Kings Cross for 9:03am LNER departure." },
@@ -2141,7 +2240,7 @@
     };
 
     const dayLogisticsNotes = {
-      2: "Arrive LHR at 6:50am on April 3. Heathrow Express from Terminal 5 to Paddington (~15 min), then Tube or taxi to central London.",
+      2: "Arrive LHR at 6:50am on April 3. Elizabeth Line from Terminal 5 → Tottenham Court Road, then taxi to 134 Great Portland St. Thames Clippers from Westminster Pier to Greenwich (~45–60 min).",
       5: "LNER 9:03am from London Kings Cross — book at lner.co.uk. Arrive Edinburgh Waverley 1:32pm.",
       9: "Lumo 8:26am from Edinburgh Waverley — book at lumo.co.uk. Arrive London Kings Cross 12:46pm.",
       10: "BA 239 departs LHR at 8:10pm — leave central London by ~6:00pm. Heathrow Express from Paddington ~15 min.",
@@ -2154,9 +2253,17 @@
       Newark_Liberty_International_Airport: [40.6895, -74.1745],
       Washington_Dulles_International_Airport: [38.9531, -77.4565],
       London_Heathrow_Arrival: [51.4700, -0.4543],
+
+
+      London_Hotel_Base: [51.5196, -0.1439],
+      Edinburgh_Hotel_Base: [55.9500, -3.1883],
+      Airbnb_65_The_Cut: [51.5015, -0.1097],
+      Westminster_Pier: [51.5020, -0.1222],
+      Thames_Clippers: [51.5055, -0.0740],
       South_Bank: [51.5076, -0.1160],
       "County_Hall,_London": [51.5033, -0.1195],
       Tower_Bridge: [51.5055, -0.0754],
+      Sky_Garden_London: [51.5107, -0.0832],
       Borough_Market: [51.5055, -0.0911],
       Buckingham_Palace: [51.5014, -0.1419],
       "St_James's_Park": [51.5026, -0.1340],
@@ -3146,9 +3253,9 @@
     function buildRouteMap() {
       if (typeof L === "undefined") return;
       const map = L.map("route-map");
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
         maxZoom: 19,
-        attribution: "&copy; OpenStreetMap contributors"
+        attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors &copy; <a href='https://carto.com/'>CARTO</a>"
       }).addTo(map);
 
       routeMapState = {
@@ -3169,13 +3276,14 @@
         const stay = dayStayPlan[day.day] || { town: "Unknown" };
         const town = stay.town || "Unknown";
 
-        // Prepend hotel check-in as the first waypoint for this day
+        // Find hotel check-in entry for this day (if any)
+        let checkInHotelStop = null;
         HOTEL_STAY_DEFS.forEach((def) => {
           const saved = hotelCheckinData[def.id] || {};
           if (!saved.lat || !saved.lng) return;
           const eff = getEffectiveDef(def, saved);
           if (eff.checkInDay === day.day) {
-            routeStops.push({
+            checkInHotelStop = {
               day: day.day,
               order: 0,
               label: `\uD83C\uDFE8 Check-in: ${saved.name || def.label}`,
@@ -3183,22 +3291,49 @@
               coords: [saved.lat, saved.lng],
               time: "Hotel check-in",
               town
-            });
+            };
           }
         });
 
-        day.items.forEach((item, itemIndex) => {
+        // Hotel insertion mode:
+        //   hotelInsertAfterPage: "PageName" — insert hotel after the first occurrence of that page
+        //   airportToHotelOnly: true         — insert hotel after the very first map stop
+        //   default                          — hotel prepended before all stops
+        let stopCounter = 1;
+        const defaultHotelFirst = checkInHotelStop && !day.airportToHotelOnly && !day.hotelInsertAfterPage;
+        if (defaultHotelFirst) {
+          checkInHotelStop.order = stopCounter++;
+          routeStops.push(checkInHotelStop);
+        }
+
+        let hotelInserted = false;
+        const seenPages = new Set();
+        day.items.forEach((item) => {
           const coords = poiCoordinates[item.page];
-          if (!coords || !isTopMapStop(item.page, coords)) return;
+          if (!coords) return;
+          if (!day.showAllStopsOnTopMap && !isTopMapStop(item.page, coords)) return;
+          // Skip duplicate pages within the same day
+          if (seenPages.has(item.page)) return;
+          seenPages.add(item.page);
           routeStops.push({
             day: day.day,
-            order: itemIndex + 1,
+            order: stopCounter++,
             label: item.caption,
             page: item.page,
             coords,
             time: visitTimes[item.page] || "Flexible",
             town
           });
+          // Insert hotel after first stop (airportToHotelOnly)
+          if (day.airportToHotelOnly && !hotelInserted && checkInHotelStop) {
+            hotelInserted = true;
+            routeStops.push({ ...checkInHotelStop, order: stopCounter++ });
+          }
+          // Insert hotel after a specific named page (hotelInsertAfterPage)
+          if (day.hotelInsertAfterPage && item.page === day.hotelInsertAfterPage && !hotelInserted && checkInHotelStop) {
+            hotelInserted = true;
+            routeStops.push({ ...checkInHotelStop, order: stopCounter++ });
+          }
         });
       });
       return routeStops;
@@ -3817,6 +3952,94 @@
       if (grandTotalEl instanceof HTMLElement) {
         grandTotalEl.textContent = "$" + grandTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       }
+      renderBudgetPie();
+    }
+
+    function renderBudgetPie() {
+      const canvas = document.getElementById("budget-pie");
+      const legendEl = document.getElementById("budget-pie-legend");
+      if (!(canvas instanceof HTMLCanvasElement) || !legendEl) return;
+
+      const SLICES = [
+        { card: "flight",  label: "Flights",   color: "#f97316" },
+        { card: "hotel",   label: "Hotels",    color: "#4ade80" },
+        { card: "booking", label: "Scotland Tour (incl. Lodging)", color: "#facc15" },
+        { card: "review",  label: "Purchases", color: "#fb923c" }
+      ];
+
+      const values = SLICES.map((s) => {
+        const el = document.querySelector(`.js-cc-card-total[data-total-card="${s.card}"]`);
+        if (!(el instanceof HTMLElement)) return 0;
+        return parseFloat(el.textContent.replace(/[$,\s]/g, "")) || 0;
+      });
+
+      const total = values.reduce((a, b) => a + b, 0);
+      const ctx = canvas.getContext("2d");
+      const W = canvas.width;
+      const H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+
+      if (total === 0) {
+        legendEl.innerHTML = `<li class="budget-pie-empty">Enter costs above to see breakdown.</li>`;
+        ctx.fillStyle = "#e8edf2";
+        ctx.beginPath();
+        ctx.arc(W / 2, H / 2, W / 2 - 6, 0, Math.PI * 2);
+        ctx.fill();
+        return;
+      }
+
+      const sliceAngles = [];
+      let startAngle = -Math.PI / 2;
+      values.forEach((val, i) => {
+        if (val <= 0) { sliceAngles.push(null); return; }
+        const sweep = (val / total) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.moveTo(W / 2, H / 2);
+        ctx.arc(W / 2, H / 2, W / 2 - 6, startAngle, startAngle + sweep);
+        ctx.closePath();
+        ctx.fillStyle = SLICES[i].color;
+        ctx.fill();
+        sliceAngles.push({ start: startAngle, sweep });
+        startAngle += sweep;
+      });
+
+      // Centre hole for donut effect
+      ctx.beginPath();
+      ctx.arc(W / 2, H / 2, W / 5, 0, Math.PI * 2);
+      ctx.fillStyle = "#fff";
+      ctx.fill();
+
+      // Slice labels
+      const labelR = (W / 2 - 6) * 0.65;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "#fff";
+      ctx.font = "bold 13px sans-serif";
+      sliceAngles.forEach((a, i) => {
+        if (!a || values[i] <= 0) return;
+        const pct = Math.round((values[i] / total) * 100);
+        if (pct < 5) return;
+        const midAngle = a.start + a.sweep / 2;
+        const x = W / 2 + labelR * Math.cos(midAngle);
+        const y = H / 2 + labelR * Math.sin(midAngle);
+        ctx.font = "bold 13px sans-serif";
+        ctx.fillText(pct + "%", x, y - 7);
+        ctx.font = "11px sans-serif";
+        ctx.fillText(SLICES[i].label, x, y + 8);
+      });
+
+      // Legend — sorted greatest to least
+      const legendItems = SLICES.map((s, i) => ({ s, val: values[i] }));
+      legendItems.sort((a, b) => b.val - a.val);
+      legendEl.innerHTML = legendItems.map(({ s, val }) => {
+        const pct = Math.round(total > 0 ? (val / total) * 100 : 0);
+        const formatted = "$" + val.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        return `<li>
+          <span class="budget-pie-legend-swatch" style="background:${s.color}"></span>
+          <span>${s.label}: <strong>${pct}%</strong></span>
+          <span class="budget-pie-legend-pct">${formatted}</span>
+        </li>`;
+      }).join("");
     }
 
     function attachDateInputToCostInput(costInput) {
@@ -4044,9 +4267,9 @@
           attributionControl: true
         });
 
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
           maxZoom: 19,
-          attribution: "&copy; OpenStreetMap contributors"
+          attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors &copy; <a href='https://carto.com/'>CARTO</a>"
         }).addTo(map);
 
         dayMapInstances[day.day] = map;
@@ -4749,6 +4972,7 @@
     initializeHotelCheckIns();
     setupPoiCarousels();
     loadWikipediaImages();
+    renderBudgetPie();
   </script>
 
 </body>
