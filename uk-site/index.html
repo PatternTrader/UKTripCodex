@@ -3672,7 +3672,7 @@
                 ${hasCandidates ? "Click to pick a photo" : "No Photo Available"}
                </div>`}
           ${hasImages ? `<button class="poi-remove-photo" data-page="${page}" data-side="${side}" title="Remove photo">✕</button>` : ""}
-          <figcaption class="poi-caption">${hasImages ? caption : (hasCandidates ? "Click to pick a photo" : "No photo available")}</figcaption>
+          ${hasImages ? `<figcaption class="poi-caption">${caption}</figcaption>` : ""}
         </figure>
       `;
     }
