@@ -6557,19 +6557,30 @@
 
     // ── Load from Cloud: pull Firestore → localStorage → UI ───────────────────
     async function loadFromCloud() {
+      let snap;
       try {
-        const snap = await getDoc(tripDocRef);
-        if (snap.exists()) {
-          _snapshotIgnoreNext = true;
-          applyFirestoreData(snap.data());
-          localStorage.setItem(LOCAL_LAST_SAVE_KEY, String(snap.data()._lastUpdated || Date.now()));
-        }
-        setStatus("✓ Loaded latest data from cloud!", false);
-        setTimeout(() => setStatus(""), 3000);
+        snap = await getDoc(tripDocRef);
       } catch (err) {
-        setStatus("Load from cloud failed. Try again.", true);
-        console.warn("[Firebase] loadFromCloud error:", err);
+        const code = err?.code || err?.message || "unknown";
+        setStatus(`Load from cloud failed (${code}). Check sign-in and try again.`, true);
+        console.warn("[Firebase] loadFromCloud getDoc error:", err);
+        return;
       }
+
+      if (snap.exists()) {
+        _snapshotIgnoreNext = true;
+        try {
+          applyFirestoreData(snap.data());
+        } catch (uiErr) {
+          console.warn("[Firebase] applyFirestoreData error (data loaded OK):", uiErr);
+        }
+        try {
+          localStorage.setItem(LOCAL_LAST_SAVE_KEY, String(snap.data()._lastUpdated || Date.now()));
+        } catch (_) {}
+      }
+
+      setStatus("✓ Loaded latest data from cloud!", false);
+      setTimeout(() => setStatus(""), 3000);
     }
 
     // ── Apply Firestore data to localStorage (and re-init UI) ─────────────────
