@@ -2337,6 +2337,7 @@
         title: "Arrival + Stonehenge — LHR → Stonehenge → Hotel",
         date: "April 3",
         hotelInsertAfterPage: "Stonehenge",
+        checkinInsertBeforePage: "Hotel_Portland_Reset",
         items: [
           { text: "🛬 6:30–7:45 AM — Land + exit airport. 6:30 land → 6:45 off plane → 6:45–7:30 immigration → 7:30–7:45 walk out (carry-on only, no baggage claim). You're outside faster than most people.", page: "London_Heathrow_Arrival", caption: "Arrive London Heathrow" },
           { text: "🪨 9:45–11:15 AM — Stonehenge visit. Shuttle to the stones, walk the loop, audio guide. 75–90 minutes is perfect.", page: "Stonehenge", caption: "Stonehenge" },
@@ -3711,7 +3712,7 @@
             }
 
             itemsMarkup += `
-              <article class="poi-item">
+              <article class="poi-item" data-page="${item.page}">
                 ${renderPoiCarousel(photoCarousels.left, item.page, item.caption, "left")}
                 <div class="poi-text">
                   <span class="poi-time">${visitTime} - ${visitEndTime} (${duration} min)${dayPart ? " - " + dayPart : ""}</span>
@@ -6283,18 +6284,34 @@
         const dayCard = document.querySelector(`.day-card[data-day="${dayNum}"]`);
         if (!dayCard) return;
 
+        // Check if this day has a custom checkin insertion point
+        const dayConfig = itinerary.find((d) => String(d.day) === String(dayNum));
+        const checkinBeforePage = dayConfig && dayConfig.checkinInsertBeforePage;
+
         const sorted = dayBanners[dayNum].slice().sort((a, b) => a.order - b.order);
         const dayHead = dayCard.querySelector(".day-head");
         const logistics = dayCard.querySelector(".day-logistics");
-        let insertAfter = logistics || dayHead;
+        let defaultInsertAfter = logistics || dayHead;
 
         sorted.forEach((bannerData) => {
           const wrapper = document.createElement("div");
           wrapper.innerHTML = bannerData.html.trim();
           const bannerEl = wrapper.firstElementChild;
-          if (bannerEl && insertAfter) {
-            insertAfter.insertAdjacentElement("afterend", bannerEl);
-            insertAfter = bannerEl;
+          if (!bannerEl) return;
+
+          // For check-in banners, honor checkinInsertBeforePage if set
+          if (checkinBeforePage && bannerEl.classList.contains("hotel-checkin-banner")) {
+            const targetPoi = dayCard.querySelector(`.poi-item[data-page="${checkinBeforePage}"]`);
+            if (targetPoi) {
+              targetPoi.insertAdjacentElement("beforebegin", bannerEl);
+              return;
+            }
+          }
+
+          // Default: insert after day head / logistics
+          if (defaultInsertAfter) {
+            defaultInsertAfter.insertAdjacentElement("afterend", bannerEl);
+            defaultInsertAfter = bannerEl;
           }
         });
       });
