@@ -288,7 +288,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2.2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #5a7a9a;
     background: repeating-linear-gradient(
       45deg,
       #dce7f2,
@@ -296,9 +298,102 @@
       #ccd8e8 10px,
       #ccd8e8 20px
     );
-    opacity: 0.7;
+    opacity: 0.85;
     cursor: default;
   }
+  .poi-no-photo.has-candidates {
+    cursor: pointer;
+    opacity: 1;
+  }
+  .poi-no-photo.has-candidates:hover {
+    background: repeating-linear-gradient(
+      45deg,
+      #c8dff5,
+      #c8dff5 10px,
+      #b8cfe8 10px,
+      #b8cfe8 20px
+    );
+  }
+
+  /* Photo picker modal */
+  #photo-picker-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: rgba(0,0,0,0.72);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #photo-picker-modal {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    max-width: 720px;
+    width: 95vw;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+  }
+  #photo-picker-modal h3 {
+    margin: 0 0 6px;
+    font-size: 1.1rem;
+    color: #1a3a5c;
+  }
+  #photo-picker-modal p {
+    margin: 0 0 16px;
+    font-size: 0.82rem;
+    color: #5a6a7d;
+  }
+  .photo-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .photo-picker-thumb {
+    cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 3px solid transparent;
+    transition: border-color 0.15s, transform 0.15s;
+    position: relative;
+  }
+  .photo-picker-thumb:hover { border-color: #1a6bbf; transform: scale(1.03); }
+  .photo-picker-thumb.selected { border-color: #1d9c45; }
+  .photo-picker-thumb img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    display: block;
+  }
+  .photo-picker-thumb span {
+    display: block;
+    font-size: 0.62rem;
+    color: #556;
+    padding: 3px 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background: #f4f6f8;
+  }
+  .photo-picker-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+  .photo-picker-actions button {
+    padding: 8px 18px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  .photo-picker-save { background: #1a6bbf; color: #fff; }
+  .photo-picker-save:hover { background: #1558a0; }
+  .photo-picker-cancel { background: #eee; color: #333; }
+  .photo-picker-cancel:hover { background: #ddd; }
 
   .poi-carousel img {
     position: absolute;
@@ -2874,6 +2969,7 @@
       ...Object.keys(localSecondaryImages)
     ]);
     const PHOTO_OVERRIDE_STORAGE_KEY = "ukTripPhotoOverridesV1";
+    const PHOTO_CANDIDATES = {"303_E_83rd_St_NYC":["nyc-apt.webp","nyc-apt-2.webp"],"Newark_Liberty_International_Airport":["newark-airport.jpg","newark-airport-2.jpg"],"Washington_Dulles_International_Airport":["newark-airport-3.jpg","newark-airport.jpg"],"London_Heathrow_Arrival":["heathrow-t5.jpg","heathrow.jpg"],"South_Bank":["south-bank.png","south-bank.jpg"],"Buckingham_Palace":["buckingham.jpg","buckingham-aerial.jpg"],"St_James's_Park":["buckingham-3.jpg","buckingham.jpg"],"Westminster_Abbey":["westminster-abbey-front.jpg","westminster-abbey-4.jpg"],"Big_Ben":["big-ben.jpg","big-ben-2.jpg"],"London_Eye":["london-eye-2.jpg","london-eye-3.jpg"],"Tate_Modern":["tate-modern.jpg","tate-modern-3.jpg"],"Shakespeare's_Globe":["globe-theatre.jpg","globe-theatre-3.jpg"],"Tower_Bridge":["tower-bridge.jpg","tower-bridge-3.jpg"],"Tower_of_London":["tower-london.jpg","tower-london-beefeater.jpg"],"British_Museum":["british-museum.jpg","british-museum-4.jpg"],"National_Gallery":["national-gallery.jpg","national-gallery-3.jpg"],"Trafalgar_Square":["trafalgar-sq.jpg","trafalgar-sq-4.jpg"],"Leicester_Square":["london-6.jpg","london-7.jpg"],"Piccadilly_Circus":["london-5.jpg","london-6.jpg"],"Forbidden_Planet_London_Megastore":["london-6.jpg","london-7.jpg"],"John_Snow_cholera_pump":["london-3.jpg","london-4.jpg"],"Soho":["london-4.jpg","london-5.jpg"],"Oxford_Street":["london-2.jpg","london-3.jpg"],"Ye_Olde_Cheshire_Cheese":["london-2.jpg"],"Dishoom_Covent_Garden":["london-3.jpg","london-4.jpg"],"Rock_and_Sole_Plaice":["london-2.jpg"],"Royal_Observatory_Greenwich":["royal-observatory.webp","royal-observatory-2.webp"],"Stonehenge":["stonehenge1.jpg","stonehenge2.jpg"],"Bletchley_Park":["cotswolds1.jpg","cotswolds2.jpg"],"Shakespeare's_Birthplace":["cotswolds1.jpg","cotswolds2.jpg"],"Royal_Shakespeare_Theatre":["cotswolds2.jpg","cotswolds1.jpg"],"Anne_Hathaway's_Cottage":["cotswolds1.jpg","cotswolds2.jpg"],"River_Avon,_Warwickshire":["cotswolds2.jpg","cotswolds1.jpg"],"London":["london-3.jpg"],"Royal_Mile":["Royal-Mile.webp","Old-Town.webp"],"Grassmarket":["Old-Town.webp","Royal-Mile.webp"],"Edinburgh":["Old-Town.webp","Royal-Mile.webp"],"Edinburgh_Castle":["Old-Town.webp","Royal-Mile.webp"],"Holyrood_Palace":["Royal-Mile.webp","Old-Town.webp"],"Arthur's_Seat":["Old-Town.webp","Royal-Mile.webp"],"Old_Town,_Edinburgh":["Old-Town.webp","Royal-Mile.webp"],"Stirling_Castle":["Royal-Mile.webp","Old-Town.webp"],"National_Wallace_Monument":["Old-Town.webp","Royal-Mile.webp"],"Battle_of_Bannockburn":["Royal-Mile.webp","Old-Town.webp"],"Scottish_Highlands":["quiraing-skye.jpg","quiraing.jpg"],"Urquhart_Castle":["eilean-donan-castle-scotland-highlands.jpg","quiraing-skye.jpg"],"Glencoe,_Highland":["quiraing.jpg","quiraing-skye.jpg"],"Inverness":["quiraing-skye.jpg","quiraing.jpg"],"Eilean_Donan":["eilean-donan-castle-scotland-highlands.jpg","eilean donan highlands.jpg"],"Old_Man_of_Storr":["oldmanofstorr.jpg","old-man-of-storr-stormy.jpg"],"A9_road_(Scotland)":["quiraing-skye.jpg"],"Edinburgh_Waverley_railway_station":["Old-Town.webp"],"London_Heathrow_Departure":["heathrow.jpg","heathrow-t5.jpg"],"Airplane":["flight home.jpg","heathrow.jpg"]};
     const POI_CAROUSEL_INTERVAL_MS = 3500;
     let poiCarouselTimers = [];
     let runtimeProjectState = null;
@@ -3321,12 +3417,15 @@
     function renderPoiCarousel(images, page, caption, side) {
       const slotAttr = side === "left" ? "primary" : "secondary";
       const hasImages = images && images.length > 0;
+      const hasCandidates = Array.isArray(PHOTO_CANDIDATES[page]) && PHOTO_CANDIDATES[page].length > 0;
       return `
-        <figure class="poi-photo poi-carousel ${side === "right" ? "right" : ""}" data-carousel="${side}">
+        <figure class="poi-photo poi-carousel ${side === "right" ? "right" : ""}" data-carousel="${side}" data-page="${page}" data-side="${side}">
           ${hasImages
             ? images.map((src, index) => `<img src="${src}" ${index === 0 ? `data-wiki-page="${page}" data-wiki-slot="${slotAttr}" data-fallback="${src}"` : ""} class="${index === 0 ? "is-active" : ""}" alt="${caption}${side === "right" ? " view" : ""}">`).join("")
-            : `<div class="poi-no-photo" title="No photo selected — assign one in the selector">📷</div>`}
-          <figcaption class="poi-caption">${hasImages ? caption : "No photo selected"}</figcaption>
+            : `<div class="poi-no-photo${hasCandidates ? " has-candidates" : ""}" data-page="${page}" data-side="${side}" title="${hasCandidates ? "Click to pick a photo" : "No photos available yet"}">
+                ${hasCandidates ? "📷 Click to pick a photo" : "📷"}
+               </div>`}
+          <figcaption class="poi-caption">${hasImages ? caption : (hasCandidates ? "Click to pick a photo" : "No photo available")}</figcaption>
         </figure>
       `;
     }
@@ -3348,6 +3447,80 @@
         poiCarouselTimers.push(timer);
       });
     }
+
+    // ── Photo Picker ──────────────────────────────────────────────────────────
+    (function initPhotoPicker() {
+      let pickerOverlay = null;
+      let selectedFile = null;
+
+      function openPhotoPicker(page, side) {
+        const candidates = PHOTO_CANDIDATES[page] || [];
+        if (!candidates.length) return;
+
+        // Build modal HTML
+        const thumbsHtml = candidates.map(file => `
+          <div class="photo-picker-thumb" data-file="${file}">
+            <img src="../photos/${encodeURIComponent(file)}" alt="${file}" loading="lazy">
+            <span>${file}</span>
+          </div>`).join("");
+
+        pickerOverlay = document.createElement("div");
+        pickerOverlay.id = "photo-picker-overlay";
+        pickerOverlay.innerHTML = `
+          <div id="photo-picker-modal">
+            <h3>Pick a photo — ${page.replace(/_/g," ")}</h3>
+            <p>Selecting for the <strong>${side}</strong> side. Click a photo to select it, then hit Save.</p>
+            <div class="photo-picker-grid">${thumbsHtml}</div>
+            <div class="photo-picker-actions">
+              <button class="photo-picker-cancel">Cancel</button>
+              <button class="photo-picker-save">Save</button>
+            </div>
+          </div>`;
+
+        document.body.appendChild(pickerOverlay);
+        selectedFile = null;
+
+        // Thumb click
+        pickerOverlay.querySelectorAll(".photo-picker-thumb").forEach(thumb => {
+          thumb.addEventListener("click", () => {
+            pickerOverlay.querySelectorAll(".photo-picker-thumb").forEach(t => t.classList.remove("selected"));
+            thumb.classList.add("selected");
+            selectedFile = thumb.getAttribute("data-file");
+          });
+        });
+
+        // Cancel
+        pickerOverlay.querySelector(".photo-picker-cancel").addEventListener("click", closePicker);
+        pickerOverlay.addEventListener("click", e => { if (e.target === pickerOverlay) closePicker(); });
+
+        // Save
+        pickerOverlay.querySelector(".photo-picker-save").addEventListener("click", () => {
+          if (!selectedFile) { closePicker(); return; }
+          const overrides = getPhotoOverrides();
+          if (!overrides[page]) overrides[page] = {};
+          const carouselKey = side === "left" ? "leftCarousel" : "rightCarousel";
+          overrides[page][carouselKey] = [selectedFile];
+          localStorage.setItem(PHOTO_OVERRIDE_STORAGE_KEY, JSON.stringify(overrides));
+          window._fbSaveAll?.();
+          closePicker();
+          rerenderTimelineForPhotoUpdates();
+        });
+      }
+
+      function closePicker() {
+        if (pickerOverlay) { pickerOverlay.remove(); pickerOverlay = null; }
+        selectedFile = null;
+      }
+
+      // Delegate click on placeholders
+      document.addEventListener("click", e => {
+        const placeholder = e.target.closest(".poi-no-photo.has-candidates");
+        if (!placeholder) return;
+        const page = placeholder.getAttribute("data-page");
+        const side = placeholder.getAttribute("data-side");
+        if (page && side) openPhotoPicker(page, side);
+      });
+    })();
 
     function getImageIdentity(url) {
       const raw = String(url || "").trim().toLowerCase();
