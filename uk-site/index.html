@@ -2339,6 +2339,7 @@
         title: "Thames Cruise + Royal Observatory + West End",
         date: "April 4",
         items: [
+          { text: "🏨 Day 3 starts at <strong>134 Great Portland St</strong>. Breakfast, get ready, then head out to Westminster Pier.", page: "Hotel_Portland_D3", caption: "Hotel Portland — Day 3 start" },
           { text: "🚶 Westminster Pier — catch the Thames Clipper boat to Greenwich.", page: "Westminster_Pier", caption: "Westminster Pier" },
           { text: "🚤 Thames Cruise to Greenwich on Thames Clippers (Uber Boat by Thames Clippers) — fastest, easiest option. ~45–60 minutes on the River Thames.", page: "Thames_Clippers", caption: "Thames Cruise to Greenwich" },
           { text: "Visit the Royal Observatory Greenwich and stand on the Prime Meridian line.", page: "Royal_Observatory_Greenwich", caption: "Royal Observatory & Prime Meridian" },
@@ -2355,6 +2356,7 @@
         title: "Royal and Historic London",
         date: "April 5",
         items: [
+          { text: "🏨 Day 4 starts at <strong>134 Great Portland St</strong>. Breakfast, gear up for a full day of Royal London.", page: "Hotel_Portland_D4", caption: "Hotel Portland — Day 4 start" },
           { text: "Watch the Changing of the Guard at Buckingham Palace (11am on select days — check schedule in advance and arrive early for a good spot).", page: "Buckingham_Palace", caption: "Buckingham Palace" },
           { text: "Stroll east through St James's Park toward Westminster — one of London's most scenic royal parks.", page: "St_James's_Park", caption: "St James's Park" },
           { text: "Tour Westminster Abbey — burial site of monarchs and national figures.", page: "Westminster_Abbey", caption: "Westminster Abbey" },
@@ -2372,6 +2374,7 @@
         title: "Train to Edinburgh",
         date: "April 6",
         items: [
+          { text: "🏨 Checkout day — depart <strong>134 Great Portland St</strong>. Pack bags and head to Kings Cross for the 9:03 AM LNER to Edinburgh.", page: "Hotel_Portland_D5", caption: "Hotel Portland — checkout Day 5" },
           { text: "Depart <strong>London Kings Cross</strong> at <strong>9:03am</strong> on LNER direct to Edinburgh Waverley. 4h 29m, Standard class. £257.60 for 5 passengers. Arrive <strong>Edinburgh Waverley at 1:32pm</strong>.", page: "LNER", caption: "Kings Cross — LNER 9:03am", defaultCost: 257.60 },
           { text: "🏨 Check into Edinburgh hotel near the Royal Mile. Drop bags, freshen up — you've been on a train since 9am.", page: "Edinburgh_Hotel_Checkin", caption: "Check in — Edinburgh hotel" },
           { text: "Walk downhill through the colourful <strong>Victoria Street</strong> archways and into the historic <strong>Grassmarket</strong> square (~10 min from Royal Mile). Browse shops, grab a coffee.", page: "Grassmarket", caption: "Victoria St & Grassmarket" },
@@ -2487,6 +2490,7 @@
       Oxford_Street: "16:30",                          // 4:30 PM stroll — 30 min gap after reset; 120 min → 18:30
       Hotel_Portland_Dinner: "18:30",                  // 6:30 PM dinner near hotel; 90 min → 20:00
       // Day 3 — Thames + Greenwich + West End
+      Hotel_Portland_D3: "09:00",                 // Day 3 start at hotel 9:00 AM
       Westminster_Pier: "09:20",                       // 20 min by Tube/taxi from hotel
       Thames_Clippers: "09:30",                        // Board 9:30 AM; 60 min cruise → 10:30
       Royal_Observatory_Greenwich: "10:45",            // Arrive Greenwich 10:30, uphill 15 min → 10:45; 90 min → 12:15
@@ -2497,6 +2501,7 @@
       Soho: "15:07",                                   // 5-min walk N from Piccadilly; 30 min → 15:37
       John_Snow_cholera_pump: "15:39",                 // 2-min walk on Broadwick St; 15 min → 15:54
       // Day 4 — Royal and Historic London
+      Hotel_Portland_D4: "09:00",                 // Day 4 start at hotel 9:00 AM
       Buckingham_Palace: "09:35",                      // 35 min travel; arrive early for 11am Guard ceremony; 120 min → 11:35
       "St_James's_Park": "11:45",                      // 10 min walk E through park; 30 min → 12:15
       Westminster_Abbey: "12:30",                      // 15 min walk from park; 90 min → 14:00
@@ -2514,6 +2519,7 @@
       Dishoom_Covent_Garden: "19:45",
       Rock_and_Sole_Plaice: "20:45",
       // Day 5 — Train to Edinburgh
+      Hotel_Portland_D5: "08:00",                 // Day 5 checkout — depart hotel 8:00 AM
       LNER: "09:03",                                   // Depart Kings Cross 9:03am; 63 min buffer from hotel
       Edinburgh_Hotel_Checkin: "14:15",                // Arrive 13:32 + 15min taxi + 28min buffer → 14:15; 45 min check-in → 15:00
       Grassmarket: "15:30",                            // 15 min walk downhill from hotel; 60 min browse → 16:30
@@ -2602,6 +2608,7 @@
       Oxford_Street: 120,                         // 16:30→18:30 Oxford Street stroll = 120 min
       Hotel_Portland_Dinner: 90,                  // 18:30→20:00 dinner near hotel = 90 min
       // Day 3
+      Hotel_Portland_D3: 0,                   // Starting point — 0 min own duration
       Westminster_Pier: 10,                       // Wait/board at pier = 10 min
       Thames_Clippers: 60,                        // 9:30→10:30 cruise to Greenwich = 60 min
       Royal_Observatory_Greenwich: 90,            // 10:45→12:15 observatory visit = 90 min
@@ -2612,6 +2619,7 @@
       Soho: 30,                                   // 15:07→15:37 Soho stroll = 30 min
       John_Snow_cholera_pump: 15,                 // 15:39→15:54 street landmark = 15 min
       // Day 4
+      Hotel_Portland_D4: 0,                   // Starting point — 0 min own duration
       Buckingham_Palace: 120,                     // 9:35→11:35: arrive early + Changing of Guard = 120 min
       "St_James's_Park": 30,                      // 11:45→12:15 stroll = 30 min
       Westminster_Abbey: 90,                      // 12:30→14:00 tour = 90 min
@@ -2629,6 +2637,7 @@
       Dishoom_Covent_Garden: 70,
       Rock_and_Sole_Plaice: 60,
       // Day 5
+      Hotel_Portland_D5: 0,                   // Checkout marker — 0 min own duration
       LNER: 269,                                  // 9:03 AM → 1:32 PM = 269 min (Kings Cross to Edinburgh Waverley)
       Edinburgh_Hotel_Checkin: 45,                // Check in, drop bags, freshen up = 45 min
       Grassmarket: 60,                            // 15:30→16:30 browse Grassmarket = 60 min
@@ -2711,7 +2720,8 @@
         { mode: "Walk (dinner nearby)", bufferMin: 0, note: "Oxford Street ends 18:30 → dinner starts right away — restaurant is right nearby." }
       ],
       3: [
-        // Entry [i] = transit BEFORE item[i]. Day 3 has 9 items (indices 0–8).
+        // Entry [i] = transit BEFORE item[i]. Day 3 has 10 items (indices 0–9).
+        { mode: "Starting point", bufferMin: 0, note: "Day 3 begins at 134 Great Portland St." },
         { mode: "Tube or taxi (Great Portland St → Westminster)", bufferMin: 50, note: "Breakfast at hotel, then depart ~08:30. Tube or taxi to Westminster Pier — arrive 09:20." },
         { mode: "Walk to boat / board", bufferMin: 10, note: "Westminster Pier → board Thames Clipper 09:30. Short walk along pier." },
         { mode: "Thames Clippers + uphill walk", bufferMin: 15, note: "Boat arrives Greenwich Pier 10:30 → uphill walk to Observatory ~15 min → arrive 10:45." },
@@ -2723,7 +2733,8 @@
         { mode: "Walk (Broadwick Street)", bufferMin: 2, note: "2-min walk within Soho to John Snow pump on Broadwick Street. 15:37→15:39." }
       ],
       4: [
-        // Entry [i] = transit BEFORE item[i]. Day 4 has 10 items (indices 0–9).
+        // Entry [i] = transit BEFORE item[i]. Day 4 has 11 items (indices 0–10).
+        { mode: "Starting point", bufferMin: 0, note: "Day 4 begins at 134 Great Portland St." },
         { mode: "Walk or taxi (Great Portland St → Buckingham Palace)", bufferMin: 65, note: "Breakfast at hotel, depart ~08:30. Walk ~1 mile south or take a taxi. Arrive 09:35 for a good spot before the 11am Guard ceremony." },
         { mode: "Walk E through St James's Park", bufferMin: 10, note: "Ceremony ends ~11:35 → 10-min walk east through park → 11:45." },
         { mode: "Walk S toward Westminster Abbey", bufferMin: 15, note: "Exit St James's Park → cross to Westminster Abbey. 12:15→12:30." },
@@ -2736,7 +2747,8 @@
         { mode: "Walk W (Sky Garden → Fleet Street)", bufferMin: 20, note: "Continue west to Ye Olde Cheshire Cheese on Fleet Street. 20:02→20:22." }
       ],
       5: [
-        // Entry [i] = transit BEFORE item[i]. Day 5 has 4 items (indices 0–3).
+        // Entry [i] = transit BEFORE item[i]. Day 5 has 5 items (indices 0–4).
+        { mode: "Starting point", bufferMin: 0, note: "Day 5 begins at 134 Great Portland St. Pack bags — checking out today." },
         { mode: "Victoria line (Oxford Circus → Kings Cross)", bufferMin: 93, note: "Wake up, pack, depart hotel 07:30 AM. Tube ~10 min → Kings Cross. On platform by 08:30 for 09:03 departure." },
         { mode: "Walk or taxi (Waverley → hotel)", bufferMin: 43, note: "LNER arrives Edinburgh Waverley 1:32 PM → short walk or taxi to hotel near Royal Mile. Check-in from ~2:15 PM." },
         { mode: "Walk (hotel → Grassmarket)", bufferMin: 30, note: "Check-in ends 15:00 → 15-min walk downhill to Grassmarket + 15-min buffer → arrive 15:30." },
@@ -2798,6 +2810,11 @@
       Hotel_Portland_Arrive: [51.5196, -0.1439],          // 134 Great Portland St
       Hotel_Portland_Reset: [51.5196, -0.1439],           // Same hotel
       Hotel_Portland_Dinner: [51.5196, -0.1439],          // Same hotel / nearby
+
+      // Day 3/4/5 hotel start keys
+      Hotel_Portland_D3: [51.5196, -0.1439],          // 134 Great Portland St
+      Hotel_Portland_D4: [51.5196, -0.1439],          // 134 Great Portland St
+      Hotel_Portland_D5: [51.5196, -0.1439],          // 134 Great Portland St
 
       // Day 5 hotel/station keys
       Edinburgh_Hotel_Checkin: [55.9500, -3.1883],        // Edinburgh hotel near Royal Mile
@@ -2974,6 +2991,9 @@
       Stonehenge_Drive: "https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
       Hotel_Portland_Drive: "https://images.pexels.com/photos/1837590/pexels-photo-1837590.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
       Hotel_Portland_Arrive: "https://images.pexels.com/photos/1838640/pexels-photo-1838640.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Hotel_Portland_D3: "https://images.pexels.com/photos/1838640/pexels-photo-1838640.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Hotel_Portland_D4: "https://images.pexels.com/photos/1838640/pexels-photo-1838640.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
+      Hotel_Portland_D5: "https://images.pexels.com/photos/1838640/pexels-photo-1838640.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
       Hotel_Portland_Reset: "https://images.pexels.com/photos/1838640/pexels-photo-1838640.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
       Hotel_Portland_Dinner: "https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
       Edinburgh_Hotel_Checkin: "https://images.pexels.com/photos/1827610/pexels-photo-1827610.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=1400",
@@ -3075,6 +3095,9 @@
       Stonehenge_Drive: localPhoto("stonehenge1.jpg"),
       Hotel_Portland_Drive: localPhoto("london-3.jpg"),
       Hotel_Portland_Arrive: localPhoto("london-2.jpg"),
+      Hotel_Portland_D3: localPhoto("london-2.jpg"),
+      Hotel_Portland_D4: localPhoto("london-2.jpg"),
+      Hotel_Portland_D5: localPhoto("london-2.jpg"),
       Hotel_Portland_Reset: localPhoto("london-2.jpg"),
       Hotel_Portland_Dinner: localPhoto("london-2.jpg"),
       Edinburgh_Hotel_Checkin: localPhoto("Old-Town.webp"),
@@ -3460,6 +3483,9 @@
       Stonehenge_Drive: { why: "1h 45min private car drive from Heathrow to Stonehenge — relax and decompress.", researchedCost: "Included in private driver booking." },
       Hotel_Portland_Drive: { why: "2–2.5h drive from Stonehenge to 134 Great Portland St, London.", researchedCost: "Included in private driver booking." },
       Hotel_Portland_Arrive: { why: "Arrive at 134 Great Portland St — drop bags, check in or store luggage.", researchedCost: "Hotel booking required." },
+      Hotel_Portland_D3: { why: "Day 3 starting point — 134 Great Portland St. Breakfast at hotel before heading out.", researchedCost: "Hotel already booked." },
+      Hotel_Portland_D4: { why: "Day 4 starting point — 134 Great Portland St. Breakfast and gear up for a full Royal London day.", researchedCost: "Hotel already booked." },
+      Hotel_Portland_D5: { why: "Checkout day — pack bags and head to Kings Cross for the 9:03 AM LNER to Edinburgh.", researchedCost: "Hotel already booked." },
       Hotel_Portland_Reset: { why: "Afternoon rest at hotel — max 90-min nap to manage jet lag.", researchedCost: "Hotel booking required." },
       Hotel_Portland_Dinner: { why: "Dinner near the hotel on arrival evening — keep it simple and close.", researchedCost: "Paid dining." },
       Edinburgh_Hotel_Checkin: { why: "Check in to Edinburgh hotel near Royal Mile — drop bags and freshen up.", researchedCost: "Hotel booking required." },
