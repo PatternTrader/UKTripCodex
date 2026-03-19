@@ -616,6 +616,18 @@
     font-weight: 600;
   }
 
+  .travel-link-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .travel-link-row .cc-link-input {
+    width: 200px;
+    font-size: 0.78rem;
+  }
+
   .poi-cost {
     margin-top: 10px;
     display: flex;
@@ -3685,10 +3697,15 @@
             if (transport && transport.bufferMin > 0) {
               const transferEndTime = visitTime;
               const transferStartTime = subtractMinutesFromTime(visitTime, transport.bufferMin);
+              const transportKey = `transport-d${day.day}-i${itemIndex}`;
               itemsMarkup += `
                 <article class="travel-block">
                   <div class="travel-title">${transferStartTime} - ${transferEndTime} (${transport.bufferMin} min) - ${transport.mode}</div>
                   <div class="travel-desc">Estimated transfer buffer: ~${transport.bufferMin} min. ${transport.note}</div>
+                  <div class="travel-link-row">
+                    <input type="url" class="cc-link-input js-transport-link" data-link-id="${transportKey}" placeholder="Paste Google Maps link" aria-label="Google Maps link">
+                    <a class="cc-link-open js-cc-link-open" data-link-open-id="${transportKey}" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
+                  </div>
                 </article>
               `;
             }
@@ -3844,6 +3861,7 @@
 
     function rerenderTimelineForPhotoUpdates() {
       renderTimeline();
+      bindTransportLinks();
       bindCostInputs();
       buildDayMaps();
       setupPoiCarousels();
@@ -4299,6 +4317,25 @@
           <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="${item.id}" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="${item.id}" aria-label="Cost GBP"></div>
         </li>
       `).join("");
+    }
+
+    function bindTransportLinks() {
+      document.querySelectorAll(".js-transport-link[data-link-id]").forEach((input) => {
+        const id = input.getAttribute("data-link-id");
+        if (!id) return;
+        const savedValue = typeof ccLinks[id] === "string" ? ccLinks[id].trim() : "";
+        if (savedValue) input.value = savedValue;
+        syncCommandCenterLink(id, input.value);
+        if (input.dataset.bound === "true") return;
+        input.dataset.bound = "true";
+        input.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); input.blur(); } });
+        input.addEventListener("input", () => {
+          ccLinks[id] = input.value;
+          localStorage.setItem(CC_LINKS_STORAGE_KEY, JSON.stringify(ccLinks));
+          syncCommandCenterLink(id, input.value);
+          window._fbSaveAll?.();
+        });
+      });
     }
 
     function bindCostInputs() {
@@ -6378,6 +6415,7 @@
     initializeCostState();
     renderStaySummary();
     renderTimeline();
+    bindTransportLinks();
     renderPaidMixedReviewChecklist();
     renderFoodSouvenirsChecklist();
     renderCostSheet();
@@ -6622,6 +6660,7 @@
       try { if (typeof initializeCostState === "function") initializeCostState(); } catch (_) {}
       try { if (typeof renderCostSheet === "function") renderCostSheet(); } catch (_) {}
       try { if (typeof bindCostInputs === "function") bindCostInputs(); } catch (_) {}
+      try { if (typeof bindTransportLinks === "function") bindTransportLinks(); } catch (_) {}
       try { if (typeof bindCustomCostControls === "function") bindCustomCostControls(); } catch (_) {}
       try { if (typeof initializeCommandChecklist === "function") initializeCommandChecklist(); } catch (_) {}
       try { if (typeof initializeDateInputs === "function") initializeDateInputs(); } catch (_) {}
