@@ -290,7 +290,7 @@
     justify-content: center;
     font-size: 1.1rem;
     font-weight: 600;
-    color: #333;
+    color: #fff;
     background: #000;
     opacity: 1;
     cursor: default;
@@ -3643,7 +3643,7 @@
           ${hasImages
             ? images.map((src, index) => `<img src="${src}" ${index === 0 ? `data-wiki-page="${page}" data-wiki-slot="${slotAttr}" data-fallback="${src}"` : ""} class="${index === 0 ? "is-active" : ""}" alt="${caption}${side === "right" ? " view" : ""}">`).join("")
             : `<div class="poi-no-photo${hasCandidates ? " has-candidates" : ""}" data-page="${page}" data-side="${side}" title="${hasCandidates ? "Click to pick a photo" : "No photos available yet"}">
-                ${hasCandidates ? "📷 Click to pick a photo" : "📷"}
+                ${hasCandidates ? "Click to pick a photo" : "No Photo Available"}
                </div>`}
           ${hasImages ? `<button class="poi-remove-photo" data-page="${page}" data-side="${side}" title="Remove photo">✕</button>` : ""}
           <figcaption class="poi-caption">${hasImages ? caption : (hasCandidates ? "Click to pick a photo" : "No photo available")}</figcaption>
