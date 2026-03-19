@@ -2495,132 +2495,158 @@
     };
 
     const visitTimes = {
-      "303_E_83rd_St_NYC": "12:35",
+      // Day 1 — NYC to JFK
+      "303_E_83rd_St_NYC": "15:00",                    // Leave home ~3 PM for 6:40 PM JFK flight
+      John_F._Kennedy_International_Airport: "16:15",  // Arrive JFK ~4:15 PM, 2h+ before 6:40 PM departure
       Newark_Liberty_International_Airport: "15:07",
       Washington_Dulles_International_Airport: "17:20",
-      London_Heathrow_Arrival: "06:55",
-      South_Bank: "15:30",
+      // Day 2 — Arrival + Stonehenge
+      London_Heathrow_Arrival: "06:30",                // Land 6:30 AM; text confirms 6:30–7:45 AM
+      Stonehenge: "09:45",                             // Text: "9:45–11:15 AM" ✓
+      Oxford_Street: "16:30",                          // Text: "4:30–6:30 PM" — was wrongly "19:20"
+      // Day 3 — Thames + Greenwich + West End
+      Royal_Observatory_Greenwich: "10:45",            // Arrive Greenwich ~10:30, uphill 15 min
+      National_Gallery: "13:35",                       // After boat return from Greenwich (~1:30 PM)
+      Trafalgar_Square: "15:05",                       // Right outside National Gallery
+      Leicester_Square: "15:50",                       // 5-min walk from Trafalgar Square
+      Piccadilly_Circus: "16:25",                      // 5-min walk from Leicester Square
+      Soho: "17:05",                                   // 5-min walk from Piccadilly
+      John_Snow_cholera_pump: "17:20",                 // Broadwick St, during Soho walk
+      // Day 4 — Royal and Historic London
+      Buckingham_Palace: "09:30",                      // Arrive early; Changing of Guard 11am ✓
+      "St_James's_Park": "11:30",                      // After ceremony ends (~11:30)
+      Westminster_Abbey: "12:15",                      // After St James's Park walk
+      Big_Ben: "13:50",                                // Photo stop after Westminster Abbey
+      London_Eye: "14:25",                             // Cross Westminster Bridge after Big Ben
+      South_Bank: "15:40",                             // Walk east from London Eye
+      Tower_of_London: "16:45",                        // April last entry 5pm — arrive before cutoff
+      Tower_Bridge: "18:15",                           // After Tower of London, riverbank photo
+      Sky_Garden_London: "18:55",                      // 10-min walk west from Tower Bridge
+      Ye_Olde_Cheshire_Cheese: "20:05",                // After Sky Garden, Fleet St dinner
+      // Day 4 also uses South_Bank (listed above)
       "County_Hall,_London": "16:30",
       Borough_Market: "18:30",
-      Tower_Bridge: "20:15",
-      Buckingham_Palace: "09:30",
-      "St_James's_Park": "10:30",
-      Westminster_Abbey: "11:30",
-      Big_Ben: "13:00",
-      London_Eye: "13:45",
-      Tate_Modern: "15:15",
-      "Shakespeare's_Globe": "17:00",
-      Tower_of_London: "18:20",
-      British_Museum: "09:30",
-      National_Gallery: "12:15",
-      Trafalgar_Square: "14:00",
-      Leicester_Square: "14:50",
-      Piccadilly_Circus: "15:30",
+      // Day 3 also
       Forbidden_Planet_London_Megastore: "16:15",
-      John_Snow_cholera_pump: "16:55",
-      Soho: "17:30",
-      Oxford_Street: "19:20",
-      Ye_Olde_Cheshire_Cheese: "21:10",
       Dishoom_Covent_Garden: "19:45",
       Rock_and_Sole_Plaice: "20:45",
-      Royal_Observatory_Greenwich: "12:00",
-      Stonehenge: "09:45",
+      // Day 5 — Train to Edinburgh
+      LNER: "09:00",                                   // Board Kings Cross, departs 9:03am ✓
+      Royal_Mile: "15:00",                             // Afternoon after hotel check-in ✓
+      Grassmarket: "16:30",                            // Evening stroll ✓
+      // Day 6-8 — Rabbies Tour (guide-managed, times approximate)
+      Edinburgh: "19:00",                              // Day 5 evening; Day 8 Rabbies drop-off ~7pm
+      Edinburgh_Castle: "09:00",
+      Holyrood_Palace: "12:00",
+      "Arthur's_Seat": "15:30",
+      "Old_Town,_Edinburgh": "19:00",
+      Stirling_Castle: "09:30",                        // Day 6 Rabbies early stop ✓
+      National_Wallace_Monument: "11:30",
+      Battle_of_Bannockburn: "14:00",
+      Scottish_Highlands: "08:30",                     // Early Highlands driving ✓
+      "Glencoe,_Highland": "12:00",                    // Before Fort William lunch (Edinburgh→Glencoe→FW)
+      Urquhart_Castle: "11:30",                        // Day 8: after Eilean Donan, en route to Fort Augustus ✓
+      Eilean_Donan: "10:00",                           // Day 8 morning detailed visit ✓
+      Old_Man_of_Storr: "11:30",                       // Day 7 mid-morning Trotternish Ridge ✓
+      Inverness: "18:30",
+      Fairy_Pools: "13:00",
+      Neist_Point_Lighthouse: "19:30",
+      "A9_road_(Scotland)": "15:00",                   // Day 8 southbound ✓
+      // Day 9 — Edinburgh to London + activities
+      Edinburgh_Waverley_railway_station: "08:00",     // Arrive station before 8:26 AM Lumo departure
+      British_Museum: "14:30",                         // Day 9 afternoon (arrive Kings Cross 12:46 + check-in)
+      Tate_Modern: "16:45",                            // Day 9 after British Museum (14:30 + 2h = 16:30+)
+      "Shakespeare's_Globe": "18:15",                  // Day 9 after Tate Modern (16:45 + 90 min)
+      // Day 10 — Last morning + Heathrow
+      London: "10:00",                                 // Morning free in London ✓
+      London_Heathrow_Departure: "18:00",              // Text: "head to Heathrow by ~6:00pm"; flight 8:10 PM
+      // Day 11
+      Edinburgh_Airport: "13:00",
+      Airplane: "08:30",
+      // Misc / kept
       Camden_Market: "13:30",
       Kensington_Palace: "16:30",
       Bletchley_Park: "09:30",
       "Shakespeare's_Birthplace": "12:00",
       Royal_Shakespeare_Theatre: "14:00",
       "Anne_Hathaway's_Cottage": "15:30",
-      "River_Avon,_Warwickshire": "17:00",
-      London: "20:00",
-      LNER: "09:00",
-      Royal_Mile: "15:00",
-      Grassmarket: "16:30",
-      Edinburgh: "19:00",
-      Edinburgh_Castle: "09:00",
-      Holyrood_Palace: "12:00",
-      "Arthur's_Seat": "15:30",
-      "Old_Town,_Edinburgh": "19:00",
-      Stirling_Castle: "09:30",
-      National_Wallace_Monument: "11:30",
-      Battle_of_Bannockburn: "14:00",
-      Scottish_Highlands: "08:30",
-      Urquhart_Castle: "11:30",
-      "Glencoe,_Highland": "15:00",
-      Inverness: "18:30",
-      Eilean_Donan: "10:00",
-      Fairy_Pools: "13:00",
-      Old_Man_of_Storr: "11:30",
-      Neist_Point_Lighthouse: "19:30",
-      "A9_road_(Scotland)": "15:00",
-      Edinburgh_Waverley_railway_station: "20:00",
-      London_Heathrow_Departure: "05:30",
-      Edinburgh_Airport: "13:00",
-      Airplane: "08:30"
+      "River_Avon,_Warwickshire": "17:00"
     };
 
     const visitDurationsMin = {
-      "303_E_83rd_St_NYC": 65,
+      // Day 1
+      "303_E_83rd_St_NYC": 30,                    // Final prep + rideshare wait
+      John_F._Kennedy_International_Airport: 145, // 4:15 PM to 6:40 PM departure
       Newark_Liberty_International_Airport: 80,
       Washington_Dulles_International_Airport: 45,
-      London_Heathrow_Arrival: 60,
-      South_Bank: 90,
+      // Day 2
+      London_Heathrow_Arrival: 75,                // Text: 6:30–7:45 AM = 75 min (was 60)
+      Stonehenge: 90,                             // Text: "75–90 minutes is perfect" (was 180!)
+      Oxford_Street: 120,                         // Text: 4:30–6:30 PM = 120 min (was 75)
+      // Day 3
+      Royal_Observatory_Greenwich: 90,            // ✓
+      National_Gallery: 90,                       // ✓
+      Trafalgar_Square: 40,                       // ✓
+      Leicester_Square: 30,                       // ✓
+      Piccadilly_Circus: 35,                      // ✓
+      John_Snow_cholera_pump: 25,                 // ✓
+      Soho: 75,                                   // Exploration + walk (was 90)
+      // Day 4
+      Buckingham_Palace: 120,                     // Arrive early + watch Changing of Guard ceremony (was 75)
+      "St_James's_Park": 45,                      // ✓
+      Westminster_Abbey: 90,                      // ✓
+      Big_Ben: 20,                                // Photo stop only (was 35)
+      London_Eye: 75,                             // Queue + 30-min ride (was 60)
+      South_Bank: 60,                             // Walk east ~2 miles toward Tower Bridge (was 90)
+      Tower_of_London: 90,                        // Crown Jewels + Tower (was 150; April closes 18:30)
+      Tower_Bridge: 30,                           // Photo walk, not a full tour (was 60)
+      Sky_Garden_London: 60,                      // 35th floor panoramic garden
+      Ye_Olde_Cheshire_Cheese: 90,                // Dinner (was 75)
+      // Day 3/4 misc
       "County_Hall,_London": 60,
-      Tower_Bridge: 60,
       Borough_Market: 90,
-      Buckingham_Palace: 75,
-      "St_James's_Park": 45,
-      Westminster_Abbey: 90,
-      Big_Ben: 35,
-      London_Eye: 60,
-      Tower_of_London: 150,
-      Tate_Modern: 90,
-      "Shakespeare's_Globe": 60,
-      National_Gallery: 90,
-      Trafalgar_Square: 40,
-      Piccadilly_Circus: 35,
-      Leicester_Square: 30,
       Forbidden_Planet_London_Megastore: 30,
-      John_Snow_cholera_pump: 25,
-      Soho: 90,
-      Ye_Olde_Cheshire_Cheese: 75,
       Dishoom_Covent_Garden: 70,
       Rock_and_Sole_Plaice: 60,
-      Oxford_Street: 75,
-      Royal_Observatory_Greenwich: 90,
-      Stonehenge: 180,
-      British_Museum: 120,
+      // Day 5
+      LNER: 270,                                  // Kings Cross 9:03am → Edinburgh 1:32pm ✓
+      Royal_Mile: 60,                             // ✓
+      Grassmarket: 60,                            // ✓
+      // Day 6-8
+      Edinburgh: 75,                              // ✓
+      Edinburgh_Castle: 120,                      // ✓
+      Holyrood_Palace: 90,                        // ✓
+      "Arthur's_Seat": 120,                       // ✓
+      "Old_Town,_Edinburgh": 90,                  // ✓
+      Stirling_Castle: 60,                        // Rabbies quick stop (was 120)
+      National_Wallace_Monument: 60,              // ✓
+      Battle_of_Bannockburn: 75,                  // ✓
+      Scottish_Highlands: 60,                     // ✓
+      "Glencoe,_Highland": 60,                    // ✓
+      Urquhart_Castle: 90,                        // ✓
+      Inverness: 60,                              // ✓
+      Eilean_Donan: 60,                           // ✓
+      Fairy_Pools: 90,                            // ✓
+      Old_Man_of_Storr: 90,                       // ✓
+      Neist_Point_Lighthouse: 75,                 // ✓
+      "A9_road_(Scotland)": 240,                  // ✓
+      // Day 9
+      Edinburgh_Waverley_railway_station: 280,    // 8:00 AM → Kings Cross 12:46 PM = ~286 min (covers whole Lumo journey)
+      British_Museum: 120,                        // ✓
+      Tate_Modern: 90,                            // ✓
+      "Shakespeare's_Globe": 45,                  // Exterior + brief look (was 60)
+      // Day 10
+      London: 45,                                 // ✓
+      London_Heathrow_Departure: 150,             // 6 PM arrival → 8:10 PM flight = 130 min + buffer
+      // Misc
+      Airplane: 671,
       Camden_Market: 90,
       Kensington_Palace: 90,
       Bletchley_Park: 120,
       "Shakespeare's_Birthplace": 75,
       Royal_Shakespeare_Theatre: 90,
       "Anne_Hathaway's_Cottage": 60,
-      "River_Avon,_Warwickshire": 45,
-      London: 45,
-      LNER: 270,
-      Royal_Mile: 60,
-      Grassmarket: 60,
-      Edinburgh: 75,
-      Edinburgh_Castle: 120,
-      Holyrood_Palace: 90,
-      "Arthur's_Seat": 120,
-      "Old_Town,_Edinburgh": 90,
-      Stirling_Castle: 120,
-      National_Wallace_Monument: 60,
-      Battle_of_Bannockburn: 75,
-      Scottish_Highlands: 60,
-      Urquhart_Castle: 90,
-      "Glencoe,_Highland": 60,
-      Inverness: 60,
-      Eilean_Donan: 60,
-      Fairy_Pools: 90,
-      Old_Man_of_Storr: 90,
-      Neist_Point_Lighthouse: 75,
-      "A9_road_(Scotland)": 240,
-      Edinburgh_Waverley_railway_station: 60,
-      London_Heathrow_Departure: 180,
-      Airplane: 671
+      "River_Avon,_Warwickshire": 45
     };
 
     const dayTransportPlans = {
