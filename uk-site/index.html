@@ -195,9 +195,14 @@
   .day-head {
     display: flex;
     flex-wrap: wrap;
-    align-items: baseline;
+    align-items: center;
+    justify-content: space-between;
     gap: 8px 12px;
     margin-bottom: 12px;
+  }
+  .day-head .day-title {
+    flex: 1;
+    text-align: center;
   }
 
   .day-pill {
@@ -3131,7 +3136,10 @@
                   <span class="day-pill-weekday">${formatDayFilterDate(day)}</span>
                 </span>
                 <h3 class="day-title">${day.title}</h3>
-                <span class="day-date">${day.date}</span>
+                <span class="day-pill">
+                  <span class="day-pill-main">Day ${day.day}</span>
+                  <span class="day-pill-weekday">${formatDayFilterDate(day)}</span>
+                </span>
               </div>
               ${dayLogisticsNotes[day.day] ? `<div class="day-logistics"><strong>Logistics:</strong> ${dayLogisticsNotes[day.day]}</div>` : ""}
               <div class="day-map-wrap">
