@@ -4320,19 +4320,47 @@
     }
 
     function bindTransportLinks() {
+      // Self-contained: reads/writes localStorage directly so it works outside initializeCommandChecklist scope
+      const LINKS_KEY = "ukTripCCLinksV1";
+
+      function applyTransportLink(id, value) {
+        const linkBtn = document.querySelector(`.js-cc-link-open[data-link-open-id="${id}"]`);
+        const inp = document.querySelector(`.js-transport-link[data-link-id="${id}"]`);
+        if (!linkBtn) return;
+        try {
+          const url = new URL(value);
+          if (url.protocol === "http:" || url.protocol === "https:") {
+            linkBtn.href = url.toString();
+            linkBtn.hidden = false;
+            linkBtn.classList.add("has-url");
+            if (inp) inp.classList.add("has-url");
+            return;
+          }
+        } catch (_) {}
+        linkBtn.hidden = true;
+        linkBtn.removeAttribute("href");
+        linkBtn.classList.remove("has-url");
+        if (inp) inp.classList.remove("has-url");
+      }
+
       document.querySelectorAll(".js-transport-link[data-link-id]").forEach((input) => {
         const id = input.getAttribute("data-link-id");
         if (!id) return;
-        const savedValue = typeof ccLinks[id] === "string" ? ccLinks[id].trim() : "";
-        if (savedValue) input.value = savedValue;
-        syncCommandCenterLink(id, input.value);
+        // Load saved value
+        let links = {};
+        try { links = JSON.parse(localStorage.getItem(LINKS_KEY) || "{}"); } catch (_) {}
+        const saved = (links[id] || "").trim();
+        if (saved) input.value = saved;
+        applyTransportLink(id, input.value);
         if (input.dataset.bound === "true") return;
         input.dataset.bound = "true";
         input.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); input.blur(); } });
         input.addEventListener("input", () => {
-          ccLinks[id] = input.value;
-          localStorage.setItem(CC_LINKS_STORAGE_KEY, JSON.stringify(ccLinks));
-          syncCommandCenterLink(id, input.value);
+          let all = {};
+          try { all = JSON.parse(localStorage.getItem(LINKS_KEY) || "{}"); } catch (_) {}
+          all[id] = input.value;
+          localStorage.setItem(LINKS_KEY, JSON.stringify(all));
+          applyTransportLink(id, input.value);
           window._fbSaveAll?.();
         });
       });
