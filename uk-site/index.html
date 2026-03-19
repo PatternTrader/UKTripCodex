@@ -305,6 +305,28 @@
     cursor: pointer;
     opacity: 1;
   }
+  .poi-remove-photo {
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    z-index: 10;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .poi-carousel:hover .poi-remove-photo { opacity: 1; }
+  .poi-remove-photo:hover { background: rgba(180,30,30,0.85); }
+
   .poi-no-photo.has-candidates:hover {
     background: repeating-linear-gradient(
       45deg,
@@ -3425,6 +3447,7 @@
             : `<div class="poi-no-photo${hasCandidates ? " has-candidates" : ""}" data-page="${page}" data-side="${side}" title="${hasCandidates ? "Click to pick a photo" : "No photos available yet"}">
                 ${hasCandidates ? "📷 Click to pick a photo" : "📷"}
                </div>`}
+          ${hasImages ? `<button class="poi-remove-photo" data-page="${page}" data-side="${side}" title="Remove photo">✕</button>` : ""}
           <figcaption class="poi-caption">${hasImages ? caption : (hasCandidates ? "Click to pick a photo" : "No photo available")}</figcaption>
         </figure>
       `;
@@ -3519,6 +3542,24 @@
         const page = placeholder.getAttribute("data-page");
         const side = placeholder.getAttribute("data-side");
         if (page && side) openPhotoPicker(page, side);
+      });
+
+      // Delegate click on remove buttons
+      document.addEventListener("click", e => {
+        const btn = e.target.closest(".poi-remove-photo");
+        if (!btn) return;
+        const page = btn.getAttribute("data-page");
+        const side = btn.getAttribute("data-side");
+        if (!page || !side) return;
+        const overrides = getPhotoOverrides();
+        if (overrides[page]) {
+          const carouselKey = side === "left" ? "leftCarousel" : "rightCarousel";
+          delete overrides[page][carouselKey];
+          if (!Object.keys(overrides[page]).length) delete overrides[page];
+        }
+        localStorage.setItem(PHOTO_OVERRIDE_STORAGE_KEY, JSON.stringify(overrides));
+        window._fbSaveAll?.();
+        rerenderTimelineForPhotoUpdates();
       });
     })();
 
