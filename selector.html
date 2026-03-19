@@ -549,8 +549,13 @@
 
     const photoAssignments = {
       "303_E_83rd_St_NYC": [
-        { file: "nyc-apt.webp", caption: "Depart from 303 E. 83rd St", poi: "303 E. 83rd St, NYC" },
-        { file: "nyc-apt-2.webp", caption: "Depart from 303 E. 83rd St", poi: "303 E. 83rd St, NYC alternate view" }
+        { file: "303 E 83rd.webp", caption: "Depart from 303 E. 83rd St", poi: "303 E. 83rd St, NYC" },
+        { file: "303 E 83rd #2.webp", caption: "Depart from 303 E. 83rd St", poi: "303 E. 83rd St, NYC alternate view" }
+      ],
+      John_F._Kennedy_International_Airport: [
+        { file: "Unsure/JFK airport.jpg", caption: "JFK International Airport", poi: "JFK Airport" },
+        { file: "Unsure/JFK airport 2.jpg", caption: "JFK International Airport", poi: "JFK Airport alternate view" },
+        { file: "Unsure/jfk airport terminal 4.avif", caption: "JFK Terminal 4", poi: "JFK Terminal 4" }
       ],
       Newark_Liberty_International_Airport: [
         { file: "newark-airport.jpg", caption: "Newark to London flight", poi: "Newark Liberty Airport" },
@@ -562,7 +567,11 @@
       ],
       London_Heathrow_Arrival: [
         { file: "heathrow-t5.jpg", caption: "Arrive London Heathrow", poi: "Heathrow arrival" },
-        { file: "heathrow.jpg", caption: "Arrive London Heathrow", poi: "Heathrow arrival alternate view" }
+        { file: "heathrow.jpg", caption: "Arrive London Heathrow", poi: "Heathrow arrival alternate view" },
+        { file: "heathrow 1.jpg", caption: "Arrive London Heathrow", poi: "Heathrow arrival terminal" },
+        { file: "heathrow 2.jpg", caption: "Arrive London Heathrow", poi: "Heathrow arrival terminal 2" },
+        { file: "heathrow terminal 2.jpg", caption: "Arrive London Heathrow", poi: "Heathrow terminal interior" },
+        { file: "heathrow terminal 3.jpg", caption: "Arrive London Heathrow", poi: "Heathrow terminal interior 2" }
       ],
       South_Bank: [
         { file: "south-bank.png", caption: "London arrival morning", poi: "South Bank" },
@@ -577,16 +586,17 @@
         { file: "buckingham.jpg", caption: "St James's Park", poi: "St James's Park / palace edge" }
       ],
       Westminster_Abbey: [
-        { file: "westminster-abbey-front.jpg", caption: "Westminster Abbey", poi: "Westminster Abbey" },
-        { file: "westminster-abbey-4.jpg", caption: "Westminster Abbey", poi: "Westminster Abbey alternate view" }
+        { file: "westminster-abbey-4.jpg", caption: "Westminster Abbey", poi: "Westminster Abbey" },
+        { file: "westminster-abbey-6.jpg", caption: "Westminster Abbey", poi: "Westminster Abbey alternate view" }
       ],
       Big_Ben: [
         { file: "big-ben.jpg", caption: "Big Ben", poi: "Big Ben" },
         { file: "big-ben-2.jpg", caption: "Big Ben", poi: "Big Ben alternate view" }
       ],
       London_Eye: [
-        { file: "london-eye-2.jpg", caption: "London Eye", poi: "London Eye" },
-        { file: "london-eye-3.jpg", caption: "London Eye", poi: "London Eye alternate view" }
+        { file: "london-eye.jpg", caption: "London Eye", poi: "London Eye" },
+        { file: "london-eye-2.jpg", caption: "London Eye", poi: "London Eye alternate view" },
+        { file: "london-eye-3.jpg", caption: "London Eye", poi: "London Eye alternate view 2" }
       ],
       Tate_Modern: [
         { file: "tate-modern.jpg", caption: "Tate Modern", poi: "Tate Modern" },
@@ -606,7 +616,9 @@
       ],
       British_Museum: [
         { file: "british-museum.jpg", caption: "British Museum", poi: "British Museum" },
-        { file: "british-museum-4.jpg", caption: "British Museum", poi: "British Museum alternate view" }
+        { file: "british-museum-4.jpg", caption: "British Museum", poi: "British Museum alternate view" },
+        { file: "british-museum-8.jpg", caption: "British Museum", poi: "British Museum alternate view 2" },
+        { file: "british-museum-11.jpg", caption: "British Museum", poi: "British Museum alternate view 3" }
       ],
       National_Gallery: [
         { file: "national-gallery.jpg", caption: "The National Gallery", poi: "National Gallery" },
@@ -616,40 +628,15 @@
         { file: "trafalgar-sq.jpg", caption: "Trafalgar Square", poi: "Trafalgar Square" },
         { file: "trafalgar-sq-4.jpg", caption: "Trafalgar Square", poi: "Trafalgar Square alternate view" }
       ],
-      Leicester_Square: [
-        { file: "london-6.jpg", caption: "Leicester Square", poi: "Leicester Square" },
-        { file: "london-7.jpg", caption: "Leicester Square", poi: "Leicester Square alternate view" }
-      ],
-      Piccadilly_Circus: [
-        { file: "london-5.jpg", caption: "Piccadilly Circus", poi: "Piccadilly Circus" },
-        { file: "london-6.jpg", caption: "Piccadilly Circus", poi: "Piccadilly Circus alternate view" }
-      ],
-      Forbidden_Planet_London_Megastore: [
-        { file: "london-6.jpg", caption: "Forbidden Planet London", poi: "Forbidden Planet London Megastore" },
-        { file: "london-7.jpg", caption: "Forbidden Planet London", poi: "Forbidden Planet area alternate view" }
-      ],
-      John_Snow_cholera_pump: [
-        { file: "london-3.jpg", caption: "John Snow cholera pump", poi: "Broadwick Street / Soho" },
-        { file: "london-4.jpg", caption: "John Snow cholera pump", poi: "Soho alternate street view" }
-      ],
-      Soho: [
-        { file: "london-4.jpg", caption: "Soho dinner walk", poi: "Soho" },
-        { file: "london-5.jpg", caption: "Soho dinner walk", poi: "Soho alternate view" }
-      ],
-      Oxford_Street: [
-        { file: "london-2.jpg", caption: "Oxford Street shopping walk", poi: "Oxford Street" },
-        { file: "london-3.jpg", caption: "Oxford Street shopping walk", poi: "Oxford Street alternate view" }
-      ],
-      Ye_Olde_Cheshire_Cheese: [
-        { file: "london-2.jpg", caption: "Ye Olde Cheshire Cheese dinner", poi: "Ye Olde Cheshire Cheese area" }
-      ],
-      Dishoom_Covent_Garden: [
-        { file: "london-3.jpg", caption: "Dishoom dinner", poi: "Covent Garden / Dishoom" },
-        { file: "london-4.jpg", caption: "Dishoom dinner", poi: "Covent Garden alternate view" }
-      ],
-      Rock_and_Sole_Plaice: [
-        { file: "london-2.jpg", caption: "Rock & Sole Plaice dinner", poi: "Covent Garden / London" }
-      ],
+      Leicester_Square: [],
+      Piccadilly_Circus: [],
+      Forbidden_Planet_London_Megastore: [],
+      John_Snow_cholera_pump: [],
+      Soho: [],
+      Oxford_Street: [],
+      Ye_Olde_Cheshire_Cheese: [],
+      Dishoom_Covent_Garden: [],
+      Rock_and_Sole_Plaice: [],
       Royal_Observatory_Greenwich: [
         { file: "royal-observatory.webp", caption: "Royal Observatory Greenwich", poi: "Royal Observatory Greenwich" },
         { file: "royal-observatory-2.webp", caption: "Royal Observatory Greenwich", poi: "Royal Observatory alternate view" }
@@ -679,9 +666,7 @@
         { file: "cotswolds2.jpg", caption: "River Avon", poi: "River Avon / Stratford area" },
         { file: "cotswolds1.jpg", caption: "River Avon", poi: "River Avon alternate view" }
       ],
-      London: [
-        { file: "london-3.jpg", caption: "London evening return", poi: "London return / city night" }
-      ],
+      London: [],
       Royal_Mile: [
         { file: "Royal-Mile.webp", caption: "Royal Mile", poi: "Royal Mile" },
         { file: "Old-Town.webp", caption: "Royal Mile", poi: "Old Town alternate view" }
@@ -708,7 +693,11 @@
       ],
       "Old_Town,_Edinburgh": [
         { file: "Old-Town.webp", caption: "Old Town", poi: "Old Town" },
-        { file: "Royal-Mile.webp", caption: "Old Town", poi: "Old Town alternate view" }
+        { file: "Royal-Mile.webp", caption: "Old Town", poi: "Old Town alternate view" },
+        { file: "victoria street old town edinburgh.jpg", caption: "Old Town Victoria Street", poi: "Victoria Street, Old Town" },
+        { file: "Unsure/victoria street.webp", caption: "Victoria Street Edinburgh", poi: "Victoria Street, Edinburgh" },
+        { file: "Unsure/victoria street 2.jpg", caption: "Victoria Street Edinburgh", poi: "Victoria Street alternate" },
+        { file: "Unsure/victoria-street-edinburgh, diagon alley.webp", caption: "Victoria Street – like Diagon Alley", poi: "Victoria Street Edinburgh" }
       ],
       Stirling_Castle: [
         { file: "Royal-Mile.webp", caption: "Stirling Castle", poi: "Stirling day trip placeholder" },
@@ -724,7 +713,8 @@
       ],
       Scottish_Highlands: [
         { file: "quiraing-skye.jpg", caption: "Road into the Highlands", poi: "Scottish Highlands" },
-        { file: "quiraing.jpg", caption: "Road into the Highlands", poi: "Highlands alternate view" }
+        { file: "quiraing.jpg", caption: "Road into the Highlands", poi: "Highlands alternate view" },
+        { file: "quiraing-scotland-quiraing-isle-skye-scotland-428501576.jpg", caption: "Quiraing, Isle of Skye", poi: "Quiraing panorama" }
       ],
       Urquhart_Castle: [
         { file: "eilean-donan-castle-scotland-highlands.jpg", caption: "Urquhart Castle", poi: "Urquhart / Loch Ness placeholder" },
@@ -744,7 +734,8 @@
       ],
       Old_Man_of_Storr: [
         { file: "oldmanofstorr.jpg", caption: "Old Man of Storr", poi: "Old Man of Storr" },
-        { file: "old-man-of-storr-stormy.jpg", caption: "Old Man of Storr", poi: "Old Man of Storr alternate view" }
+        { file: "old-man-of-storr-stormy.jpg", caption: "Old Man of Storr", poi: "Old Man of Storr alternate view" },
+        { file: "old-man-of-storr-in-scotland.jpeg", caption: "Old Man of Storr", poi: "Old Man of Storr dramatic view" }
       ],
       "A9_road_(Scotland)": [
         { file: "quiraing-skye.jpg", caption: "Drive south to Edinburgh", poi: "A9 southbound / Highlands road" }
@@ -754,11 +745,13 @@
       ],
       London_Heathrow_Departure: [
         { file: "heathrow.jpg", caption: "Early transfer to Heathrow", poi: "Heathrow departure" },
-        { file: "heathrow-t5.jpg", caption: "Heathrow departure terminal", poi: "Heathrow departure terminal" }
+        { file: "heathrow-t5.jpg", caption: "Heathrow departure terminal", poi: "Heathrow departure terminal" },
+        { file: "heathrow 1.jpg", caption: "Heathrow departure", poi: "Heathrow terminal view" },
+        { file: "heathrow 2.jpg", caption: "Heathrow departure", poi: "Heathrow terminal view 2" }
       ],
       Airplane: [
-        { file: "flight home.jpg", caption: "London to New York flight", poi: "Return flight" },
-        { file: "heathrow.jpg", caption: "London to New York flight", poi: "Return flight alternate view" }
+        { file: "airplane flight.jpg", caption: "London to New York flight", poi: "Return flight" },
+        { file: "airplane flight 2.jpg", caption: "London to New York flight", poi: "Return flight alternate view" }
       ]
     };
 
@@ -771,7 +764,7 @@
         { file: "south-bank-3.jpg", caption: "Candidate for South Bank", poi: "Possible South Bank alternate" }
       ],
       Buckingham_Palace: [
-        { file: "buckingham-2.jpg", caption: "Candidate for Buckingham Palace", poi: "Possible Buckingham Palace alternate" },
+        { file: "buckingham-5.jpg", caption: "Candidate for Buckingham Palace", poi: "Possible Buckingham Palace alternate" },
         { file: "buckingham-4.jpg", caption: "Candidate for Buckingham Palace", poi: "Possible Buckingham Palace alternate" },
         { file: "buckingham.webp", caption: "Candidate for Buckingham Palace", poi: "Possible Buckingham Palace alternate" },
         { file: "buckingham-throne.png", caption: "Candidate for Buckingham Palace", poi: "Buckingham interior / throne room candidate" }
@@ -809,7 +802,9 @@
         { file: "british-museum-2.jpg", caption: "Candidate for British Museum", poi: "Possible British Museum alternate" },
         { file: "british-museum-3.jpg", caption: "Candidate for British Museum", poi: "Possible British Museum alternate" },
         { file: "british-museum-5.jpg", caption: "Candidate for British Museum", poi: "Possible British Museum alternate" },
-        { file: "british-museum-6.jpg", caption: "Candidate for British Museum", poi: "Possible British Museum alternate" }
+        { file: "british-museum-6.jpg", caption: "Candidate for British Museum", poi: "Possible British Museum alternate" },
+        { file: "british-museum-8.jpg", caption: "Candidate for British Museum", poi: "Possible British Museum alternate" },
+        { file: "british-museum-11.jpg", caption: "Candidate for British Museum", poi: "Possible British Museum alternate" }
       ],
       National_Gallery: [
         { file: "national-gallery-2.jpg", caption: "Candidate for National Gallery", poi: "Possible National Gallery alternate" },
@@ -827,14 +822,14 @@
         { file: "washington-dulles-2.jpg", caption: "Candidate for Washington Dulles connection", poi: "Washington Dulles candidate" }
       ],
       Scottish_Highlands: [
-        { file: "quiraing-sunset.jpg", caption: "Candidate for Quiraing / Highlands", poi: "Quiraing scenic candidate" },
+        { file: "quiraing-scotland-quiraing-isle-skye-scotland-428501576.jpg", caption: "Candidate for Quiraing / Highlands", poi: "Quiraing scenic candidate" },
         { file: "quiraing-view.png", caption: "Candidate for Quiraing / Highlands", poi: "Quiraing scenic candidate" }
       ],
       Eilean_Donan: [
         { file: "fairy-pools-skye-dusk.jpg", caption: "Skye-area candidate near Eilean Donan", poi: "Skye / Eilean Donan day candidate" }
       ],
       Old_Man_of_Storr: [
-        { file: "free-photo-of-dramatic-landscape-of-old-man-of-storr-in-scotland.jpeg", caption: "Candidate for Old Man of Storr", poi: "Possible Old Man of Storr alternate" }
+        { file: "old-man-of-storr-in-scotland.jpeg", caption: "Candidate for Old Man of Storr", poi: "Possible Old Man of Storr alternate" }
       ],
       "A9_road_(Scotland)": [
         { file: "neist-point-lighthouse-skye.jpg", caption: "Skye-area candidate for Day 10", poi: "Neist Point / Skye candidate" }

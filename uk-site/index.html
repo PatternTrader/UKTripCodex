@@ -2985,23 +2985,50 @@
       ...Object.keys(localSecondaryImages)
     ]);
     const PHOTO_OVERRIDE_STORAGE_KEY = "ukTripPhotoOverridesV1";
-    const PHOTO_CANDIDATES = {"303_E_83rd_St_NYC":["nyc-apt.webp","nyc-apt-2.webp"],"Newark_Liberty_International_Airport":["newark-airport.jpg","newark-airport-2.jpg"],"Washington_Dulles_International_Airport":["newark-airport-3.jpg","newark-airport.jpg"],"London_Heathrow_Arrival":["heathrow-t5.jpg","heathrow.jpg"],"South_Bank":["south-bank.png","south-bank.jpg"],"Buckingham_Palace":["buckingham.jpg","buckingham-aerial.jpg"],"St_James's_Park":["buckingham-3.jpg","buckingham.jpg"],"Westminster_Abbey":["westminster-abbey-front.jpg","westminster-abbey-4.jpg"],"Big_Ben":["big-ben.jpg","big-ben-2.jpg"],"London_Eye":["london-eye-2.jpg","london-eye-3.jpg"],"Tate_Modern":["tate-modern.jpg","tate-modern-3.jpg"],"Shakespeare's_Globe":["globe-theatre.jpg","globe-theatre-3.jpg"],"Tower_Bridge":["tower-bridge.jpg","tower-bridge-3.jpg"],"Tower_of_London":["tower-london.jpg","tower-london-beefeater.jpg"],"British_Museum":["british-museum.jpg","british-museum-4.jpg"],"National_Gallery":["national-gallery.jpg","national-gallery-3.jpg"],"Trafalgar_Square":["trafalgar-sq.jpg","trafalgar-sq-4.jpg"],"Leicester_Square":["london-6.jpg","london-7.jpg"],"Piccadilly_Circus":["london-5.jpg","london-6.jpg"],"Forbidden_Planet_London_Megastore":["london-6.jpg","london-7.jpg"],"John_Snow_cholera_pump":["london-3.jpg","london-4.jpg"],"Soho":["london-4.jpg","london-5.jpg"],"Oxford_Street":["london-2.jpg","london-3.jpg"],"Ye_Olde_Cheshire_Cheese":["london-2.jpg"],"Dishoom_Covent_Garden":["london-3.jpg","london-4.jpg"],"Rock_and_Sole_Plaice":["london-2.jpg"],"Royal_Observatory_Greenwich":["royal-observatory.webp","royal-observatory-2.webp"],"Stonehenge":["stonehenge1.jpg","stonehenge2.jpg"],"Bletchley_Park":["cotswolds1.jpg","cotswolds2.jpg"],"Shakespeare's_Birthplace":["cotswolds1.jpg","cotswolds2.jpg"],"Royal_Shakespeare_Theatre":["cotswolds2.jpg","cotswolds1.jpg"],"Anne_Hathaway's_Cottage":["cotswolds1.jpg","cotswolds2.jpg"],"River_Avon,_Warwickshire":["cotswolds2.jpg","cotswolds1.jpg"],"London":["london-3.jpg"],"Royal_Mile":["Royal-Mile.webp","Old-Town.webp"],"Grassmarket":["Old-Town.webp","Royal-Mile.webp"],"Edinburgh":["Old-Town.webp","Royal-Mile.webp"],"Edinburgh_Castle":["Old-Town.webp","Royal-Mile.webp"],"Holyrood_Palace":["Royal-Mile.webp","Old-Town.webp"],"Arthur's_Seat":["Old-Town.webp","Royal-Mile.webp"],"Old_Town,_Edinburgh":["Old-Town.webp","Royal-Mile.webp"],"Stirling_Castle":["Royal-Mile.webp","Old-Town.webp"],"National_Wallace_Monument":["Old-Town.webp","Royal-Mile.webp"],"Battle_of_Bannockburn":["Royal-Mile.webp","Old-Town.webp"],"Scottish_Highlands":["quiraing-skye.jpg","quiraing.jpg"],"Urquhart_Castle":["eilean-donan-castle-scotland-highlands.jpg","quiraing-skye.jpg"],"Glencoe,_Highland":["quiraing.jpg","quiraing-skye.jpg"],"Inverness":["quiraing-skye.jpg","quiraing.jpg"],"Eilean_Donan":["eilean-donan-castle-scotland-highlands.jpg","eilean donan highlands.jpg"],"Old_Man_of_Storr":["oldmanofstorr.jpg","old-man-of-storr-stormy.jpg"],"A9_road_(Scotland)":["quiraing-skye.jpg"],"Edinburgh_Waverley_railway_station":["Old-Town.webp"],"London_Heathrow_Departure":["heathrow.jpg","heathrow-t5.jpg"],"Airplane":["flight home.jpg","heathrow.jpg"]};
+    // Migration map: old filename → new filename (null = removed, no replacement)
+    const PHOTO_FILE_RENAMES = {"nyc-apt.webp":"303 E 83rd.webp","nyc-apt-2.webp":"303 E 83rd #2.webp","westminster-abbey-front.jpg":"london-eye.jpg","london-2.jpg":"airplane flight 2.jpg","london-3.jpg":"heathrow terminal 2.jpg","london-4.jpg":"heathrow terminal 3.jpg","london-5.jpg":"heathrow 1.jpg","london-6.jpg":"heathrow 2.jpg","london-7.jpg":null,"flight home.jpg":"airplane flight.jpg","buckingham-2.jpg":"buckingham-5.jpg","quiraing-sunset.jpg":"quiraing-scotland-quiraing-isle-skye-scotland-428501576.jpg","free-photo-of-dramatic-landscape-of-old-man-of-storr-in-scotland.jpeg":"old-man-of-storr-in-scotland.jpeg"};
+    // Auto-migrate any saved photo overrides (localStorage + Firebase) that use old filenames
+    (function migratePhotoOverrides() {
+      try {
+        const stored = JSON.parse(localStorage.getItem(PHOTO_OVERRIDE_STORAGE_KEY) || "{}");
+        let changed = false;
+        Object.keys(stored).forEach(page => {
+          ["primary","secondary"].forEach(slot => {
+            const v = stored[page]?.[slot];
+            if (v && Object.prototype.hasOwnProperty.call(PHOTO_FILE_RENAMES, v)) {
+              const nv = PHOTO_FILE_RENAMES[v];
+              if (nv) stored[page][slot] = nv; else delete stored[page][slot];
+              changed = true;
+            }
+          });
+        });
+        if (changed) { localStorage.setItem(PHOTO_OVERRIDE_STORAGE_KEY, JSON.stringify(stored)); console.log("[Photos] Migrated renamed photo overrides in localStorage"); }
+      } catch(e) {}
+    })();
+    const PHOTO_CANDIDATES = {"303_E_83rd_St_NYC":["303 E 83rd.webp","303 E 83rd #2.webp"],"John_F._Kennedy_International_Airport":["Unsure/JFK airport.jpg","Unsure/JFK airport 2.jpg","Unsure/jfk airport terminal 4.avif"],"Newark_Liberty_International_Airport":["newark-airport.jpg","newark-airport-2.jpg"],"Washington_Dulles_International_Airport":["newark-airport-3.jpg","newark-airport.jpg"],"London_Heathrow_Arrival":["heathrow-t5.jpg","heathrow.jpg","heathrow 1.jpg","heathrow 2.jpg","heathrow terminal 2.jpg","heathrow terminal 3.jpg"],"South_Bank":["south-bank.png","south-bank.jpg"],"Buckingham_Palace":["buckingham.jpg","buckingham-aerial.jpg"],"St_James's_Park":["buckingham-3.jpg","buckingham.jpg"],"Westminster_Abbey":["westminster-abbey-4.jpg","westminster-abbey-6.jpg"],"Big_Ben":["big-ben.jpg","big-ben-2.jpg"],"London_Eye":["london-eye.jpg","london-eye-2.jpg","london-eye-3.jpg"],"Tate_Modern":["tate-modern.jpg","tate-modern-3.jpg"],"Shakespeare's_Globe":["globe-theatre.jpg","globe-theatre-3.jpg"],"Tower_Bridge":["tower-bridge.jpg","tower-bridge-3.jpg"],"Tower_of_London":["tower-london.jpg","tower-london-beefeater.jpg"],"British_Museum":["british-museum.jpg","british-museum-4.jpg","british-museum-8.jpg","british-museum-11.jpg"],"National_Gallery":["national-gallery.jpg","national-gallery-3.jpg"],"Trafalgar_Square":["trafalgar-sq.jpg","trafalgar-sq-4.jpg"],"Royal_Observatory_Greenwich":["royal-observatory.webp","royal-observatory-2.webp"],"Stonehenge":["stonehenge1.jpg","stonehenge2.jpg"],"Bletchley_Park":["cotswolds1.jpg","cotswolds2.jpg"],"Shakespeare's_Birthplace":["cotswolds1.jpg","cotswolds2.jpg"],"Royal_Shakespeare_Theatre":["cotswolds2.jpg","cotswolds1.jpg"],"Anne_Hathaway's_Cottage":["cotswolds1.jpg","cotswolds2.jpg"],"River_Avon,_Warwickshire":["cotswolds2.jpg","cotswolds1.jpg"],"Royal_Mile":["Royal-Mile.webp","Old-Town.webp"],"Grassmarket":["Old-Town.webp","Royal-Mile.webp"],"Edinburgh":["Old-Town.webp","Royal-Mile.webp"],"Edinburgh_Castle":["Old-Town.webp","Royal-Mile.webp"],"Holyrood_Palace":["Royal-Mile.webp","Old-Town.webp"],"Arthur's_Seat":["Old-Town.webp","Royal-Mile.webp"],"Old_Town,_Edinburgh":["Old-Town.webp","Royal-Mile.webp","victoria street old town edinburgh.jpg","Unsure/victoria street.webp","Unsure/victoria street 2.jpg","Unsure/victoria-street-edinburgh, diagon alley.webp"],"Stirling_Castle":["Royal-Mile.webp","Old-Town.webp"],"National_Wallace_Monument":["Old-Town.webp","Royal-Mile.webp"],"Battle_of_Bannockburn":["Royal-Mile.webp","Old-Town.webp"],"Scottish_Highlands":["quiraing-skye.jpg","quiraing.jpg","quiraing-scotland-quiraing-isle-skye-scotland-428501576.jpg"],"Urquhart_Castle":["eilean-donan-castle-scotland-highlands.jpg","quiraing-skye.jpg"],"Glencoe,_Highland":["quiraing.jpg","quiraing-skye.jpg"],"Inverness":["quiraing-skye.jpg","quiraing.jpg"],"Eilean_Donan":["eilean-donan-castle-scotland-highlands.jpg","eilean donan highlands.jpg"],"Old_Man_of_Storr":["oldmanofstorr.jpg","old-man-of-storr-stormy.jpg","old-man-of-storr-in-scotland.jpeg"],"A9_road_(Scotland)":["quiraing-skye.jpg"],"Edinburgh_Waverley_railway_station":["Old-Town.webp"],"London_Heathrow_Departure":["heathrow.jpg","heathrow-t5.jpg","heathrow 1.jpg","heathrow 2.jpg"],"Airplane":["airplane flight.jpg","airplane flight 2.jpg"]};
     // ALL_PHOTOS_START
   const ALL_PHOTOS = [
+    "303 E 83rd #2.webp",
+    "303 E 83rd.webp",
     "303 E. 83rd lobby.webp",
     "Old-Town.webp",
     "Royal-Mile.webp",
     "Screenshot 2026-03-10 104326.png",
+    "airplane flight 2.jpg",
+    "airplane flight.jpg",
     "big-ben-2.jpg",
     "big-ben.jpg",
+    "british-museum-11.jpg",
     "british-museum-2.jpg",
     "british-museum-3.jpg",
     "british-museum-4.jpg",
     "british-museum-5.jpg",
     "british-museum-6.jpg",
+    "british-museum-8.jpg",
     "british-museum.jpg",
     "buckingham-3.jpg",
     "buckingham-4.jpg",
+    "buckingham-5.jpg",
     "buckingham-aerial.jpg",
     "buckingham-throne.png",
     "buckingham.jpg",
@@ -3015,13 +3042,17 @@
     "globe-theatre-3.jpg",
     "globe-theatre-4.jpg",
     "globe-theatre.jpg",
-    "golden-hour-sunset-over-dramatic-green-rolling-hills-quiraing-scotland-quiraing-isle-skye-scotland-428501576.jpg",
+    "heathrow 1.jpg",
+    "heathrow 2.jpg",
+    "heathrow terminal 2.jpg",
+    "heathrow terminal 3.jpg",
     "heathrow-t5.jpg",
     "heathrow.jpg",
     "london-eye-2.jpg",
     "london-eye-3.jpg",
     "london-eye-4.jpg",
     "london-eye-5.jpg",
+    "london-eye.jpg",
     "national-gallery-2.jpg",
     "national-gallery-3.jpg",
     "national-gallery-4.jpg",
@@ -3030,91 +3061,11 @@
     "newark-airport-2.jpg",
     "newark-airport-3.jpg",
     "newark-airport.jpg",
-    "nyc-apt-2.webp",
-    "nyc-apt.webp",
     "old-man-of-storr-in-scotland.jpeg",
     "old-man-of-storr-stormy.jpg",
     "oldmanofstorr.jpg",
-    "photo-001-nyc-apt.webp",
-    "photo-002-nyc-apt.webp",
-    "photo-003-nyc-apt.webp",
-    "photo-014-newark-airport.jpg",
-    "photo-015-newark-airport.jpg",
-    "photo-016-newark-airport.jpg",
-    "photo-027-london.jpg",
-    "photo-029-london.jpg",
-    "photo-033-heathrow-t5.jpg",
-    "photo-034-heathrow.jpg",
-    "photo-037-london.jpg",
-    "photo-038-london.jpg",
-    "photo-044-london.jpg",
-    "photo-045-london.jpg",
-    "photo-047-london.jpg",
-    "photo-052-south-bank.png",
-    "photo-054-south-bank.jpg",
-    "photo-055-south-bank.jpg",
-    "photo-058-south-bank.jpg",
-    "photo-060-tower-bridge.jpg",
-    "photo-061-tower-bridge.jpg",
-    "photo-064-tower-bridge.jpg",
-    "photo-066-tower-bridge.jpg",
-    "photo-067-tower-bridge.jpg",
-    "photo-068-tower-bridge.jpg",
-    "photo-071-tower-bridge.jpg",
-    "photo-075-tower-london.jpg",
-    "photo-077-tower-london-beefeater.jpg",
-    "photo-082-buckingham.jpg",
-    "photo-083-buckingham.jpg",
-    "photo-085-buckingham-aerial.jpg",
-    "photo-087-buckingham.jpg",
-    "photo-090-buckingham.webp",
-    "photo-091-buckingham-throne.png",
-    "photo-092-buckingham.jpg",
-    "photo-101-big-ben.jpg",
-    "photo-106-big-ben.jpg",
-    "photo-111-westminster-abbey.jpg",
-    "photo-112-westminster-abbey.jpg",
-    "photo-113-westminster-abbey.jpg",
-    "photo-114-westminster-abbey.jpg",
-    "photo-115-westminster-abbey.jpg",
-    "photo-116-westminster-abbey.jpg",
-    "photo-119-london-eye.jpg",
-    "photo-121-london-eye.jpg",
-    "photo-123-london-eye.jpg",
-    "photo-124-london-eye.jpg",
-    "photo-129-london-eye.jpg",
-    "photo-133-british-museum.jpg",
-    "photo-134-british-museum.jpg",
-    "photo-135-british-museum.jpg",
-    "photo-137-british-museum.jpg",
-    "photo-139-british-museum.jpg",
-    "photo-140-british-museum.jpg",
-    "photo-143-national-gallery.jpg",
-    "photo-144-national-gallery.jpg",
-    "photo-145-national-gallery.jpg",
-    "photo-146-national-gallery.jpg",
-    "photo-155-trafalgar-sq.jpg",
-    "photo-156-trafalgar-sq.jpg",
-    "photo-157-trafalgar-sq.jpg",
-    "photo-158-trafalgar-sq.jpg",
-    "photo-159-trafalgar-sq.jpg",
-    "photo-160-trafalgar-sq.webp",
-    "photo-161-trafalgar-sq.png",
-    "photo-168-tate-modern.jpg",
-    "photo-169-tate-modern.webp",
-    "photo-170-tate-modern.jpg",
-    "photo-171-tate-modern.jpg",
-    "photo-172-tate-modern.jpg",
-    "photo-173-tate-modern.jpg",
-    "photo-174-tate-modern.jpg",
-    "photo-180-globe-theatre.jpg",
-    "photo-181-globe-theatre.jpg",
-    "photo-182-globe-theatre.jpg",
-    "photo-184-globe-theatre.jpg",
-    "photo-185-royal-observatory.webp",
-    "photo-187-royal-observatory.webp",
+    "quiraing-scotland-quiraing-isle-skye-scotland-428501576.jpg",
     "quiraing-skye.jpg",
-    "quiraing-sunset.jpg",
     "quiraing-view.png",
     "quiraing.jpg",
     "royal-observatory-2.webp",
@@ -3156,7 +3107,6 @@
     "westminster-abbey-4.jpg",
     "westminster-abbey-5.jpg",
     "westminster-abbey-6.jpg",
-    "westminster-abbey-front.jpg",
     "westminster-abbey.jpg"
   ];
   // ALL_PHOTOS_END
