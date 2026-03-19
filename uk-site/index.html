@@ -3724,6 +3724,10 @@
                     <label for="cost-${itemKey}">Cost (USD)</label>
                     <input id="cost-${itemKey}" class="cost-input js-cost-input" data-cost-key="${itemKey}" type="number" min="0" step="0.01" value="${savedCost ?? ""}" placeholder="0.00">
                   </div>
+                  <div class="travel-link-row">
+                    <input type="url" class="cc-link-input js-poi-link" data-link-id="poi-${item.page}" placeholder="Paste URL" aria-label="Related URL">
+                    <a class="cc-link-open js-cc-link-open" data-link-open-id="poi-${item.page}" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
+                  </div>
                 </div>
                 ${renderPoiCarousel(photoCarousels.right, item.page, item.caption, "right")}
               </article>
@@ -3863,6 +3867,7 @@
     function rerenderTimelineForPhotoUpdates() {
       renderTimeline();
       bindTransportLinks();
+      bindPoiLinks();
       bindCostInputs();
       buildDayMaps();
       setupPoiCarousels();
@@ -4362,6 +4367,51 @@
           all[id] = input.value;
           localStorage.setItem(LINKS_KEY, JSON.stringify(all));
           applyTransportLink(id, input.value);
+          window._fbSaveAll?.();
+        });
+      });
+    }
+
+    function bindPoiLinks() {
+      const LINKS_KEY = "ukTripCCLinksV1";
+
+      function applyPoiLink(id, value) {
+        const linkBtn = document.querySelector(`.js-cc-link-open[data-link-open-id="${id}"]`);
+        const inp = document.querySelector(`.js-poi-link[data-link-id="${id}"]`);
+        if (!linkBtn) return;
+        try {
+          const url = new URL(value);
+          if (url.protocol === "http:" || url.protocol === "https:") {
+            linkBtn.href = url.toString();
+            linkBtn.hidden = false;
+            linkBtn.classList.add("has-url");
+            if (inp) inp.classList.add("has-url");
+            return;
+          }
+        } catch (_) {}
+        linkBtn.hidden = true;
+        linkBtn.removeAttribute("href");
+        linkBtn.classList.remove("has-url");
+        if (inp) inp.classList.remove("has-url");
+      }
+
+      document.querySelectorAll(".js-poi-link[data-link-id]").forEach((input) => {
+        const id = input.getAttribute("data-link-id");
+        if (!id) return;
+        let links = {};
+        try { links = JSON.parse(localStorage.getItem(LINKS_KEY) || "{}"); } catch (_) {}
+        const saved = (links[id] || "").trim();
+        if (saved) input.value = saved;
+        applyPoiLink(id, input.value);
+        if (input.dataset.bound === "true") return;
+        input.dataset.bound = "true";
+        input.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); input.blur(); } });
+        input.addEventListener("input", () => {
+          let all = {};
+          try { all = JSON.parse(localStorage.getItem(LINKS_KEY) || "{}"); } catch (_) {}
+          all[id] = input.value;
+          localStorage.setItem(LINKS_KEY, JSON.stringify(all));
+          applyPoiLink(id, input.value);
           window._fbSaveAll?.();
         });
       });
@@ -6461,6 +6511,7 @@
     renderStaySummary();
     renderTimeline();
     bindTransportLinks();
+    bindPoiLinks();
     renderPaidMixedReviewChecklist();
     renderFoodSouvenirsChecklist();
     renderCostSheet();
@@ -6706,6 +6757,7 @@
       try { if (typeof renderCostSheet === "function") renderCostSheet(); } catch (_) {}
       try { if (typeof bindCostInputs === "function") bindCostInputs(); } catch (_) {}
       try { if (typeof bindTransportLinks === "function") bindTransportLinks(); } catch (_) {}
+      try { if (typeof bindPoiLinks === "function") bindPoiLinks(); } catch (_) {}
       try { if (typeof bindCustomCostControls === "function") bindCustomCostControls(); } catch (_) {}
       try { if (typeof initializeCommandChecklist === "function") initializeCommandChecklist(); } catch (_) {}
       try { if (typeof initializeDateInputs === "function") initializeDateInputs(); } catch (_) {}
