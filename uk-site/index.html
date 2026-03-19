@@ -2328,8 +2328,7 @@
         items: [
           { text: "🛬 6:30–7:45 AM — Land + exit airport. 6:30 land → 6:45 off plane → 6:45–7:30 immigration → 7:30–7:45 walk out (carry-on only, no baggage claim). You're outside faster than most people.", page: "London_Heathrow_Arrival", caption: "Arrive London Heathrow" },
           { text: "🪨 9:45–11:15 AM — Stonehenge visit. Shuttle to the stones, walk the loop, audio guide. 75–90 minutes is perfect.", page: "Stonehenge", caption: "Stonehenge" },
-          { text: "🏨 ~1:45–2:15 PM — Arrive at 134 Great Portland St. Drop bags / check in (or store).", page: "Hotel_Portland_Arrive", caption: "Arrive hotel" },
-          { text: "😴 2:30–4:00 PM — Reset: light rest (max 90-min nap), shower, change clothes. Don't nap longer — it'll wreck your jet lag adjustment.", page: "Hotel_Portland_Reset", caption: "Afternoon reset" },
+          { text: "😴 2:15–3:45 PM — Reset: light rest (max 90-min nap), shower, change clothes. Don't nap longer — it'll wreck your jet lag adjustment.", page: "Hotel_Portland_Reset", caption: "Afternoon reset" },
           { text: "🚶 4:30–6:30 PM — Easy stroll down Oxford Street — 5-min walk from the hotel. Window shop, grab a snack, decompress. No agenda required.", page: "Oxford_Street", caption: "Oxford Street stroll" },
           { text: "🍽️ 6:30–8:00 PM — Dinner near hotel. Simple, nearby — don't travel far.", page: "Hotel_Portland_Dinner", caption: "Dinner near hotel" }
         ]
@@ -2478,15 +2477,14 @@
 
     const visitTimes = {
       // Day 1 — NYC to JFK
-      "303_E_83rd_St_NYC": "15:00",                    // Leave home ~3 PM for 6:40 PM JFK flight
-      "John_F._Kennedy_International_Airport": "16:15",  // Arrive JFK ~4:15 PM, 2h+ before 6:40 PM departure
+      "303_E_83rd_St_NYC": "13:00",                    // Start packing/prep at 1 PM; depart ~1:25 PM for JFK
+      "John_F._Kennedy_International_Airport": "14:40",  // Arrive JFK 2:40 PM — 4 hrs before 6:40 PM departure
       Newark_Liberty_International_Airport: "15:07",
       Washington_Dulles_International_Airport: "17:20",
       // Day 2 — Arrival + Stonehenge
       London_Heathrow_Arrival: "06:30",                // Land 6:30 AM; immigration + walk out = 75 min → 07:45 exit
       Stonehenge: "09:45",                             // Arrive Stonehenge 9:45 AM; visit 90 min → 11:15
-      Hotel_Portland_Arrive: "13:45",                  // Arrive 134 Great Portland St ~1:45 PM; 30 min drop bags
-      Hotel_Portland_Reset: "14:30",                   // 2:30 PM rest/reset — 15 min gap after arrive; 90 min → 16:00
+      Hotel_Portland_Reset: "14:15",                   // 2:15 PM — after 180-min drive+check-in from Stonehenge; 90 min → 15:45
       Oxford_Street: "16:30",                          // 4:30 PM stroll — 30 min gap after reset; 120 min → 18:30
       Hotel_Portland_Dinner: "18:30",                  // 6:30 PM dinner near hotel; 90 min → 20:00
       // Day 3 — Thames + Greenwich + West End
@@ -2593,8 +2591,8 @@
 
     const visitDurationsMin = {
       // Day 1
-      "303_E_83rd_St_NYC": 30,                    // Final prep + rideshare wait
-      "John_F._Kennedy_International_Airport": 145, // 4:15 PM to 6:40 PM departure
+      "303_E_83rd_St_NYC": 25,                    // 1:00 PM prep; rideshare departs 1:25 PM
+      "John_F._Kennedy_International_Airport": 240, // 2:40 PM to 6:40 PM = 4 hrs at airport
       Newark_Liberty_International_Airport: 80,
       Washington_Dulles_International_Airport: 45,
       // Day 2 — all new/split keys
@@ -2603,8 +2601,7 @@
       Stonehenge_Drive: 105,                      // 8:00→9:45 AM drive to Stonehenge = 105 min
       Stonehenge: 90,                             // 9:45→11:15 AM visit = 90 min
       Hotel_Portland_Drive: 150,                  // 11:15→13:45 PM drive to London = 150 min
-      Hotel_Portland_Arrive: 30,                  // 13:45→14:15 drop bags/check in = 30 min
-      Hotel_Portland_Reset: 90,                   // 14:30→16:00 rest/nap = 90 min
+      Hotel_Portland_Reset: 90,                   // 14:15→15:45 rest/nap = 90 min (check-in folded into blue bar)
       Oxford_Street: 120,                         // 16:30→18:30 Oxford Street stroll = 120 min
       Hotel_Portland_Dinner: 90,                  // 18:30→20:00 dinner near hotel = 90 min
       // Day 3
@@ -2707,15 +2704,14 @@
 
     const dayTransportPlans = {
       1: [
-        { mode: "Starting point", bufferMin: 0, note: "Departing from home — 303 E. 83rd St." },
-        { mode: "Rideshare / taxi", bufferMin: 75, note: "Transfer from Upper East Side to JFK; allow 45–75 min depending on traffic." }
+        { mode: "Starting point", bufferMin: 0, note: "Departing from home — 303 E. 83rd St. Prep and pack." },
+        { mode: "Rideshare / taxi", bufferMin: 75, note: "Depart ~1:25 PM. Transfer from Upper East Side to JFK; allow 45–75 min depending on traffic. Arrive JFK 2:40 PM — 4 hrs before 6:40 PM departure." }
       ],
       2: [
-        // Entry [i] = transit BEFORE item[i]. Day 2 has 6 items (indices 0–5).
+        // Entry [i] = transit BEFORE item[i]. Day 2 has 5 items (indices 0–4).
         { mode: "Airplane landing + immigration", bufferMin: 0, note: "Land at LHR 6:30 AM. Immigration, walk out, exit terminal." },
         { mode: "Private car + driver", bufferMin: 105, note: "Driver meets at Arrivals ~8:00 AM — quick load and go. Drive LHR → Stonehenge ~1 hr 45 min. Arrive 9:45 AM." },
-        { mode: "Private car", bufferMin: 150, note: "Depart Stonehenge 11:15 AM → 134 Great Portland St — ~2–2.5 hrs, traffic-dependent. Arrive ~1:45 PM." },
-        { mode: "Settle in room", bufferMin: 15, note: "Check in ends 14:15 → 15-min gap to freshen up before rest." },
+        { mode: "🚗 Private car → 🏨 Hotel check-in", bufferMin: 180, note: "Depart Stonehenge 11:15 AM → 134 Great Portland St (~2–2.5 hrs, traffic-dependent). Arrive ~1:45 PM. Check in / drop bags ~30 min. Settled by 2:15 PM." },
         { mode: "Walk to Oxford Street", bufferMin: 30, note: "Reset ends 16:00 → 30-min gap to get ready. 5-min walk from hotel to Oxford Street." },
         { mode: "Walk (dinner nearby)", bufferMin: 0, note: "Oxford Street ends 18:30 → dinner starts right away — restaurant is right nearby." }
       ],
