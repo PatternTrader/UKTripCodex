@@ -1351,6 +1351,14 @@
     flex: 0 0 auto;
   }
   .cc-date-input:focus { outline: none; border-color: #1a6bbf; box-shadow: 0 0 0 2px rgba(26, 107, 191, 0.18); }
+  .cc-date-input.is-stale {
+    background: #ff6200;
+    color: #fff;
+    border-color: #e04e00;
+    font-weight: 700;
+    box-shadow: 0 0 0 2px rgba(255, 98, 0, 0.4), 0 0 8px rgba(255, 98, 0, 0.5);
+  }
+  .cc-date-input.is-stale::-webkit-calendar-picker-indicator { filter: invert(1); }
 
   .cc-cost-note {
     order: 20;
@@ -5546,6 +5554,15 @@
       }).join("");
     }
 
+    function updateDateHighlight(dateInput) {
+      if (!(dateInput instanceof HTMLInputElement)) return;
+      const val = dateInput.value;
+      if (!val) { dateInput.classList.remove("is-stale"); return; }
+      const t = new Date();
+      const todayISO = `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}`;
+      dateInput.classList.toggle("is-stale", val !== todayISO);
+    }
+
     function attachDateInputToCostInput(costInput) {
       if (!(costInput instanceof HTMLElement)) return;
       const id = costInput.getAttribute("data-cost-id");
@@ -5564,9 +5581,11 @@
       dateInput.setAttribute("aria-label", "Price valid date");
       dateInput.title = "Date this price was valid";
       if (ccDates[id]) dateInput.value = ccDates[id];
+      updateDateHighlight(dateInput);
       dateInput.addEventListener("change", () => {
         ccDates[id] = dateInput.value;
         localStorage.setItem(CC_DATES_STORAGE_KEY, JSON.stringify(ccDates));
+        updateDateHighlight(dateInput);
       });
       dateInput.addEventListener("click", (e) => e.stopPropagation());
       const pairEl = costInput.closest(".cc-cost-pair") || costInput;
