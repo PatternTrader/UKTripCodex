@@ -5611,6 +5611,7 @@
       try { ccDates = JSON.parse(localStorage.getItem(CC_DATES_STORAGE_KEY) || "{}"); } catch (_) {}
       ccDates[id] = iso;
       localStorage.setItem(CC_DATES_STORAGE_KEY, JSON.stringify(ccDates));
+      updateDateHighlight(dateInput);
     }
 
     function autofillTodayForCostInput(costInput, force = false) {
@@ -5620,7 +5621,8 @@
       const raw = String(costInput.value || "").trim();
       const normalized = raw.replace(/[$,\s]/g, "");
       if (!normalized || Number.isNaN(Number(normalized))) return;
-      autofillTodayForId(id, force);
+      // Always force today when a real cost value is present — entering a price = stamp today
+      autofillTodayForId(id, true);
     }
 
     function initializeCommandCenterBackup() {
