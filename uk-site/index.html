@@ -5107,7 +5107,7 @@
           const num = parseFloat(String(input.value || "").replace(/[$,\s]/g, ""));
           if (ccCostSource[id] === "usd") fillComputedGbp(id, num);
           applyPairHighlight(id, ccCostSource[id] || null);
-          autofillTodayForCostInput(input);
+          autofillTodayForCostInput(input, true);
           updateFlightTotal();
         });
 
@@ -5621,8 +5621,7 @@
       const raw = String(costInput.value || "").trim();
       const normalized = raw.replace(/[$,\s]/g, "");
       if (!normalized || Number.isNaN(Number(normalized))) return;
-      // Always force today when a real cost value is present — entering a price = stamp today
-      autofillTodayForId(id, true);
+      autofillTodayForId(id, force);
     }
 
     function initializeCommandCenterBackup() {
