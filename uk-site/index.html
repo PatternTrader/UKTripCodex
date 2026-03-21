@@ -5560,7 +5560,7 @@
       if (!val) { dateInput.classList.remove("is-stale"); return; }
       const t = new Date();
       const todayISO = `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}`;
-      dateInput.classList.toggle("is-stale", val !== todayISO);
+      dateInput.classList.toggle("is-stale", val === todayISO);
     }
 
     function attachDateInputToCostInput(costInput) {
