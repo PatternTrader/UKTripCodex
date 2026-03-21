@@ -6745,6 +6745,10 @@
           try { localStorage.setItem(lsKey, JSON.stringify(data[field])); } catch (_) {}
         }
       }
+      // Stamp local timestamp so smartSync doesn't think local is stale and push empty data
+      if (data._lastUpdated) {
+        localStorage.setItem(LOCAL_LAST_SAVE_KEY, String(data._lastUpdated));
+      }
 
       // 2. Refresh outer-scope variables from localStorage so all bind functions see fresh data
       try { ccCosts    = JSON.parse(localStorage.getItem(CC_COSTS_STORAGE_KEY)      || "{}"); } catch (_) {}
