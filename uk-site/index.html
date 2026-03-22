@@ -4060,59 +4060,182 @@
       localStorage.setItem(CUSTOM_COSTS_STORAGE_KEY, JSON.stringify(customCostEntries));
     }
 
+    const COST_SHEET_OVERRIDES_KEY = "ukTripCostSheetOverrides";
+    const COST_SHEET_ORDER_KEY = "ukTripCostSheetOrder";
+    const COST_SHEET_GBP_KEY = "ukTripCostSheetGbp";
+
+    function getCostSheetOverrides() {
+      try { return JSON.parse(localStorage.getItem(COST_SHEET_OVERRIDES_KEY) || "{}"); } catch (_) { return {}; }
+    }
+    function getCostSheetOrder() {
+      try { return JSON.parse(localStorage.getItem(COST_SHEET_ORDER_KEY) || "null"); } catch (_) { return null; }
+    }
+    function getCostSheetGbp() {
+      try { return JSON.parse(localStorage.getItem(COST_SHEET_GBP_KEY) || "{}"); } catch (_) { return {}; }
+    }
+
     function renderCostSheet() {
-      const rows = [];
+      const overrides = getCostSheetOverrides();
+      const gbpMap = getCostSheetGbp();
+      const savedOrder = getCostSheetOrder();
+      const getRate = () => {
+        const el = document.getElementById("cc-exchange-rate");
+        const v = el ? parseFloat(el.value) : NaN;
+        return (!isNaN(v) && v > 0) ? v : 1.27;
+      };
+
+      // Build all rows from itinerary
+      const allRows = [];
       itinerary.forEach((day) => {
         day.items.forEach((item, itemIndex) => {
           const key = getItemKey(day, item, itemIndex);
           const t = visitTimes[item.page] || "";
           const meta = poiMeta[item.page] || { researchedCost: "Cost unknown; verify manually." };
-          rows.push(`
-            <tr>
-              <td>Day ${day.day}</td>
-              <td>${day.date}</td>
-              <td>${item.caption}</td>
-              <td>${t}</td>
-              <td>${meta.researchedCost}</td>
-              <td><input class="cost-input js-cost-input" data-cost-key="${key}" type="number" min="0" step="0.01" value="${costState[key] ?? ""}" placeholder="0.00"></td>
-            </tr>
-          `);
+          const ov = overrides[key] || {};
+          allRows.push({ key, day: ov.day ?? `Day ${day.day}`, date: ov.date ?? day.date, poi: ov.poi ?? item.caption, plannedTime: ov.plannedTime ?? t, researchedCost: ov.researchedCost ?? meta.researchedCost });
         });
       });
 
+      // Apply saved order
+      let orderedRows = allRows;
+      if (savedOrder && Array.isArray(savedOrder)) {
+        const byKey = Object.fromEntries(allRows.map((r) => [r.key, r]));
+        const ordered = savedOrder.map((k) => byKey[k]).filter(Boolean);
+        const remaining = allRows.filter((r) => !savedOrder.includes(r.key));
+        orderedRows = [...ordered, ...remaining];
+      }
+
+      const rows = orderedRows.map(({ key, day, date, poi, plannedTime, researchedCost }) => {
+        const usdVal = costState[key] ?? "";
+        const gbpVal = gbpMap[key] ?? "";
+        return `
+          <tr class="js-cs-row" data-cs-key="${key}" draggable="true">
+            <td style="width:30px;text-align:center;padding:4px"><span class="actc-drag-handle" title="Drag to reorder">⠿</span></td>
+            <td><input class="actc-cell js-cs-field" data-cs-key="${key}" data-field="day" value="${escapeHtml(day)}" placeholder="Day 1"></td>
+            <td><input class="actc-cell js-cs-field" data-cs-key="${key}" data-field="date" value="${escapeHtml(date)}" placeholder="Apr 2"></td>
+            <td><input class="actc-cell actc-cell--poi js-cs-field" data-cs-key="${key}" data-field="poi" value="${escapeHtml(poi)}" placeholder="Point of Interest"></td>
+            <td><input class="actc-cell js-cs-field" data-cs-key="${key}" data-field="plannedTime" value="${escapeHtml(plannedTime)}" placeholder="9:00 AM"></td>
+            <td><input class="actc-cell actc-cell--research js-cs-field" data-cs-key="${key}" data-field="researchedCost" value="${escapeHtml(researchedCost)}" placeholder="Cost guidance"></td>
+            <td style="width:90px"><input class="actc-cell actc-cell--cost cost-input js-cost-input" data-cost-key="${key}" type="text" inputmode="decimal" value="${usdVal !== "" ? usdVal : ""}" placeholder="0.00"></td>
+            <td style="width:90px"><input class="actc-cell actc-cell--cost actc-cell--gbp js-cs-gbp" data-cs-key="${key}" type="text" inputmode="decimal" value="${escapeHtml(gbpVal)}" placeholder="0.00"></td>
+          </tr>
+        `;
+      });
+
       const tableHtml = `
-        <table class="cost-table">
-          <thead>
-            <tr>
-              <th>Day</th>
-              <th>Date</th>
-              <th>Point Of Interest</th>
-              <th>Planned Time</th>
-              <th>Researched Cost Guidance</th>
-              <th>Your Cost (USD)</th>
-            </tr>
-          </thead>
-          <tbody>${rows.join("")}</tbody>
-        </table>
+        <div class="actc-table-outer">
+          <table class="actc-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Day</th>
+                <th>Date</th>
+                <th>Point of Interest</th>
+                <th>Planned Time</th>
+                <th>Researched Cost Guidance</th>
+                <th>USD ($)</th>
+                <th>GBP (£)</th>
+              </tr>
+            </thead>
+            <tbody id="cs-tbody">${rows.join("")}</tbody>
+          </table>
+        </div>
       `;
-      document.getElementById("cost-sheet").innerHTML = tableHtml;
+      const wrap = document.getElementById("cost-sheet");
+      wrap.innerHTML = tableHtml;
+
+      // Bind text fields
+      wrap.querySelectorAll(".js-cs-field").forEach((input) => {
+        input.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); input.blur(); } });
+        input.addEventListener("blur", () => {
+          const key = input.dataset.csKey;
+          const field = input.dataset.field;
+          const ov = getCostSheetOverrides();
+          if (!ov[key]) ov[key] = {};
+          ov[key][field] = input.value;
+          localStorage.setItem(COST_SHEET_OVERRIDES_KEY, JSON.stringify(ov));
+        });
+      });
+
+      // Bind GBP inputs
+      wrap.querySelectorAll(".js-cs-gbp").forEach((input) => {
+        input.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); input.blur(); } });
+        input.addEventListener("blur", () => {
+          const key = input.dataset.csKey;
+          const gbp = getCostSheetGbp();
+          gbp[key] = input.value;
+          localStorage.setItem(COST_SHEET_GBP_KEY, JSON.stringify(gbp));
+          // Auto-fill USD if empty
+          const num = parseFloat(input.value.replace(/[£,\s]/g, ""));
+          if (!isNaN(num) && num > 0) {
+            const usdInput = wrap.querySelector(`.js-cost-input[data-cost-key="${key}"]`);
+            if (usdInput && !usdInput.value.trim()) {
+              const usd = (num * getRate()).toFixed(2);
+              usdInput.value = usd;
+              costState[key] = usd;
+              localStorage.setItem(COST_STORAGE_KEY, JSON.stringify(costState));
+              updateCostSummary();
+            }
+          }
+        });
+        input.addEventListener("input", () => updateCostSummary());
+      });
+
+      // USD auto-fill GBP
+      wrap.querySelectorAll(".js-cost-input").forEach((input) => {
+        input.addEventListener("blur", () => {
+          const key = input.dataset.costKey;
+          const num = parseFloat(String(input.value || "").replace(/[$,\s]/g, ""));
+          if (!isNaN(num) && num > 0) {
+            const gbpInput = wrap.querySelector(`.js-cs-gbp[data-cs-key="${key}"]`);
+            if (gbpInput && !gbpInput.value.trim()) {
+              const gbp = (num / getRate()).toFixed(2);
+              gbpInput.value = gbp;
+              const gbpMap = getCostSheetGbp();
+              gbpMap[key] = gbp;
+              localStorage.setItem(COST_SHEET_GBP_KEY, JSON.stringify(gbpMap));
+            }
+          }
+        });
+      });
+
+      // Drag-and-drop reorder
+      let dragSrcKey = null;
+      wrap.querySelectorAll(".js-cs-row").forEach((row) => {
+        row.addEventListener("dragstart", (e) => { dragSrcKey = row.dataset.csKey; row.classList.add("actc-row-dragging"); e.dataTransfer.effectAllowed = "move"; });
+        row.addEventListener("dragend", () => row.classList.remove("actc-row-dragging"));
+        row.addEventListener("dragover", (e) => { e.preventDefault(); e.dataTransfer.dropEffect = "move"; row.classList.add("actc-row-dragover"); });
+        row.addEventListener("dragleave", () => row.classList.remove("actc-row-dragover"));
+        row.addEventListener("drop", (e) => {
+          e.preventDefault();
+          row.classList.remove("actc-row-dragover");
+          if (!dragSrcKey || dragSrcKey === row.dataset.csKey) return;
+          const keys = orderedRows.map((r) => r.key);
+          const si = keys.indexOf(dragSrcKey), di = keys.indexOf(row.dataset.csKey);
+          if (si < 0 || di < 0) return;
+          keys.splice(di, 0, keys.splice(si, 1)[0]);
+          localStorage.setItem(COST_SHEET_ORDER_KEY, JSON.stringify(keys));
+          renderCostSheet();
+        });
+      });
+
       renderCustomCostSheet();
       updateCostSummary();
     }
 
     function updateCostSummary() {
-      let total = 0;
+      let totalUSD = 0;
       Object.values(costState).forEach((v) => {
-        const n = Number(v);
-        if (!Number.isNaN(n)) total += n;
+        const n = parseFloat(String(v || "").replace(/[$,\s]/g, ""));
+        if (!Number.isNaN(n)) totalUSD += n;
       });
       customCostEntries.forEach((entry) => {
-        // Support both old {amount} and new {amountUSD} fields
         const raw = entry.amountUSD !== undefined ? entry.amountUSD : entry.amount;
         const n = parseFloat(String(raw || "").replace(/[$,\s]/g, ""));
-        if (!Number.isNaN(n)) total += n;
+        if (!Number.isNaN(n)) totalUSD += n;
       });
-      document.getElementById("cost-summary").textContent = `Current tracked total: $${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      const el = document.getElementById("cost-summary");
+      if (el) el.textContent = `Current tracked total: $${totalUSD.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     }
 
     function renderCustomCostSheet() {
