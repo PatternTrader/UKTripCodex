@@ -4188,10 +4188,10 @@
           <td style="width:62px"><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="plannedTime" value="${escapeHtml(plannedTime)}" placeholder="0900"></td>
           <td style="width:140px"><input class="actc-cell actc-cell--poi js-unified-field" data-row-key="${rowKey}" data-field="poi" value="${escapeHtml(poi)}" placeholder="Activity"></td>
           <td style="width:140px"><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="category" value="${escapeHtml(category)}" placeholder="Category"></td>
-          <td><input class="actc-cell actc-cell--research js-unified-field" data-row-key="${rowKey}" data-field="researchedCost" value="${escapeHtml(researchedCost)}" placeholder="Notes"></td>
+          <td><input class="actc-cell actc-cell--research js-unified-field" data-row-key="${rowKey}" data-field="researchedCost" value="${escapeHtml(researchedCost)}" placeholder="Notes"><div class="actc-cost-note js-actc-math-note" data-row-key="${rowKey}"></div></td>
           <td style="width:90px"><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="paymentMethod" value="${escapeHtml(paymentMethod)}" placeholder="cash vs. CC"></td>
-          <td style="width:90px"><input class="actc-cell actc-cell--cost js-unified-usd" data-row-key="${rowKey}" value="${escapeHtml(usd)}" placeholder="0.00" type="text" inputmode="decimal"><div class="actc-cost-note js-actc-usd-note" data-row-key="${rowKey}"></div></td>
-          <td style="width:90px"><input class="actc-cell actc-cell--cost actc-cell--gbp js-unified-gbp" data-row-key="${rowKey}" value="${escapeHtml(gbp)}" placeholder="0.00" type="text" inputmode="decimal"><div class="actc-cost-note js-actc-gbp-note" data-row-key="${rowKey}"></div></td>
+          <td style="width:90px"><input class="actc-cell actc-cell--cost js-unified-usd" data-row-key="${rowKey}" value="${escapeHtml(usd)}" placeholder="0.00" type="text" inputmode="decimal"></td>
+          <td style="width:90px"><input class="actc-cell actc-cell--cost actc-cell--gbp js-unified-gbp" data-row-key="${rowKey}" value="${escapeHtml(gbp)}" placeholder="0.00" type="text" inputmode="decimal"></td>
           <td style="width:36px"><button type="button" class="actc-remove-btn js-unified-remove" data-row-key="${rowKey}" data-row-type="${type}">✕</button></td>
         </tr>`).join("");
 
@@ -4205,10 +4205,9 @@
       const _savedActcNotes = getActcCostNotes();
       orderedRows.forEach((r) => {
         const n = _savedActcNotes[r.rowKey]; if (!n) return;
-        const uN = container.querySelector(`.js-actc-usd-note[data-row-key="${r.rowKey}"]`);
-        const gN = container.querySelector(`.js-actc-gbp-note[data-row-key="${r.rowKey}"]`);
-        if (uN && n.usd) uN.textContent = `Math: ${n.usd}`;
-        if (gN && n.gbp) gN.textContent = `Math: ${n.gbp}`;
+        const mN = container.querySelector(`.js-actc-math-note[data-row-key="${r.rowKey}"]`);
+        const text = n.usd || n.gbp;
+        if (mN && text) mN.textContent = `Math: ${text}`;
       });
 
       // Save text fields
@@ -4253,16 +4252,14 @@
           if (!isNaN(finalNum) && finalNum >= 0) inp.value = "$" + finalNum.toFixed(2);
           if (gi && !isNaN(gbpNum) && gbpNum >= 0) gi.value = "£" + gbpNum.toFixed(2);
           // Show / save math note
-          const uN = container.querySelector(`.js-actc-usd-note[data-row-key="${rk}"]`);
-          const gN = container.querySelector(`.js-actc-gbp-note[data-row-key="${rk}"]`);
+          const mN = container.querySelector(`.js-actc-math-note[data-row-key="${rk}"]`);
           if (expr) {
             const fmt = (v) => "$" + (Number.isInteger(v) ? String(v) : v.toFixed(2).replace(/\.00$/, ""));
             const noteText = `${expr.numbers.map(fmt).join(" + ")} = ${fmt(expr.sum)}`;
-            if (uN) uN.textContent = `Math: ${noteText}`;
-            if (gN) gN.textContent = "";
+            if (mN) mN.textContent = `Math: ${noteText}`;
             saveActcCostNoteForRow(rk, "usd", noteText);
             saveActcCostNoteForRow(rk, "gbp", "");
-          } else { if (uN) uN.textContent = ""; saveActcCostNoteForRow(rk, "usd", ""); }
+          } else { if (mN) mN.textContent = ""; saveActcCostNoteForRow(rk, "usd", ""); }
           // Save USD
           if (row.dataset.rowType === "itinerary") {
             const k = row.dataset.itemKey; if (!isNaN(finalNum) && finalNum >= 0) { costState[k] = String(finalNum); localStorage.setItem(COST_STORAGE_KEY, JSON.stringify(costState)); }
@@ -4301,16 +4298,14 @@
           if (!isNaN(finalNum) && finalNum >= 0) inp.value = "£" + finalNum.toFixed(2);
           if (ui && !isNaN(usdNum) && usdNum >= 0) ui.value = "$" + usdNum.toFixed(2);
           // Show / save math note
-          const gN = container.querySelector(`.js-actc-gbp-note[data-row-key="${rk}"]`);
-          const uN = container.querySelector(`.js-actc-usd-note[data-row-key="${rk}"]`);
+          const mN = container.querySelector(`.js-actc-math-note[data-row-key="${rk}"]`);
           if (expr) {
             const fmt = (v) => "£" + (Number.isInteger(v) ? String(v) : v.toFixed(2).replace(/\.00$/, ""));
             const noteText = `${expr.numbers.map(fmt).join(" + ")} = ${fmt(expr.sum)}`;
-            if (gN) gN.textContent = `Math: ${noteText}`;
-            if (uN) uN.textContent = "";
+            if (mN) mN.textContent = `Math: ${noteText}`;
             saveActcCostNoteForRow(rk, "gbp", noteText);
             saveActcCostNoteForRow(rk, "usd", "");
-          } else { if (gN) gN.textContent = ""; saveActcCostNoteForRow(rk, "gbp", ""); }
+          } else { if (mN) mN.textContent = ""; saveActcCostNoteForRow(rk, "gbp", ""); }
           // Save GBP
           if (row.dataset.rowType === "itinerary") {
             const gm = getCostSheetGbp(); if (!isNaN(finalNum) && finalNum >= 0) { gm[row.dataset.itemKey] = "£" + finalNum.toFixed(2); localStorage.setItem(COST_SHEET_GBP_KEY, JSON.stringify(gm)); }
