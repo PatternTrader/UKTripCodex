@@ -4107,12 +4107,12 @@
           const t = visitTimes[item.page] || "";
           const meta = poiMeta[item.page] || { researchedCost: "Cost unknown; verify manually." };
           const ov = overrides[itemKey] || {};
-          itRows.push({ rowKey, type: "itinerary", itemKey, day: normalizeDayField(ov.day ?? `Day ${day.day}`), date: normalizeDateField(ov.date ?? day.date), poi: ov.poi ?? item.caption, plannedTime: ov.plannedTime ?? t, researchedCost: ov.researchedCost ?? meta.researchedCost, paymentMethod: ov.paymentMethod ?? "", usd: String(costState[itemKey] ?? ""), gbp: String(gbpMap[itemKey] ?? "") });
+          itRows.push({ rowKey, type: "itinerary", itemKey, day: normalizeDayField(ov.day ?? `Day ${day.day}`), date: normalizeDateField(ov.date ?? day.date), poi: ov.poi ?? item.caption, plannedTime: ov.plannedTime ?? t, category: ov.category ?? "", researchedCost: ov.researchedCost ?? meta.researchedCost, paymentMethod: ov.paymentMethod ?? "", usd: String(costState[itemKey] ?? ""), gbp: String(gbpMap[itemKey] ?? "") });
         });
       });
 
       // Build custom rows (prefixed cu:)
-      const cuRows = customCostEntries.map((e) => ({ rowKey: `cu:${e.id}`, type: "custom", entryId: e.id, day: normalizeDayField(e.day || ""), date: normalizeDateField(e.date || ""), poi: e.poi || "", plannedTime: e.plannedTime || "", researchedCost: e.researchedCost || "", paymentMethod: e.paymentMethod || "", usd: e.amountUSD || "", gbp: e.amountGBP || "" }));
+      const cuRows = customCostEntries.map((e) => ({ rowKey: `cu:${e.id}`, type: "custom", entryId: e.id, day: normalizeDayField(e.day || ""), date: normalizeDateField(e.date || ""), poi: e.poi || "", plannedTime: e.plannedTime || "", category: e.category || "", researchedCost: e.researchedCost || "", paymentMethod: e.paymentMethod || "", usd: e.amountUSD || "", gbp: e.amountGBP || "" }));
 
       // Apply unified order
       let savedOrder = null; try { savedOrder = JSON.parse(localStorage.getItem(UNIFIED_ORDER_KEY) || "null"); } catch (_) {}
@@ -4126,13 +4126,14 @@
         orderedRows = [...itRows, ...cuRows];
       }
 
-      const rows = orderedRows.map(({ rowKey, type, itemKey, entryId, day, date, poi, plannedTime, researchedCost, paymentMethod, usd, gbp }) => `
+      const rows = orderedRows.map(({ rowKey, type, itemKey, entryId, day, date, poi, plannedTime, category, researchedCost, paymentMethod, usd, gbp }) => `
         <tr class="js-unified-row" data-row-key="${rowKey}" data-row-type="${type}" ${type === "itinerary" ? `data-item-key="${itemKey}"` : `data-entry-id="${entryId}"`} draggable="true">
           <td style="width:30px;text-align:center;padding:4px"><span class="actc-drag-handle" title="Drag to reorder">⠿</span></td>
           <td style="width:52px"><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="day" value="${escapeHtml(day)}" placeholder="Day 1"></td>
           <td style="width:58px"><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="date" value="${escapeHtml(date)}" placeholder="Apr 2"></td>
           <td style="width:62px"><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="plannedTime" value="${escapeHtml(plannedTime)}" placeholder="9:00"></td>
-          <td style="width:140px"><input class="actc-cell actc-cell--poi js-unified-field" data-row-key="${rowKey}" data-field="poi" value="${escapeHtml(poi)}" placeholder="Point of Interest"></td>
+          <td style="width:140px"><input class="actc-cell actc-cell--poi js-unified-field" data-row-key="${rowKey}" data-field="poi" value="${escapeHtml(poi)}" placeholder="Activity"></td>
+          <td style="width:140px"><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="category" value="${escapeHtml(category)}" placeholder="Category"></td>
           <td><input class="actc-cell actc-cell--research js-unified-field" data-row-key="${rowKey}" data-field="researchedCost" value="${escapeHtml(researchedCost)}" placeholder="Notes"></td>
           <td style="width:90px"><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="paymentMethod" value="${escapeHtml(paymentMethod)}" placeholder="cash vs. CC"></td>
           <td style="width:90px"><input class="actc-cell actc-cell--cost js-unified-usd" data-row-key="${rowKey}" value="${escapeHtml(usd)}" placeholder="0.00" type="text" inputmode="decimal"></td>
@@ -4140,7 +4141,7 @@
           <td style="width:36px"><button type="button" class="actc-remove-btn js-unified-remove" data-row-key="${rowKey}" data-row-type="${type}">✕</button></td>
         </tr>`).join("");
 
-      container.innerHTML = `<div class="actc-table-outer"><table class="actc-table"><thead><tr><th></th><th>Day</th><th>Date</th><th>Planned Time</th><th>Point of Interest</th><th>Notes</th><th style="width:90px">Payment<br>Method</th><th>USD ($)</th><th>GBP (£)</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
+      container.innerHTML = `<div class="actc-table-outer"><table class="actc-table"><thead><tr><th></th><th>Day</th><th>Date</th><th>Planned Time</th><th>Activity</th><th>Category</th><th>Notes</th><th style="width:90px">Payment<br>Method</th><th>USD ($)</th><th>GBP (£)</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
 
       // Save text fields
       container.querySelectorAll(".js-unified-field").forEach((inp) => {
@@ -4380,7 +4381,7 @@
     function addCustomCostEntry() {
       customCostEntries.push({
         id: `custom-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-        day: "", date: "", poi: "", plannedTime: "", researchedCost: "", paymentMethod: "", amountUSD: "", amountGBP: ""
+        day: "", date: "", poi: "", plannedTime: "", category: "", researchedCost: "", paymentMethod: "", amountUSD: "", amountGBP: ""
       });
       saveCustomCostEntries();
       renderUnifiedCostSheet();
