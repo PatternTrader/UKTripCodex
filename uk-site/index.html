@@ -6743,7 +6743,20 @@
       ccExchangeRate:       "ukTripCCExchangeRateV1",
       ccLinks:              "ukTripCCLinksV1",
       ccDates:              "ukTripCCDatesV1",
-      ccOrder:              "ukTripCCOrderV1"
+      ccOrder:              "ukTripCCOrderV1",
+      costSheetOverrides:   "ukTripCostSheetOverrides",
+      costSheetGbp:         "ukTripCostSheetGbp",
+      unifiedSheetOrder:    "ukTripUnifiedSheetOrder",
+      hiddenItRows:         "ukTripHiddenItRows"
+    };
+
+    // Auto-stamp LOCAL_LAST_CHANGE_KEY whenever any synced key is written to localStorage
+    const LOCAL_LAST_CHANGE_KEY = "ukTripLastLocalChange";
+    const _syncedLsKeys = new Set(Object.values(STORAGE_KEY_MAP));
+    const _origSetItem = localStorage.setItem.bind(localStorage);
+    localStorage.setItem = (key, value) => {
+      _origSetItem(key, value);
+      if (_syncedLsKeys.has(key)) _origSetItem(LOCAL_LAST_CHANGE_KEY, String(Date.now()));
     };
 
     // ── Firestore document reference ──────────────────────────────────────────
@@ -6998,23 +7011,45 @@
       hideOverlay();
       setUserStatusBar(email);
 
-      // Load current data from Firestore once
+      // Smart load: compare local-change timestamp vs cloud timestamp before overwriting
       try {
         const snap = await getDoc(tripDocRef);
-        if (snap.exists()) {
+        const cloudTs = snap.exists() ? (snap.data()._lastUpdated || 0) : 0;
+        const localChangeTs = parseInt(localStorage.getItem(LOCAL_LAST_CHANGE_KEY) || "0");
+        const localSyncTs   = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY) || "0");
+        const localTs = Math.max(localChangeTs, localSyncTs);
+
+        if (!snap.exists() || localTs === 0) {
+          // No cloud data yet, or first ever load — load cloud if it exists
+          if (snap.exists()) { _snapshotIgnoreNext = true; applyFirestoreData(snap.data()); localStorage.setItem(LOCAL_LAST_SAVE_KEY, String(cloudTs)); }
+        } else if (localTs > cloudTs + 10000) {
+          // Local is newer (user made changes after last cloud sync) — push local up
+          setStatus("Local data is newer — pushing to cloud…", false);
+          await saveAllToFirestore();
+          setStatus("✓ Auto-saved local changes to cloud.", false);
+          setTimeout(() => setStatus(""), 3000);
+        } else if (cloudTs > localTs + 10000) {
+          // Cloud is meaningfully newer (another user synced) — load from cloud
           _snapshotIgnoreNext = true;
           applyFirestoreData(snap.data());
-          localStorage.setItem(LOCAL_LAST_SAVE_KEY, String(snap.data()._lastUpdated || Date.now()));
+          localStorage.setItem(LOCAL_LAST_SAVE_KEY, String(cloudTs));
         }
+        // else: within 10s of each other — treat as in sync, no action needed
       } catch (err) {
         console.warn("[Firebase] initial getDoc error:", err);
       }
 
-      // Subscribe to real-time updates
+      // Subscribe to real-time updates — only apply if cloud is meaningfully newer than local
       if (_unsubSnapshot) _unsubSnapshot();
       _unsubSnapshot = onSnapshot(tripDocRef, (snap) => {
         if (_snapshotIgnoreNext) { _snapshotIgnoreNext = false; return; }
-        if (snap.exists()) {
+        if (!snap.exists()) return;
+        const cloudTs = snap.data()._lastUpdated || 0;
+        const localChangeTs = parseInt(localStorage.getItem(LOCAL_LAST_CHANGE_KEY) || "0");
+        const localSyncTs   = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY)   || "0");
+        const localTs = Math.max(localChangeTs, localSyncTs);
+        if (cloudTs > localTs + 10000) {
+          // Cloud is genuinely newer (another user synced) — apply it
           applyFirestoreData(snap.data());
         }
       }, (err) => {
