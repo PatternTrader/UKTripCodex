@@ -2145,7 +2145,7 @@
     <main id="timeline" class="timeline"></main>
 
     <section class="cost-panel">
-      <h2 class="section-title">Actual Travel Costs Spreadsheet</h2>
+      <h2 class="section-title">Actual Costs Spreadsheet</h2>
       <button id="actc-add-row" class="actc-add-row-btn" type="button">+ Add Row</button>
       <div id="unified-cost-sheet"></div>
       <div class="cost-summary" id="cost-summary"></div>
@@ -4118,15 +4118,15 @@
           <td style="width:30px;text-align:center;padding:4px"><span class="actc-drag-handle" title="Drag to reorder">⠿</span></td>
           <td><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="day" value="${escapeHtml(day)}" placeholder="Day 1"></td>
           <td><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="date" value="${escapeHtml(date)}" placeholder="Apr 2"></td>
-          <td><input class="actc-cell actc-cell--poi js-unified-field" data-row-key="${rowKey}" data-field="poi" value="${escapeHtml(poi)}" placeholder="Point of Interest"></td>
           <td><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="plannedTime" value="${escapeHtml(plannedTime)}" placeholder="9:00 AM"></td>
+          <td><input class="actc-cell actc-cell--poi js-unified-field" data-row-key="${rowKey}" data-field="poi" value="${escapeHtml(poi)}" placeholder="Point of Interest"></td>
           <td><input class="actc-cell actc-cell--research js-unified-field" data-row-key="${rowKey}" data-field="researchedCost" value="${escapeHtml(researchedCost)}" placeholder="Cost guidance"></td>
           <td style="width:90px"><input class="actc-cell actc-cell--cost js-unified-usd" data-row-key="${rowKey}" value="${escapeHtml(usd)}" placeholder="0.00" type="text" inputmode="decimal"></td>
           <td style="width:90px"><input class="actc-cell actc-cell--cost actc-cell--gbp js-unified-gbp" data-row-key="${rowKey}" value="${escapeHtml(gbp)}" placeholder="0.00" type="text" inputmode="decimal"></td>
           <td style="width:36px"><button type="button" class="actc-remove-btn js-unified-remove" data-row-key="${rowKey}" data-row-type="${type}">✕</button></td>
         </tr>`).join("");
 
-      container.innerHTML = `<div class="actc-table-outer"><table class="actc-table"><thead><tr><th></th><th>Day</th><th>Date</th><th>Point of Interest</th><th>Planned Time</th><th>Researched Cost Guidance</th><th>USD ($)</th><th>GBP (£)</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
+      container.innerHTML = `<div class="actc-table-outer"><table class="actc-table"><thead><tr><th></th><th>Day</th><th>Date</th><th>Planned Time</th><th>Point of Interest</th><th>Researched Cost Guidance</th><th>USD ($)</th><th>GBP (£)</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
 
       // Save text fields
       container.querySelectorAll(".js-unified-field").forEach((inp) => {
