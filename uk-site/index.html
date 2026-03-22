@@ -5859,12 +5859,13 @@
       const legendEl = document.getElementById("budget-pie-legend");
       if (!(canvas instanceof HTMLCanvasElement) || !legendEl) return;
 
+      // All five colors are visually distinct — no two share a hue family
       const SLICES = [
-        { card: "flight",  label: "Flights",   color: "#f97316" },
-        { card: "hotel",   label: "Hotels",    color: "#4ade80" },
-        { card: "booking", label: "Scotland Tour (incl. Lodging)", color: "#facc15" },
-        { card: "review",  label: "Points of Interest", color: "#fb923c" },
-        { card: "food",    label: "Food & Souvenirs",   color: "#34d399" }
+        { card: "flight",  label: "Flights",                        lines: ["Flights"],             color: "#f97316" }, // orange
+        { card: "hotel",   label: "Hotels",                         lines: ["Hotels"],              color: "#3b82f6" }, // blue
+        { card: "booking", label: "Scotland Tour (incl. Lodging)",  lines: ["Scotland", "Tour"],    color: "#facc15" }, // yellow
+        { card: "review",  label: "Points of Interest",             lines: ["Points of", "Int."],   color: "#a855f7" }, // purple
+        { card: "food",    label: "Food & Souvenirs",               lines: ["Food &", "Souvenirs"], color: "#34d399" }  // green
       ];
 
       const values = SLICES.map((s) => {
@@ -5877,25 +5878,27 @@
       const ctx = canvas.getContext("2d");
       const W = canvas.width;
       const H = canvas.height;
+      const cx = W / 2, cy = H / 2;
+      const outerR = W / 2 - 6;
+      const innerR = W / 5;
       ctx.clearRect(0, 0, W, H);
 
       if (total === 0) {
         legendEl.innerHTML = `<li class="budget-pie-empty">Enter costs above to see breakdown.</li>`;
         ctx.fillStyle = "#e8edf2";
-        ctx.beginPath();
-        ctx.arc(W / 2, H / 2, W / 2 - 6, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.beginPath(); ctx.arc(cx, cy, outerR, 0, Math.PI * 2); ctx.fill();
         return;
       }
 
+      // Draw slices
       const sliceAngles = [];
       let startAngle = -Math.PI / 2;
       values.forEach((val, i) => {
         if (val <= 0) { sliceAngles.push(null); return; }
         const sweep = (val / total) * Math.PI * 2;
         ctx.beginPath();
-        ctx.moveTo(W / 2, H / 2);
-        ctx.arc(W / 2, H / 2, W / 2 - 6, startAngle, startAngle + sweep);
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, outerR, startAngle, startAngle + sweep);
         ctx.closePath();
         ctx.fillStyle = SLICES[i].color;
         ctx.fill();
@@ -5904,28 +5907,34 @@
       });
 
       // Centre hole for donut effect
-      ctx.beginPath();
-      ctx.arc(W / 2, H / 2, W / 5, 0, Math.PI * 2);
-      ctx.fillStyle = "#fff";
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
+      ctx.fillStyle = "#fff"; ctx.fill();
 
-      // Slice labels
-      const labelR = (W / 2 - 6) * 0.65;
+      // Helper: draw multiple text lines centred on (x, y)
+      function drawLines(lines, x, y, lineH) {
+        const top = y - ((lines.length - 1) * lineH) / 2;
+        lines.forEach((ln, i) => ctx.fillText(ln, x, top + i * lineH));
+      }
+
+      // Slice labels — push slightly outward (70 %) to give room for two-line labels
+      const labelR = outerR * 0.70;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillStyle = "#000";
-      ctx.font = "bold 13px sans-serif";
+      ctx.fillStyle = "#111";
       sliceAngles.forEach((a, i) => {
         if (!a || values[i] <= 0) return;
         const pct = Math.round((values[i] / total) * 100);
-        if (pct < 5) return;
+        if (pct < 5) return; // skip tiny slices
         const midAngle = a.start + a.sweep / 2;
-        const x = W / 2 + labelR * Math.cos(midAngle);
-        const y = H / 2 + labelR * Math.sin(midAngle);
-        ctx.font = "bold 13px sans-serif";
-        ctx.fillText(pct + "%", x, y - 7);
-        ctx.font = "11px sans-serif";
-        ctx.fillText(SLICES[i].label, x, y + 8);
+        const x = cx + labelR * Math.cos(midAngle);
+        const y = cy + labelR * Math.sin(midAngle);
+        const lines = SLICES[i].lines;
+        // percentage line
+        ctx.font = "bold 12px sans-serif";
+        ctx.fillText(pct + "%", x, y - (lines.length > 1 ? 14 : 10));
+        // label lines (one or two)
+        ctx.font = "10px sans-serif";
+        drawLines(lines, x, y + (lines.length > 1 ? 2 : 5), 12);
       });
 
       // Legend — sorted greatest to least
