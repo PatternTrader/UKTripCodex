@@ -4198,38 +4198,64 @@
       container.querySelectorAll(".js-unified-usd").forEach((inp) => {
         inp.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); inp.blur(); } });
         inp.addEventListener("focus", () => { inp.value = inp.value.replace(/^\$/, "").trim(); });
+        inp.addEventListener("input", () => {
+          const num = parseFloat(inp.value.replace(/[$,\s]/g, ""));
+          const gi = container.querySelector(`.js-unified-gbp[data-row-key="${inp.dataset.rowKey}"]`);
+          if (gi && !isNaN(num) && num >= 0) gi.value = "£" + (num / getRate()).toFixed(2);
+          updateCostSummary();
+        });
         inp.addEventListener("blur", () => {
           const row = container.querySelector(`.js-unified-row[data-row-key="${inp.dataset.rowKey}"]`); if (!row) return;
           const num = parseFloat(inp.value.replace(/[$,\s]/g, ""));
+          const gi = container.querySelector(`.js-unified-gbp[data-row-key="${inp.dataset.rowKey}"]`);
+          const gbpNum = gi ? parseFloat(gi.value.replace(/[£,\s]/g, "")) : NaN;
+          // Format display
+          if (!isNaN(num) && num >= 0) inp.value = "$" + num.toFixed(2);
+          if (gi && !isNaN(gbpNum) && gbpNum >= 0) gi.value = "£" + gbpNum.toFixed(2);
+          // Save USD
           if (row.dataset.rowType === "itinerary") {
             const k = row.dataset.itemKey; if (!isNaN(num) && num >= 0) { costState[k] = String(num); localStorage.setItem(COST_STORAGE_KEY, JSON.stringify(costState)); }
-          } else { const e = customCostEntries.find((e) => e.id === row.dataset.entryId); if (e) { e.amountUSD = !isNaN(num) && num >= 0 ? "$" + num.toFixed(2) : inp.value; saveCustomCostEntries(); } }
-          if (!isNaN(num) && num > 0) { const gi = container.querySelector(`.js-unified-gbp[data-row-key="${inp.dataset.rowKey}"]`); if (gi && !gi.value.replace(/^£/, "").trim()) { gi.value = (num / getRate()).toFixed(2); gi.dispatchEvent(new Event("blur")); } }
-          if (!isNaN(num) && num >= 0) inp.value = "$" + num.toFixed(2);
+          } else { const e = customCostEntries.find((e) => e.id === row.dataset.entryId); if (e) { e.amountUSD = !isNaN(num) && num >= 0 ? "$" + num.toFixed(2) : inp.value; } }
+          // Save GBP
+          if (row.dataset.rowType === "itinerary") {
+            if (gi && !isNaN(gbpNum) && gbpNum >= 0) { const gm = getCostSheetGbp(); gm[row.dataset.itemKey] = "£" + gbpNum.toFixed(2); localStorage.setItem(COST_SHEET_GBP_KEY, JSON.stringify(gm)); }
+          } else { const e = customCostEntries.find((e) => e.id === row.dataset.entryId); if (e) { e.amountGBP = gi && !isNaN(gbpNum) && gbpNum >= 0 ? "£" + gbpNum.toFixed(2) : (gi ? gi.value : ""); saveCustomCostEntries(); } }
           saveCurrencyPref(inp.dataset.rowKey, "usd");
           applyCurrencyHighlight(container, inp.dataset.rowKey, "usd");
           updateCostSummary();
         });
-        inp.addEventListener("input", updateCostSummary);
       });
 
       // GBP inputs
       container.querySelectorAll(".js-unified-gbp").forEach((inp) => {
         inp.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); inp.blur(); } });
         inp.addEventListener("focus", () => { inp.value = inp.value.replace(/^£/, "").trim(); });
+        inp.addEventListener("input", () => {
+          const num = parseFloat(inp.value.replace(/[£,\s]/g, ""));
+          const ui = container.querySelector(`.js-unified-usd[data-row-key="${inp.dataset.rowKey}"]`);
+          if (ui && !isNaN(num) && num >= 0) ui.value = "$" + (num * getRate()).toFixed(2);
+          updateCostSummary();
+        });
         inp.addEventListener("blur", () => {
           const row = container.querySelector(`.js-unified-row[data-row-key="${inp.dataset.rowKey}"]`); if (!row) return;
           const num = parseFloat(inp.value.replace(/[£,\s]/g, ""));
-          if (row.dataset.rowType === "itinerary") {
-            const gm = getCostSheetGbp(); gm[row.dataset.itemKey] = !isNaN(num) && num >= 0 ? "£" + num.toFixed(2) : inp.value; localStorage.setItem(COST_SHEET_GBP_KEY, JSON.stringify(gm));
-          } else { const e = customCostEntries.find((e) => e.id === row.dataset.entryId); if (e) { e.amountGBP = !isNaN(num) && num >= 0 ? "£" + num.toFixed(2) : inp.value; saveCustomCostEntries(); } }
-          if (!isNaN(num) && num > 0) { const ui = container.querySelector(`.js-unified-usd[data-row-key="${inp.dataset.rowKey}"]`); if (ui && !ui.value.replace(/^\$/, "").trim()) { ui.value = (num * getRate()).toFixed(2); ui.dispatchEvent(new Event("blur")); } }
+          const ui = container.querySelector(`.js-unified-usd[data-row-key="${inp.dataset.rowKey}"]`);
+          const usdNum = ui ? parseFloat(ui.value.replace(/[$,\s]/g, "")) : NaN;
+          // Format display
           if (!isNaN(num) && num >= 0) inp.value = "£" + num.toFixed(2);
+          if (ui && !isNaN(usdNum) && usdNum >= 0) ui.value = "$" + usdNum.toFixed(2);
+          // Save GBP
+          if (row.dataset.rowType === "itinerary") {
+            const gm = getCostSheetGbp(); if (!isNaN(num) && num >= 0) { gm[row.dataset.itemKey] = "£" + num.toFixed(2); localStorage.setItem(COST_SHEET_GBP_KEY, JSON.stringify(gm)); }
+          } else { const e = customCostEntries.find((e) => e.id === row.dataset.entryId); if (e) { e.amountGBP = !isNaN(num) && num >= 0 ? "£" + num.toFixed(2) : inp.value; } }
+          // Save USD
+          if (row.dataset.rowType === "itinerary") {
+            if (ui && !isNaN(usdNum) && usdNum >= 0) { costState[row.dataset.itemKey] = String(usdNum); localStorage.setItem(COST_STORAGE_KEY, JSON.stringify(costState)); }
+          } else { const e = customCostEntries.find((e) => e.id === row.dataset.entryId); if (e) { e.amountUSD = ui && !isNaN(usdNum) && usdNum >= 0 ? "$" + usdNum.toFixed(2) : (ui ? ui.value : ""); saveCustomCostEntries(); } }
           saveCurrencyPref(inp.dataset.rowKey, "gbp");
           applyCurrencyHighlight(container, inp.dataset.rowKey, "gbp");
           updateCostSummary();
         });
-        inp.addEventListener("input", updateCostSummary);
       });
 
       // Remove rows
