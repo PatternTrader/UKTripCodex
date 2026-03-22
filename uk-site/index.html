@@ -647,7 +647,28 @@
 
   .cost-panel {
     margin: 8px 0 28px;
+    position: relative;
   }
+  .actc-grand-total-box {
+    display: flex; flex-direction: column; align-items: center;
+    background: #0f6a4b; color: #fff; border-radius: 8px;
+    padding: 4px 14px 7px; line-height: 1.3; min-width: 90px;
+    text-align: center; white-space: nowrap;
+    position: absolute; top: 0; right: 0; z-index: 1;
+    box-shadow: 0 8px 20px rgba(15,106,75,0.25);
+  }
+  .actc-grand-total-label { font-size: 0.63rem; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.8; }
+  .actc-grand-total-value { font-size: 1rem; font-weight: 700; }
+  .actc-star-btn {
+    background: rgba(255,255,255,0.9); border: 1px solid #b8c8d8;
+    border-radius: 50%; width: 26px; height: 26px; padding: 0;
+    font-size: 0.85rem; line-height: 1; cursor: pointer; color: #9badbf;
+    transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s, color 0.15s, background 0.15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .actc-star-btn:hover { border-color: #39b54a; color: #39b54a; }
+  .actc-star-btn.is-active { background: #39ff5a; border-color: #149a2a; color: #0e5d1d; box-shadow: 0 0 0 3px rgba(57,255,90,0.28); transform: scale(1.08); }
+  .actc-table tr.actc-row-starred { background: linear-gradient(90deg, rgba(57,255,90,0.10), rgba(57,255,90,0.04)); }
 
   /* Actual Travel Costs Spreadsheet */
   .actc-wrap { margin: 0 0 12px; }
@@ -2157,6 +2178,10 @@
     <main id="timeline" class="timeline"></main>
 
     <section class="cost-panel">
+      <div class="actc-grand-total-box">
+        <span class="actc-grand-total-label">Grand Total</span>
+        <span class="actc-grand-total-value js-actc-starred-total">$0.00</span>
+      </div>
       <h2 class="section-title">Actual Costs Spreadsheet</h2>
       <button id="actc-add-row" class="actc-add-row-btn" type="button">+ Add Row</button>
       <div id="unified-cost-sheet"></div>
@@ -4088,6 +4113,8 @@
 
     const ACTC_COST_NOTES_KEY = "ukTripActcCostNotes";
     function getActcCostNotes() { try { return JSON.parse(localStorage.getItem(ACTC_COST_NOTES_KEY) || "{}"); } catch (_) { return {}; } }
+    const ACTC_STARRED_KEY = "ukTripActcStarred";
+    function getActcStarred() { try { return JSON.parse(localStorage.getItem(ACTC_STARRED_KEY) || "{}"); } catch (_) { return {}; } }
     function saveActcCostNoteForRow(rowKey, side, text) {
       const n = getActcCostNotes(); if (!n[rowKey]) n[rowKey] = {};
       if (text) n[rowKey][side] = text; else delete n[rowKey][side];
@@ -4183,6 +4210,7 @@
       const rows = orderedRows.map(({ rowKey, type, itemKey, entryId, day, date, poi, plannedTime, category, researchedCost, paymentMethod, usd, gbp }) => `
         <tr class="js-unified-row" data-row-key="${rowKey}" data-row-type="${type}" ${type === "itinerary" ? `data-item-key="${itemKey}"` : `data-entry-id="${entryId}"`} draggable="true">
           <td style="width:30px;text-align:center;padding:4px"><span class="actc-drag-handle" title="Drag to reorder">⠿</span></td>
+          <td style="width:34px;text-align:center;padding:2px"><button type="button" class="actc-star-btn js-actc-star" data-row-key="${rowKey}" aria-pressed="false" title="Star to include in Grand Total">★</button></td>
           <td style="width:52px"><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="day" value="${escapeHtml(day)}" placeholder="Day 1"></td>
           <td style="width:58px"><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="date" value="${escapeHtml(date)}" placeholder="Apr 2"></td>
           <td style="width:62px"><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="plannedTime" value="${escapeHtml(plannedTime)}" placeholder="0900"></td>
@@ -4195,11 +4223,36 @@
           <td style="width:36px"><button type="button" class="actc-remove-btn js-unified-remove" data-row-key="${rowKey}" data-row-type="${type}">✕</button></td>
         </tr>`).join("");
 
-      container.innerHTML = `<div class="actc-table-outer"><table class="actc-table"><thead><tr><th></th><th>Day</th><th>Date</th><th>Time</th><th>Activity</th><th>Category</th><th>Notes</th><th style="width:90px">Payment<br>Method</th><th>USD ($)</th><th>GBP (£)</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
+      container.innerHTML = `<div class="actc-table-outer"><table class="actc-table"><thead><tr><th></th><th style="width:34px">★</th><th>Day</th><th>Date</th><th>Time</th><th>Activity</th><th>Category</th><th>Notes</th><th style="width:90px">Payment<br>Method</th><th>USD ($)</th><th>GBP (£)</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
 
       // Apply saved currency highlights
       const _currPrefs = getCurrencyPrefs();
       orderedRows.forEach((r) => { if (_currPrefs[r.rowKey]) applyCurrencyHighlight(container, r.rowKey, _currPrefs[r.rowKey]); });
+
+      // Apply saved star states
+      const _starred = getActcStarred();
+      container.querySelectorAll(".js-actc-star[data-row-key]").forEach((btn) => {
+        const active = Boolean(_starred[btn.dataset.rowKey]);
+        btn.classList.toggle("is-active", active);
+        btn.setAttribute("aria-pressed", String(active));
+        btn.title = active ? "Starred — included in Grand Total" : "Star to include in Grand Total";
+        const row = container.querySelector(`.js-unified-row[data-row-key="${btn.dataset.rowKey}"]`);
+        if (row) row.classList.toggle("actc-row-starred", active);
+      });
+      container.querySelectorAll(".js-actc-star").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const rk = btn.dataset.rowKey;
+          const active = btn.classList.toggle("is-active");
+          btn.setAttribute("aria-pressed", String(active));
+          btn.title = active ? "Starred — included in Grand Total" : "Star to include in Grand Total";
+          const row = container.querySelector(`.js-unified-row[data-row-key="${rk}"]`);
+          if (row) row.classList.toggle("actc-row-starred", active);
+          const s = getActcStarred();
+          if (active) s[rk] = true; else delete s[rk];
+          localStorage.setItem(ACTC_STARRED_KEY, JSON.stringify(s));
+          updateCostSummary();
+        });
+      });
 
       // Restore saved math notes
       const _savedActcNotes = getActcCostNotes();
@@ -4360,6 +4413,17 @@
       customCostEntries.forEach((e) => { const raw = e.amountUSD !== undefined ? e.amountUSD : e.amount; const n = parseFloat(String(raw || "").replace(/[$,\s]/g, "")); if (!Number.isNaN(n)) totalUSD += n; });
       const el = document.getElementById("cost-summary");
       if (el) el.textContent = `Current tracked total: $${totalUSD.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      // Starred grand total — sum USD inputs for starred rows
+      let starredUSD = 0;
+      const actcContainer = document.getElementById("unified-cost-sheet");
+      if (actcContainer) {
+        actcContainer.querySelectorAll(".js-actc-star.is-active[data-row-key]").forEach((btn) => {
+          const usdInp = actcContainer.querySelector(`.js-unified-usd[data-row-key="${btn.dataset.rowKey}"]`);
+          if (usdInp) { const n = parseFloat(usdInp.value.replace(/[$,\s]/g, "")); if (!isNaN(n)) starredUSD += n; }
+        });
+      }
+      const starredEl = document.querySelector(".js-actc-starred-total");
+      if (starredEl) starredEl.textContent = "$" + starredUSD.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
     function renderCustomCostSheet() { renderUnifiedCostSheet(); }
