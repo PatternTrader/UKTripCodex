@@ -2329,8 +2329,8 @@
         date: "April 2-3",
         showAllStopsOnTopMap: true,
         items: [
-          { text: "Leave from 303 E. 83rd St, NY, NY to LaGuardia Airport (LGA). Allow 30–50 min by rideshare; depart home by 12:30 PM for a 3:00 PM flight.", page: "303_E_83rd_St_NYC", caption: "Depart from 303 E. 83rd St" },
-          { text: "Depart New York LaGuardia (LGA) at 3:00 PM on VS3280, operated by Republic for Delta, to Boston Logan (BOS). 1 hr 19 min flight. Booking Ref: FAJAMJ.", page: "LaGuardia_Airport", caption: "LGA departure — VS3280" },
+          { text: "Leave from 303 E. 83rd St, NY, NY to LaGuardia Airport (LGA). Depart home by 9:30 AM — allow ~90 min by rideshare for morning traffic. Arrive LGA by 11:00 AM (4 hrs ahead of 3:00 PM flight due to reduced TSA staffing).", page: "303_E_83rd_St_NYC", caption: "Depart from 303 E. 83rd St" },
+          { text: "Arrive LaGuardia (LGA) by 11:00 AM — 4 hrs before VS3280 departure at 3:00 PM. Check in, clear security, and board. VS3280 (Republic for Delta) LGA → BOS, 3:00 PM → 4:19 PM. Booking Ref: FAJAMJ.", page: "LaGuardia_Airport", caption: "LGA — arrive 11 AM, depart 3 PM VS3280" },
           { text: "Arrive Boston Logan (BOS) at 4:19 PM. 2 hr 41 min layover until 7:00 PM departure. Stay airside — clear the BOS security checkpoint and head to the international terminal.", page: "BOS_Stopover_D1", caption: "BOS layover — 2h 41m" },
           { text: "Depart Boston Logan (BOS) at 7:00 PM on VS4012, operated by Delta, direct to London Heathrow (LHR). 6 hr 45 min overnight flight. Booking Ref: FAJAMJ.", page: "BOS_Depart_D1", caption: "BOS departure — VS4012", defaultCost: 0 }
         ]
@@ -2503,8 +2503,8 @@
 
     const visitTimes = {
       // Day 1 — NYC to LGA → BOS → LHR
-      "303_E_83rd_St_NYC": "12:00",                    // Start packing/prep at noon; depart ~12:30 PM for LGA
-      LaGuardia_Airport: "13:30",                      // Arrive LGA ~1:30 PM — 1.5 hrs before 3:00 PM departure
+      "303_E_83rd_St_NYC": "09:00",                    // Start prep at 9 AM; depart home ~9:30 AM for LGA
+      LaGuardia_Airport: "11:00",                      // Arrive LGA 11:00 AM — 4 hrs before 3:00 PM departure
       BOS_Stopover_D1: "16:19",                        // Arrive BOS 4:19 PM — 2h 41m layover until 7:00 PM
       BOS_Depart_D1: "19:00",                          // Depart BOS 7:00 PM on VS4012 → LHR
       Newark_Liberty_International_Airport: "15:07",
@@ -2620,8 +2620,8 @@
 
     const visitDurationsMin = {
       // Day 1
-      "303_E_83rd_St_NYC": 30,                    // 12:00 PM prep; rideshare departs 12:30 PM
-      LaGuardia_Airport: 90,                      // 1:30 PM arrive → 3:00 PM depart = 90 min at airport
+      "303_E_83rd_St_NYC": 30,                    // 9:00 AM prep; rideshare departs ~9:30 AM
+      LaGuardia_Airport: 240,                     // 11:00 AM arrive → 3:00 PM depart = 4 hrs at airport
       BOS_Stopover_D1: 0,                         // 4:19 PM arrive — layover marker; transit bar covers the 2h41m
       BOS_Depart_D1: 0,                           // 7:00 PM depart — overnight flight, 0 own duration (shown as transit)
       Newark_Liberty_International_Airport: 80,
@@ -2738,7 +2738,7 @@
     const dayTransportPlans = {
       1: [
         { mode: "Starting point", bufferMin: 0, note: "Departing from home — 303 E. 83rd St. Prep and pack." },
-        { mode: "Rideshare / taxi to LGA", bufferMin: 50, note: "Depart home 12:30 PM. Transfer from Upper East Side to LaGuardia; allow 30–50 min traffic. Arrive LGA ~1:30 PM — 90 min before 3:00 PM departure." },
+        { mode: "Rideshare / taxi to LGA", bufferMin: 90, note: "Depart home ~9:30 AM. Transfer from Upper East Side to LaGuardia; allow ~90 min for morning traffic. Arrive LGA by 11:00 AM — 4 hrs before 3:00 PM departure (reduced TSA staffing)." },
         { mode: "Airplane VS3280 (LGA → BOS)", bufferMin: 79, note: "Departs LGA 3:00 PM, arrives BOS 4:19 PM. 1 hr 19 min flight. 2h 41m layover in Boston follows." },
         { mode: "BOS Terminal layover", bufferMin: 161, note: "Layover 4:19 PM → 7:00 PM = 2h 41m. Stay airside, grab food, rest before overnight flight." }
       ],
@@ -2828,7 +2828,7 @@
       2: "Arrive LHR at 6:50am on April 3. Elizabeth Line from Terminal 5 → Tottenham Court Road, then taxi to 134 Great Portland St. Thames Clippers from Westminster Pier to Greenwich (~45–60 min).",
       5: "LNER 9:03am from London Kings Cross — book at lner.co.uk. Arrive Edinburgh Waverley 1:32pm.",
       9: "Lumo 8:26am from Edinburgh Waverley — book at lumo.co.uk. Arrive London Kings Cross 12:46pm.",
-      1: "Depart home ~12:30 PM for LGA. VS3280 departs LGA 3:00 PM, connects BOS (2h 41m layover). VS4012 departs BOS 7:00 PM, arrives LHR Apr 3, 6:45 AM. Booking Ref: FAJAMJ.",
+      1: "Depart home ~9:30 AM for LGA — arrive by 11:00 AM (4 hrs early, reduced TSA staffing). VS3280 departs LGA 3:00 PM → BOS 4:19 PM (2h 41m layover). VS4012 departs BOS 7:00 PM → LHR Apr 3, 6:45 AM. Ref: FAJAMJ.",
       10: "Bonus free day in London — no flights today. Pack bags tonight. Departure is April 12.",
       11: "VS11 (Virgin Atlantic) departs LHR 6:55 PM — leave central London by 4:00 PM. Heathrow Express from Paddington ~15 min. Arrive BOS 9:20 PM. Book hotel near airport.",
       12: "Very early departure — VS3678 departs BOS 6:00 AM, arrives LGA 7:30 AM. Be at airport by 4:30 AM. Book hotel near BOS Logan for the overnight. Booking Ref: FAJAMJ."
