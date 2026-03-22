@@ -649,59 +649,30 @@
     margin: 8px 0 28px;
   }
 
-  .cost-add-wrap {
-    display: grid;
-    gap: 10px;
-    margin: 0 0 12px;
-  }
-
-  .cost-add-form {
-    display: grid;
-    grid-template-columns: minmax(220px, 1fr) 140px auto;
-    gap: 10px;
-    align-items: center;
-  }
-
-  .cost-add-input,
-  .cost-add-amount {
-    width: 100%;
-    border: 1px solid #c8d2de;
-    border-radius: 8px;
-    padding: 8px 10px;
-    font-size: 0.86rem;
-    background: #fff;
-  }
-
-  .cost-add-btn,
-  .cost-remove-btn {
-    border: 1px solid #1a6bbf;
-    border-radius: 8px;
-    background: #1a6bbf;
-    color: #fff;
-    font-size: 0.84rem;
-    font-weight: 700;
-    padding: 8px 12px;
-    cursor: pointer;
-  }
-
-  .cost-remove-btn {
-    border-color: #b94b3b;
-    background: #b94b3b;
-    padding: 6px 10px;
-  }
-
-  .cost-add-btn:hover,
-  .cost-remove-btn:hover {
-    filter: brightness(0.96);
-  }
-
-  .cost-extra-wrap {
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    overflow: auto;
-    background: #fff;
-    box-shadow: 0 10px 22px rgba(14, 34, 56, 0.08);
-  }
+  /* Actual Travel Costs Spreadsheet */
+  .actc-wrap { margin: 0 0 12px; }
+  .actc-add-row-btn { margin: 0 0 10px; padding: 8px 18px; background: #1a6bbf; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 0.88rem; font-weight: 700; letter-spacing: 0.02em; }
+  .actc-add-row-btn:hover { background: #1558a0; }
+  .actc-table-outer { border: 1px solid var(--line); border-radius: 12px; overflow: auto; background: #fff; box-shadow: 0 10px 22px rgba(14,34,56,0.08); margin-bottom: 10px; }
+  .actc-table { width: 100%; border-collapse: collapse; min-width: 900px; }
+  .actc-table thead th { background: #2e5a8a; color: #fff; padding: 9px 8px; text-align: left; font-size: 0.78rem; letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; }
+  .actc-table tbody td { padding: 5px 4px; border-bottom: 1px solid #e5ebf2; vertical-align: middle; }
+  .actc-table tbody tr:hover td { background: #f0f5fb; }
+  .actc-table tbody tr:last-child td { border-bottom: none; }
+  .actc-drag-handle { cursor: grab; color: #b0b8c5; font-size: 1.1rem; padding: 0 6px; user-select: none; display: inline-block; }
+  .actc-drag-handle:active { cursor: grabbing; }
+  .actc-row-dragging { opacity: 0.35; background: #e8f0fb; }
+  .actc-row-dragover td { border-top: 2px solid #1a6bbf; }
+  .actc-cell { width: 100%; border: 1px solid transparent; border-radius: 5px; padding: 5px 7px; font-size: 0.85rem; font-family: inherit; background: transparent; color: inherit; box-sizing: border-box; }
+  .actc-cell:focus { border-color: #1a6bbf; background: #fff; outline: none; box-shadow: 0 0 0 2px rgba(26,107,191,0.18); }
+  .actc-cell--poi { min-width: 160px; }
+  .actc-cell--research { min-width: 140px; }
+  .actc-cell--cost { width: 80px; text-align: right; }
+  .actc-cell--gbp { background: rgba(219,234,254,0.5); }
+  .actc-cell--gbp:focus { background: #fff; }
+  .actc-remove-btn { background: #b94b3b; color: #fff; border: none; border-radius: 5px; padding: 4px 9px; cursor: pointer; font-size: 0.78rem; font-weight: 700; }
+  .actc-remove-btn:hover { background: #9b3a2b; }
+  .actc-empty { color: #7a8fa8; font-style: italic; padding: 16px; }
 
   .cost-sheet-wrap {
     border: 1px solid var(--line);
@@ -2175,13 +2146,9 @@
 
     <section class="cost-panel">
       <h2 class="section-title">Actual Travel Costs Spreadsheet</h2>
-      <div class="cost-add-wrap">
-        <div class="cost-add-form">
-          <input id="custom-cost-label" class="cost-add-input" type="text" placeholder="Add a new travel cost item">
-          <input id="custom-cost-amount" class="cost-add-amount" type="number" min="0" step="0.01" placeholder="0.00">
-          <button id="add-custom-cost" class="cost-add-btn" type="button">Add Cost</button>
-        </div>
-        <div class="cost-extra-wrap" id="custom-cost-sheet"></div>
+      <div class="actc-wrap">
+        <button id="actc-add-row" class="actc-add-row-btn" type="button">+ Add Row</button>
+        <div id="actc-table-wrap"></div>
       </div>
       <div class="cost-sheet-wrap" id="cost-sheet"></div>
       <div class="cost-summary" id="cost-summary"></div>
@@ -4140,57 +4107,154 @@
         if (!Number.isNaN(n)) total += n;
       });
       customCostEntries.forEach((entry) => {
-        const n = Number(entry.amount);
+        // Support both old {amount} and new {amountUSD} fields
+        const raw = entry.amountUSD !== undefined ? entry.amountUSD : entry.amount;
+        const n = parseFloat(String(raw || "").replace(/[$,\s]/g, ""));
         if (!Number.isNaN(n)) total += n;
       });
       document.getElementById("cost-summary").textContent = `Current tracked total: $${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     }
 
     function renderCustomCostSheet() {
-      const container = document.getElementById("custom-cost-sheet");
+      const container = document.getElementById("actc-table-wrap");
       if (!container) return;
+
+      // Migrate old-format entries {id, label, amount} → new format
+      customCostEntries = customCostEntries.map((e) => {
+        if (e.label !== undefined && e.poi === undefined) {
+          return { id: e.id, day: "", date: "", poi: e.label || "", plannedTime: "", researchedCost: "", amountUSD: e.amount || "", amountGBP: "" };
+        }
+        return e;
+      });
+
       if (!customCostEntries.length) {
-        container.innerHTML = `
-          <table class="cost-table">
-            <thead>
-              <tr>
-                <th>Custom Travel Cost</th>
-                <th>Amount (USD)</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td colspan="3">No custom travel costs added yet.</td>
-              </tr>
-            </tbody>
-          </table>
-        `;
+        container.innerHTML = '<p class="actc-empty">No rows yet. Click "+ Add Row" to start tracking actual costs.</p>';
+        updateCostSummary();
         return;
       }
 
-      const rows = customCostEntries
-        .map((entry) => `
-          <tr>
-            <td>${escapeHtml(entry.label)}</td>
-            <td>$${Number(entry.amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-            <td><button type="button" class="cost-remove-btn js-remove-custom-cost" data-custom-cost-id="${entry.id}">Remove</button></td>
-          </tr>
-        `)
-        .join("");
+      const rows = customCostEntries.map((entry) => `
+        <tr class="js-actc-row" data-actc-id="${entry.id}" draggable="true">
+          <td style="width:30px;text-align:center"><span class="actc-drag-handle" title="Drag to reorder">⠿</span></td>
+          <td style="width:60px"><input class="actc-cell js-actc-field" data-actc-id="${entry.id}" data-field="day" value="${escapeHtml(entry.day || "")}" placeholder="Day 3"></td>
+          <td style="width:70px"><input class="actc-cell js-actc-field" data-actc-id="${entry.id}" data-field="date" value="${escapeHtml(entry.date || "")}" placeholder="Apr 4"></td>
+          <td><input class="actc-cell actc-cell--poi js-actc-field" data-actc-id="${entry.id}" data-field="poi" value="${escapeHtml(entry.poi || "")}" placeholder="Point of Interest"></td>
+          <td style="width:90px"><input class="actc-cell js-actc-field" data-actc-id="${entry.id}" data-field="plannedTime" value="${escapeHtml(entry.plannedTime || "")}" placeholder="9:30 AM"></td>
+          <td><input class="actc-cell actc-cell--research js-actc-field" data-actc-id="${entry.id}" data-field="researchedCost" value="${escapeHtml(entry.researchedCost || "")}" placeholder="~£15/person"></td>
+          <td style="width:90px"><input class="actc-cell actc-cell--cost js-actc-usd" data-actc-id="${entry.id}" value="${escapeHtml(entry.amountUSD || "")}" placeholder="0.00" type="text" inputmode="decimal"></td>
+          <td style="width:90px"><input class="actc-cell actc-cell--cost actc-cell--gbp js-actc-gbp" data-actc-id="${entry.id}" value="${escapeHtml(entry.amountGBP || "")}" placeholder="0.00" type="text" inputmode="decimal"></td>
+          <td style="width:36px"><button type="button" class="actc-remove-btn js-actc-remove" data-actc-id="${entry.id}">✕</button></td>
+        </tr>
+      `).join("");
 
       container.innerHTML = `
-        <table class="cost-table">
-          <thead>
-            <tr>
-              <th>Custom Travel Cost</th>
-              <th>Amount (USD)</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>${rows}</tbody>
-        </table>
+        <div class="actc-table-outer">
+          <table class="actc-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Day</th>
+                <th>Date</th>
+                <th>Point of Interest</th>
+                <th>Planned Time</th>
+                <th>Researched Cost Guidance</th>
+                <th>USD ($)</th>
+                <th>GBP (£)</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="actc-tbody">${rows}</tbody>
+          </table>
+        </div>
       `;
+      bindActcTable(container);
+      updateCostSummary();
+    }
+
+    function bindActcTable(container) {
+      const getRate = () => {
+        const el = document.getElementById("cc-exchange-rate");
+        const v = el ? parseFloat(el.value) : NaN;
+        return (!isNaN(v) && v > 0) ? v : 1.27;
+      };
+      const saveEntry = (id, field, value) => {
+        const entry = customCostEntries.find((e) => e.id === id);
+        if (!entry) return;
+        entry[field] = value;
+        saveCustomCostEntries();
+        if (field === "amountUSD" || field === "amountGBP") updateCostSummary();
+      };
+
+      // Text field auto-save on Enter/blur
+      container.querySelectorAll(".js-actc-field").forEach((input) => {
+        input.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); input.blur(); } });
+        input.addEventListener("blur", () => saveEntry(input.dataset.actcId, input.dataset.field, input.value));
+      });
+
+      // USD input — auto-compute GBP
+      container.querySelectorAll(".js-actc-usd").forEach((input) => {
+        input.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); input.blur(); } });
+        input.addEventListener("blur", () => {
+          const id = input.dataset.actcId;
+          const num = parseFloat(input.value.replace(/[$,\s]/g, ""));
+          saveEntry(id, "amountUSD", input.value);
+          if (!isNaN(num) && num > 0) {
+            const gbp = (num / getRate()).toFixed(2);
+            const gbpInput = container.querySelector(`.js-actc-gbp[data-actc-id="${id}"]`);
+            if (gbpInput && !gbpInput.value.trim()) { gbpInput.value = gbp; saveEntry(id, "amountGBP", gbp); }
+          }
+        });
+      });
+
+      // GBP input — auto-compute USD
+      container.querySelectorAll(".js-actc-gbp").forEach((input) => {
+        input.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); input.blur(); } });
+        input.addEventListener("blur", () => {
+          const id = input.dataset.actcId;
+          const num = parseFloat(input.value.replace(/[£,\s]/g, ""));
+          saveEntry(id, "amountGBP", input.value);
+          if (!isNaN(num) && num > 0) {
+            const usd = (num * getRate()).toFixed(2);
+            const usdInput = container.querySelector(`.js-actc-usd[data-actc-id="${id}"]`);
+            if (usdInput && !usdInput.value.trim()) { usdInput.value = usd; saveEntry(id, "amountUSD", usd); }
+          }
+        });
+      });
+
+      // Remove row
+      container.querySelectorAll(".js-actc-remove").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = btn.dataset.actcId;
+          customCostEntries = customCostEntries.filter((e) => e.id !== id);
+          saveCustomCostEntries();
+          renderCustomCostSheet();
+        });
+      });
+
+      // Drag-and-drop reorder
+      let dragSrcId = null;
+      container.querySelectorAll(".js-actc-row").forEach((row) => {
+        row.addEventListener("dragstart", (e) => {
+          dragSrcId = row.dataset.actcId;
+          row.classList.add("actc-row-dragging");
+          e.dataTransfer.effectAllowed = "move";
+        });
+        row.addEventListener("dragend", () => row.classList.remove("actc-row-dragging"));
+        row.addEventListener("dragover", (e) => { e.preventDefault(); e.dataTransfer.dropEffect = "move"; row.classList.add("actc-row-dragover"); });
+        row.addEventListener("dragleave", () => row.classList.remove("actc-row-dragover"));
+        row.addEventListener("drop", (e) => {
+          e.preventDefault();
+          row.classList.remove("actc-row-dragover");
+          if (!dragSrcId || dragSrcId === row.dataset.actcId) return;
+          const srcIdx = customCostEntries.findIndex((e) => e.id === dragSrcId);
+          const dstIdx = customCostEntries.findIndex((e) => e.id === row.dataset.actcId);
+          if (srcIdx < 0 || dstIdx < 0) return;
+          const [moved] = customCostEntries.splice(srcIdx, 1);
+          customCostEntries.splice(dstIdx, 0, moved);
+          saveCustomCostEntries();
+          renderCustomCostSheet();
+        });
+      });
     }
 
     function saveCustomCostEntries() {
@@ -4198,52 +4262,20 @@
     }
 
     function addCustomCostEntry() {
-      const labelInput = document.getElementById("custom-cost-label");
-      const amountInput = document.getElementById("custom-cost-amount");
-      if (!(labelInput instanceof HTMLInputElement) || !(amountInput instanceof HTMLInputElement)) return;
-
-      const label = labelInput.value.trim();
-      const amount = Number(amountInput.value);
-      if (!label || Number.isNaN(amount) || amount < 0) return;
-
       customCostEntries.push({
         id: `custom-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-        label,
-        amount: amount.toFixed(2)
+        day: "", date: "", poi: "", plannedTime: "", researchedCost: "", amountUSD: "", amountGBP: ""
       });
       saveCustomCostEntries();
       renderCustomCostSheet();
-      updateCostSummary();
-      labelInput.value = "";
-      amountInput.value = "";
-      labelInput.focus();
+      // Focus the POI field of the new row
+      const rows = document.querySelectorAll(".js-actc-row");
+      const lastRow = rows[rows.length - 1];
+      lastRow?.querySelector(".actc-cell--poi")?.focus();
     }
 
     function bindCustomCostControls() {
-      const addButton = document.getElementById("add-custom-cost");
-      const labelInput = document.getElementById("custom-cost-label");
-      const amountInput = document.getElementById("custom-cost-amount");
-
-      addButton?.addEventListener("click", addCustomCostEntry);
-      [labelInput, amountInput].forEach((input) => {
-        input?.addEventListener("keydown", (event) => {
-          if (event.key !== "Enter") return;
-          event.preventDefault();
-          addCustomCostEntry();
-        });
-      });
-
-      document.addEventListener("click", (event) => {
-        const target = event.target;
-        if (!(target instanceof HTMLElement)) return;
-        if (!target.classList.contains("js-remove-custom-cost")) return;
-        const id = target.getAttribute("data-custom-cost-id");
-        if (!id) return;
-        customCostEntries = customCostEntries.filter((entry) => entry.id !== id);
-        saveCustomCostEntries();
-        renderCustomCostSheet();
-        updateCostSummary();
-      });
+      document.getElementById("actc-add-row")?.addEventListener("click", addCustomCostEntry);
     }
 
     function getPaidMixedReviewItems() {
