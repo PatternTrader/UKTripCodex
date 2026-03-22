@@ -670,6 +670,10 @@
   .actc-cell--cost { width: 80px; text-align: right; }
   .actc-cell--gbp { background: rgba(219,234,254,0.5); }
   .actc-cell--gbp:focus { background: #fff; }
+  .actc-cell--currency-primary { background: #fff9c4 !important; }
+  .actc-cell--currency-secondary { background: #e0e0e0 !important; }
+  .actc-cell--currency-primary:focus { background: #fffde7 !important; }
+  .actc-cell--currency-secondary:focus { background: #eeeeee !important; }
   .actc-remove-btn { background: #b94b3b; color: #fff; border: none; border-radius: 5px; padding: 4px 9px; cursor: pointer; font-size: 0.78rem; font-weight: 700; }
   .actc-remove-btn:hover { background: #9b3a2b; }
   .actc-empty { color: #7a8fa8; font-style: italic; padding: 16px; }
@@ -4061,6 +4065,18 @@
     const COST_SHEET_GBP_KEY = "ukTripCostSheetGbp";
     const UNIFIED_ORDER_KEY = "ukTripUnifiedSheetOrder";
     const HIDDEN_IT_ROWS_KEY = "ukTripHiddenItRows";
+    const COST_CURRENCY_PREF_KEY = "ukTripCostCurrencyPref";
+    function getCurrencyPrefs() { try { return JSON.parse(localStorage.getItem(COST_CURRENCY_PREF_KEY) || "{}"); } catch (_) { return {}; } }
+    function saveCurrencyPref(rowKey, which) { const p = getCurrencyPrefs(); p[rowKey] = which; localStorage.setItem(COST_CURRENCY_PREF_KEY, JSON.stringify(p)); }
+    function applyCurrencyHighlight(container, rowKey, which) {
+      const u = container.querySelector(`.js-unified-usd[data-row-key="${rowKey}"]`);
+      const g = container.querySelector(`.js-unified-gbp[data-row-key="${rowKey}"]`);
+      if (!u || !g) return;
+      u.classList.toggle("actc-cell--currency-primary",   which === "usd");
+      u.classList.toggle("actc-cell--currency-secondary", which === "gbp");
+      g.classList.toggle("actc-cell--currency-primary",   which === "gbp");
+      g.classList.toggle("actc-cell--currency-secondary", which === "usd");
+    }
 
     function getCostSheetOverrides() {
       try { return JSON.parse(localStorage.getItem(COST_SHEET_OVERRIDES_KEY) || "{}"); } catch (_) { return {}; }
@@ -4156,6 +4172,10 @@
 
       container.innerHTML = `<div class="actc-table-outer"><table class="actc-table"><thead><tr><th></th><th>Day</th><th>Date</th><th>Time</th><th>Activity</th><th>Category</th><th>Notes</th><th style="width:90px">Payment<br>Method</th><th>USD ($)</th><th>GBP (£)</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
 
+      // Apply saved currency highlights
+      const _currPrefs = getCurrencyPrefs();
+      orderedRows.forEach((r) => { if (_currPrefs[r.rowKey]) applyCurrencyHighlight(container, r.rowKey, _currPrefs[r.rowKey]); });
+
       // Save text fields
       container.querySelectorAll(".js-unified-field").forEach((inp) => {
         inp.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); inp.blur(); } });
@@ -4184,6 +4204,8 @@
             const k = row.dataset.itemKey; if (!isNaN(num) && num >= 0) { costState[k] = String(num); localStorage.setItem(COST_STORAGE_KEY, JSON.stringify(costState)); }
           } else { const e = customCostEntries.find((e) => e.id === row.dataset.entryId); if (e) { e.amountUSD = inp.value; saveCustomCostEntries(); } }
           if (!isNaN(num) && num > 0) { const gi = container.querySelector(`.js-unified-gbp[data-row-key="${inp.dataset.rowKey}"]`); if (gi && !gi.value.trim()) { gi.value = (num / getRate()).toFixed(2); gi.dispatchEvent(new Event("blur")); } }
+          saveCurrencyPref(inp.dataset.rowKey, "usd");
+          applyCurrencyHighlight(container, inp.dataset.rowKey, "usd");
           updateCostSummary();
         });
         inp.addEventListener("input", updateCostSummary);
@@ -4199,6 +4221,8 @@
             const gm = getCostSheetGbp(); gm[row.dataset.itemKey] = inp.value; localStorage.setItem(COST_SHEET_GBP_KEY, JSON.stringify(gm));
           } else { const e = customCostEntries.find((e) => e.id === row.dataset.entryId); if (e) { e.amountGBP = inp.value; saveCustomCostEntries(); } }
           if (!isNaN(num) && num > 0) { const ui = container.querySelector(`.js-unified-usd[data-row-key="${inp.dataset.rowKey}"]`); if (ui && !ui.value.trim()) { ui.value = (num * getRate()).toFixed(2); ui.dispatchEvent(new Event("blur")); } }
+          saveCurrencyPref(inp.dataset.rowKey, "gbp");
+          applyCurrencyHighlight(container, inp.dataset.rowKey, "gbp");
           updateCostSummary();
         });
         inp.addEventListener("input", updateCostSummary);
