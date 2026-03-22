@@ -6043,10 +6043,11 @@
         if (window._fbLoadFromCloud) window._fbLoadFromCloud();
       });
 
-      document.getElementById("cc-sync-push-anyway")?.addEventListener("click", () => {
+      document.getElementById("cc-sync-push-anyway")?.addEventListener("click", async () => {
         document.getElementById("cc-sync-status-row").style.display = "none";
-        if (window._fbSaveAll) {
-          window._fbSaveAll();
+        const saveFn = window._fbSaveNow || window._fbSaveAll;
+        if (saveFn) {
+          await saveFn();
           setBackupStatus("✓ Pushed to cloud!", false);
           setTimeout(() => setBackupStatus(""), 3000);
         }
@@ -7099,22 +7100,12 @@
 
         if (syncBtn) { syncBtn.classList.remove("is-syncing"); syncBtn.textContent = "☁️ Sync to Cloud"; }
 
-        if (cloudTs > localTs + 60000) {
-          // Cloud is newer — warn before overwriting
-          if (timestampsEl) {
-            timestampsEl.innerHTML =
-              `⚠️ <strong>Cloud is newer than your local data.</strong>&nbsp;&nbsp;` +
-              `Cloud: <strong>${fmtTs(cloudTs)}</strong>&nbsp;&nbsp;·&nbsp;&nbsp;` +
-              `Local last synced: <strong>${localTs ? fmtTs(localTs) : "never"}</strong>`;
-          }
-          if (statusRow) statusRow.style.display = "flex";
-        } else {
-          // Local is same or newer — safe to push
-          await saveAllToFirestore();
-          if (statusRow) statusRow.style.display = "none";
-          setStatus("✓ Synced to cloud!", false);
-          setTimeout(() => setStatus(""), 3000);
-        }
+        // Always push — "Sync to Cloud" means the user wants their data saved now.
+        // Hide any leftover conflict banner from a previous check.
+        if (statusRow) statusRow.style.display = "none";
+        await saveAllToFirestore();
+        setStatus("✓ Synced to cloud!", false);
+        setTimeout(() => setStatus(""), 3000);
       } catch (err) {
         if (syncBtn) { syncBtn.classList.remove("is-syncing"); syncBtn.textContent = "☁️ Sync to Cloud"; }
         setStatus("Sync check failed. Try again.", true);
@@ -7331,6 +7322,7 @@
         if (cloudTs > localTs + 10000) {
           // Cloud is genuinely newer (another user synced) — apply it
           applyFirestoreData(snap.data());
+          _origSetItem(LOCAL_LAST_SAVE_KEY, String(cloudTs));
         }
       }, (err) => {
         console.warn("[Firebase] onSnapshot error:", err);
@@ -7339,6 +7331,7 @@
 
     // ── Expose functions to the non-module script ─────────────────────────────
     window._fbSaveAll       = debouncedSave;
+    window._fbSaveNow       = saveAllToFirestore;
     window._fbSmartSync     = smartSync;
     window._fbLoadFromCloud = loadFromCloud;
 
