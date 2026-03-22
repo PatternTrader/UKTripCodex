@@ -4071,6 +4071,19 @@
 
     function renderCostSheet() { renderUnifiedCostSheet(); }
 
+    // ── Actual Costs field normalizers ─────────────────────────────────────────
+    function normalizeDayField(val) {
+      if (!val) return val;
+      return val.replace(/^Day\s+/i, "").trim();
+    }
+    const _MONTH_NUM = { january:1, february:2, march:3, april:4, may:5, june:6, july:7, august:8, september:9, october:10, november:11, december:12 };
+    function normalizeDateField(val) {
+      if (!val) return val;
+      const m = val.trim().match(/^([A-Za-z]+)\s+(.+)$/);
+      if (m) { const n = _MONTH_NUM[m[1].toLowerCase()]; if (n) return `${n}/${m[2]}`; }
+      return val;
+    }
+
     function renderUnifiedCostSheet() {
       const container = document.getElementById("unified-cost-sheet");
       if (!container) return;
@@ -4094,12 +4107,12 @@
           const t = visitTimes[item.page] || "";
           const meta = poiMeta[item.page] || { researchedCost: "Cost unknown; verify manually." };
           const ov = overrides[itemKey] || {};
-          itRows.push({ rowKey, type: "itinerary", itemKey, day: ov.day ?? `Day ${day.day}`, date: ov.date ?? day.date, poi: ov.poi ?? item.caption, plannedTime: ov.plannedTime ?? t, researchedCost: ov.researchedCost ?? meta.researchedCost, paymentMethod: ov.paymentMethod ?? "", usd: String(costState[itemKey] ?? ""), gbp: String(gbpMap[itemKey] ?? "") });
+          itRows.push({ rowKey, type: "itinerary", itemKey, day: normalizeDayField(ov.day ?? `Day ${day.day}`), date: normalizeDateField(ov.date ?? day.date), poi: ov.poi ?? item.caption, plannedTime: ov.plannedTime ?? t, researchedCost: ov.researchedCost ?? meta.researchedCost, paymentMethod: ov.paymentMethod ?? "", usd: String(costState[itemKey] ?? ""), gbp: String(gbpMap[itemKey] ?? "") });
         });
       });
 
       // Build custom rows (prefixed cu:)
-      const cuRows = customCostEntries.map((e) => ({ rowKey: `cu:${e.id}`, type: "custom", entryId: e.id, day: e.day || "", date: e.date || "", poi: e.poi || "", plannedTime: e.plannedTime || "", researchedCost: e.researchedCost || "", paymentMethod: e.paymentMethod || "", usd: e.amountUSD || "", gbp: e.amountGBP || "" }));
+      const cuRows = customCostEntries.map((e) => ({ rowKey: `cu:${e.id}`, type: "custom", entryId: e.id, day: normalizeDayField(e.day || ""), date: normalizeDateField(e.date || ""), poi: e.poi || "", plannedTime: e.plannedTime || "", researchedCost: e.researchedCost || "", paymentMethod: e.paymentMethod || "", usd: e.amountUSD || "", gbp: e.amountGBP || "" }));
 
       // Apply unified order
       let savedOrder = null; try { savedOrder = JSON.parse(localStorage.getItem(UNIFIED_ORDER_KEY) || "null"); } catch (_) {}
@@ -4121,7 +4134,7 @@
           <td style="width:62px"><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="plannedTime" value="${escapeHtml(plannedTime)}" placeholder="9:00"></td>
           <td style="width:140px"><input class="actc-cell actc-cell--poi js-unified-field" data-row-key="${rowKey}" data-field="poi" value="${escapeHtml(poi)}" placeholder="Point of Interest"></td>
           <td><input class="actc-cell actc-cell--research js-unified-field" data-row-key="${rowKey}" data-field="researchedCost" value="${escapeHtml(researchedCost)}" placeholder="Notes"></td>
-          <td style="width:90px"><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="paymentMethod" value="${escapeHtml(paymentMethod)}" placeholder="e.g. Visa"></td>
+          <td style="width:90px"><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="paymentMethod" value="${escapeHtml(paymentMethod)}" placeholder="cash vs. CC"></td>
           <td style="width:90px"><input class="actc-cell actc-cell--cost js-unified-usd" data-row-key="${rowKey}" value="${escapeHtml(usd)}" placeholder="0.00" type="text" inputmode="decimal"></td>
           <td style="width:90px"><input class="actc-cell actc-cell--cost actc-cell--gbp js-unified-gbp" data-row-key="${rowKey}" value="${escapeHtml(gbp)}" placeholder="0.00" type="text" inputmode="decimal"></td>
           <td style="width:36px"><button type="button" class="actc-remove-btn js-unified-remove" data-row-key="${rowKey}" data-row-type="${type}">✕</button></td>
@@ -4135,6 +4148,9 @@
         inp.addEventListener("blur", () => {
           const row = container.querySelector(`.js-unified-row[data-row-key="${inp.dataset.rowKey}"]`);
           if (!row) return;
+          // Normalize day/date on save
+          if (inp.dataset.field === "day")  inp.value = normalizeDayField(inp.value);
+          if (inp.dataset.field === "date") inp.value = normalizeDateField(inp.value);
           if (row.dataset.rowType === "itinerary") {
             const ov = getCostSheetOverrides(); if (!ov[row.dataset.itemKey]) ov[row.dataset.itemKey] = {}; ov[row.dataset.itemKey][inp.dataset.field] = inp.value; localStorage.setItem(COST_SHEET_OVERRIDES_KEY, JSON.stringify(ov));
           } else {
