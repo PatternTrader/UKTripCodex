@@ -4136,12 +4136,12 @@
           const t = visitTimes[item.page] || "";
           const meta = poiMeta[item.page] || { researchedCost: "Cost unknown; verify manually." };
           const ov = overrides[itemKey] || {};
-          itRows.push({ rowKey, type: "itinerary", itemKey, day: normalizeDayField(ov.day ?? `Day ${day.day}`), date: normalizeDateField(ov.date ?? day.date), poi: ov.poi ?? item.caption, plannedTime: normalizeTimeField(ov.plannedTime ?? t), category: ov.category ?? "", researchedCost: ov.researchedCost ?? meta.researchedCost, paymentMethod: ov.paymentMethod ?? "", usd: String(costState[itemKey] ?? ""), gbp: String(gbpMap[itemKey] ?? "") });
+          { const rawUsd = costState[itemKey] != null ? parseFloat(costState[itemKey]) : NaN; const rawGbp = parseFloat(String(gbpMap[itemKey] ?? "").replace(/^£/, "")); itRows.push({ rowKey, type: "itinerary", itemKey, day: normalizeDayField(ov.day ?? `Day ${day.day}`), date: normalizeDateField(ov.date ?? day.date), poi: ov.poi ?? item.caption, plannedTime: normalizeTimeField(ov.plannedTime ?? t), category: ov.category ?? "", researchedCost: ov.researchedCost ?? meta.researchedCost, paymentMethod: ov.paymentMethod ?? "", usd: (!isNaN(rawUsd) && rawUsd >= 0 && costState[itemKey] != null) ? "$" + rawUsd.toFixed(2) : "", gbp: (!isNaN(rawGbp) && gbpMap[itemKey]) ? "£" + rawGbp.toFixed(2) : "" }); }
         });
       });
 
       // Build custom rows (prefixed cu:)
-      const cuRows = customCostEntries.map((e) => ({ rowKey: `cu:${e.id}`, type: "custom", entryId: e.id, day: normalizeDayField(e.day || ""), date: normalizeDateField(e.date || ""), poi: e.poi || "", plannedTime: normalizeTimeField(e.plannedTime || ""), category: e.category || "", researchedCost: e.researchedCost || "", paymentMethod: e.paymentMethod || "", usd: e.amountUSD || "", gbp: e.amountGBP || "" }));
+      const cuRows = customCostEntries.map((e) => { const rawU = parseFloat(String(e.amountUSD || "").replace(/^\$/, "")); const rawG = parseFloat(String(e.amountGBP || "").replace(/^£/, "")); return { rowKey: `cu:${e.id}`, type: "custom", entryId: e.id, day: normalizeDayField(e.day || ""), date: normalizeDateField(e.date || ""), poi: e.poi || "", plannedTime: normalizeTimeField(e.plannedTime || ""), category: e.category || "", researchedCost: e.researchedCost || "", paymentMethod: e.paymentMethod || "", usd: (!isNaN(rawU) && rawU >= 0 && e.amountUSD) ? "$" + rawU.toFixed(2) : "", gbp: (!isNaN(rawG) && rawG >= 0 && e.amountGBP) ? "£" + rawG.toFixed(2) : "" }; });
 
       // Apply unified order
       let savedOrder = null; try { savedOrder = JSON.parse(localStorage.getItem(UNIFIED_ORDER_KEY) || "null"); } catch (_) {}
@@ -4197,13 +4197,15 @@
       // USD inputs
       container.querySelectorAll(".js-unified-usd").forEach((inp) => {
         inp.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); inp.blur(); } });
+        inp.addEventListener("focus", () => { inp.value = inp.value.replace(/^\$/, "").trim(); });
         inp.addEventListener("blur", () => {
           const row = container.querySelector(`.js-unified-row[data-row-key="${inp.dataset.rowKey}"]`); if (!row) return;
           const num = parseFloat(inp.value.replace(/[$,\s]/g, ""));
           if (row.dataset.rowType === "itinerary") {
             const k = row.dataset.itemKey; if (!isNaN(num) && num >= 0) { costState[k] = String(num); localStorage.setItem(COST_STORAGE_KEY, JSON.stringify(costState)); }
-          } else { const e = customCostEntries.find((e) => e.id === row.dataset.entryId); if (e) { e.amountUSD = inp.value; saveCustomCostEntries(); } }
-          if (!isNaN(num) && num > 0) { const gi = container.querySelector(`.js-unified-gbp[data-row-key="${inp.dataset.rowKey}"]`); if (gi && !gi.value.trim()) { gi.value = (num / getRate()).toFixed(2); gi.dispatchEvent(new Event("blur")); } }
+          } else { const e = customCostEntries.find((e) => e.id === row.dataset.entryId); if (e) { e.amountUSD = !isNaN(num) && num >= 0 ? "$" + num.toFixed(2) : inp.value; saveCustomCostEntries(); } }
+          if (!isNaN(num) && num > 0) { const gi = container.querySelector(`.js-unified-gbp[data-row-key="${inp.dataset.rowKey}"]`); if (gi && !gi.value.replace(/^£/, "").trim()) { gi.value = (num / getRate()).toFixed(2); gi.dispatchEvent(new Event("blur")); } }
+          if (!isNaN(num) && num >= 0) inp.value = "$" + num.toFixed(2);
           saveCurrencyPref(inp.dataset.rowKey, "usd");
           applyCurrencyHighlight(container, inp.dataset.rowKey, "usd");
           updateCostSummary();
@@ -4214,13 +4216,15 @@
       // GBP inputs
       container.querySelectorAll(".js-unified-gbp").forEach((inp) => {
         inp.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); inp.blur(); } });
+        inp.addEventListener("focus", () => { inp.value = inp.value.replace(/^£/, "").trim(); });
         inp.addEventListener("blur", () => {
           const row = container.querySelector(`.js-unified-row[data-row-key="${inp.dataset.rowKey}"]`); if (!row) return;
           const num = parseFloat(inp.value.replace(/[£,\s]/g, ""));
           if (row.dataset.rowType === "itinerary") {
-            const gm = getCostSheetGbp(); gm[row.dataset.itemKey] = inp.value; localStorage.setItem(COST_SHEET_GBP_KEY, JSON.stringify(gm));
-          } else { const e = customCostEntries.find((e) => e.id === row.dataset.entryId); if (e) { e.amountGBP = inp.value; saveCustomCostEntries(); } }
-          if (!isNaN(num) && num > 0) { const ui = container.querySelector(`.js-unified-usd[data-row-key="${inp.dataset.rowKey}"]`); if (ui && !ui.value.trim()) { ui.value = (num * getRate()).toFixed(2); ui.dispatchEvent(new Event("blur")); } }
+            const gm = getCostSheetGbp(); gm[row.dataset.itemKey] = !isNaN(num) && num >= 0 ? "£" + num.toFixed(2) : inp.value; localStorage.setItem(COST_SHEET_GBP_KEY, JSON.stringify(gm));
+          } else { const e = customCostEntries.find((e) => e.id === row.dataset.entryId); if (e) { e.amountGBP = !isNaN(num) && num >= 0 ? "£" + num.toFixed(2) : inp.value; saveCustomCostEntries(); } }
+          if (!isNaN(num) && num > 0) { const ui = container.querySelector(`.js-unified-usd[data-row-key="${inp.dataset.rowKey}"]`); if (ui && !ui.value.replace(/^\$/, "").trim()) { ui.value = (num * getRate()).toFixed(2); ui.dispatchEvent(new Event("blur")); } }
+          if (!isNaN(num) && num >= 0) inp.value = "£" + num.toFixed(2);
           saveCurrencyPref(inp.dataset.rowKey, "gbp");
           applyCurrencyHighlight(container, inp.dataset.rowKey, "gbp");
           updateCostSummary();
