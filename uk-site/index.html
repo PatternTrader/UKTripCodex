@@ -674,6 +674,14 @@
   .actc-cell--currency-secondary { background: #e0e0e0 !important; }
   .actc-cell--currency-primary:focus { background: #fffde7 !important; }
   .actc-cell--currency-secondary:focus { background: #eeeeee !important; }
+  .actc-cost-note {
+    display: none; font-size: 0.67rem; color: #6b5600; font-weight: 600;
+    background: rgba(255,248,196,0.95); border: 1px dashed rgba(201,168,0,0.55);
+    border-radius: 4px; padding: 2px 5px; margin-top: 3px;
+    line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .actc-cost-note:not(:empty) { display: block; }
+  .actc-table td { vertical-align: top; }
   .actc-remove-btn { background: #b94b3b; color: #fff; border: none; border-radius: 5px; padding: 4px 9px; cursor: pointer; font-size: 0.78rem; font-weight: 700; }
   .actc-remove-btn:hover { background: #9b3a2b; }
   .actc-empty { color: #7a8fa8; font-style: italic; padding: 16px; }
@@ -4078,6 +4086,23 @@
       g.classList.toggle("actc-cell--currency-secondary", which === "usd");
     }
 
+    const ACTC_COST_NOTES_KEY = "ukTripActcCostNotes";
+    function getActcCostNotes() { try { return JSON.parse(localStorage.getItem(ACTC_COST_NOTES_KEY) || "{}"); } catch (_) { return {}; } }
+    function saveActcCostNoteForRow(rowKey, side, text) {
+      const n = getActcCostNotes(); if (!n[rowKey]) n[rowKey] = {};
+      if (text) n[rowKey][side] = text; else delete n[rowKey][side];
+      localStorage.setItem(ACTC_COST_NOTES_KEY, JSON.stringify(n));
+    }
+    // Parse "50+30+20" or "=50+30" into { sum, numbers } or null if not an expression
+    function parseActcExpr(raw, stripSymbol) {
+      const cleaned = raw.replace(new RegExp("[" + stripSymbol + ",\\s]", "g"), "").replace(/^=/, "");
+      if (!cleaned.includes("+")) return null;
+      const parts = cleaned.split("+");
+      if (!parts.length || parts.some((p) => !p || isNaN(Number(p)))) return null;
+      const numbers = parts.map(Number);
+      return { sum: numbers.reduce((a, b) => a + b, 0), numbers };
+    }
+
     function getCostSheetOverrides() {
       try { return JSON.parse(localStorage.getItem(COST_SHEET_OVERRIDES_KEY) || "{}"); } catch (_) { return {}; }
     }
@@ -4165,8 +4190,8 @@
           <td style="width:140px"><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="category" value="${escapeHtml(category)}" placeholder="Category"></td>
           <td><input class="actc-cell actc-cell--research js-unified-field" data-row-key="${rowKey}" data-field="researchedCost" value="${escapeHtml(researchedCost)}" placeholder="Notes"></td>
           <td style="width:90px"><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="paymentMethod" value="${escapeHtml(paymentMethod)}" placeholder="cash vs. CC"></td>
-          <td style="width:90px"><input class="actc-cell actc-cell--cost js-unified-usd" data-row-key="${rowKey}" value="${escapeHtml(usd)}" placeholder="0.00" type="text" inputmode="decimal"></td>
-          <td style="width:90px"><input class="actc-cell actc-cell--cost actc-cell--gbp js-unified-gbp" data-row-key="${rowKey}" value="${escapeHtml(gbp)}" placeholder="0.00" type="text" inputmode="decimal"></td>
+          <td style="width:90px"><input class="actc-cell actc-cell--cost js-unified-usd" data-row-key="${rowKey}" value="${escapeHtml(usd)}" placeholder="0.00" type="text" inputmode="decimal"><div class="actc-cost-note js-actc-usd-note" data-row-key="${rowKey}"></div></td>
+          <td style="width:90px"><input class="actc-cell actc-cell--cost actc-cell--gbp js-unified-gbp" data-row-key="${rowKey}" value="${escapeHtml(gbp)}" placeholder="0.00" type="text" inputmode="decimal"><div class="actc-cost-note js-actc-gbp-note" data-row-key="${rowKey}"></div></td>
           <td style="width:36px"><button type="button" class="actc-remove-btn js-unified-remove" data-row-key="${rowKey}" data-row-type="${type}">✕</button></td>
         </tr>`).join("");
 
@@ -4175,6 +4200,16 @@
       // Apply saved currency highlights
       const _currPrefs = getCurrencyPrefs();
       orderedRows.forEach((r) => { if (_currPrefs[r.rowKey]) applyCurrencyHighlight(container, r.rowKey, _currPrefs[r.rowKey]); });
+
+      // Restore saved math notes
+      const _savedActcNotes = getActcCostNotes();
+      orderedRows.forEach((r) => {
+        const n = _savedActcNotes[r.rowKey]; if (!n) return;
+        const uN = container.querySelector(`.js-actc-usd-note[data-row-key="${r.rowKey}"]`);
+        const gN = container.querySelector(`.js-actc-gbp-note[data-row-key="${r.rowKey}"]`);
+        if (uN && n.usd) uN.textContent = `Math: ${n.usd}`;
+        if (gN && n.gbp) gN.textContent = `Math: ${n.gbp}`;
+      });
 
       // Save text fields
       container.querySelectorAll(".js-unified-field").forEach((inp) => {
@@ -4199,29 +4234,45 @@
         inp.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); inp.blur(); } });
         inp.addEventListener("focus", () => { inp.value = inp.value.replace(/^\$/, "").trim(); });
         inp.addEventListener("input", () => {
-          const num = parseFloat(inp.value.replace(/[$,\s]/g, ""));
+          const raw = inp.value.replace(/^\$/, "").trim();
+          const expr = parseActcExpr(raw, "\\$");
+          const num = expr ? expr.sum : parseFloat(raw.replace(/[$,\s]/g, ""));
           const gi = container.querySelector(`.js-unified-gbp[data-row-key="${inp.dataset.rowKey}"]`);
           if (gi && !isNaN(num) && num >= 0) gi.value = "£" + (num / getRate()).toFixed(2);
           updateCostSummary();
         });
         inp.addEventListener("blur", () => {
           const row = container.querySelector(`.js-unified-row[data-row-key="${inp.dataset.rowKey}"]`); if (!row) return;
-          const num = parseFloat(inp.value.replace(/[$,\s]/g, ""));
-          const gi = container.querySelector(`.js-unified-gbp[data-row-key="${inp.dataset.rowKey}"]`);
-          const gbpNum = gi ? parseFloat(gi.value.replace(/[£,\s]/g, "")) : NaN;
+          const rk = inp.dataset.rowKey;
+          const raw = inp.value.replace(/^\$/, "").trim();
+          const expr = parseActcExpr(raw, "\\$");
+          const finalNum = expr ? expr.sum : parseFloat(raw.replace(/[$,\s]/g, ""));
+          const gi = container.querySelector(`.js-unified-gbp[data-row-key="${rk}"]`);
+          const gbpNum = expr ? (finalNum / getRate()) : (gi ? parseFloat(gi.value.replace(/[£,\s]/g, "")) : NaN);
           // Format display
-          if (!isNaN(num) && num >= 0) inp.value = "$" + num.toFixed(2);
+          if (!isNaN(finalNum) && finalNum >= 0) inp.value = "$" + finalNum.toFixed(2);
           if (gi && !isNaN(gbpNum) && gbpNum >= 0) gi.value = "£" + gbpNum.toFixed(2);
+          // Show / save math note
+          const uN = container.querySelector(`.js-actc-usd-note[data-row-key="${rk}"]`);
+          const gN = container.querySelector(`.js-actc-gbp-note[data-row-key="${rk}"]`);
+          if (expr) {
+            const fmt = (v) => "$" + (Number.isInteger(v) ? String(v) : v.toFixed(2).replace(/\.00$/, ""));
+            const noteText = `${expr.numbers.map(fmt).join(" + ")} = ${fmt(expr.sum)}`;
+            if (uN) uN.textContent = `Math: ${noteText}`;
+            if (gN) gN.textContent = "";
+            saveActcCostNoteForRow(rk, "usd", noteText);
+            saveActcCostNoteForRow(rk, "gbp", "");
+          } else { if (uN) uN.textContent = ""; saveActcCostNoteForRow(rk, "usd", ""); }
           // Save USD
           if (row.dataset.rowType === "itinerary") {
-            const k = row.dataset.itemKey; if (!isNaN(num) && num >= 0) { costState[k] = String(num); localStorage.setItem(COST_STORAGE_KEY, JSON.stringify(costState)); }
-          } else { const e = customCostEntries.find((e) => e.id === row.dataset.entryId); if (e) { e.amountUSD = !isNaN(num) && num >= 0 ? "$" + num.toFixed(2) : inp.value; } }
+            const k = row.dataset.itemKey; if (!isNaN(finalNum) && finalNum >= 0) { costState[k] = String(finalNum); localStorage.setItem(COST_STORAGE_KEY, JSON.stringify(costState)); }
+          } else { const e = customCostEntries.find((e) => e.id === row.dataset.entryId); if (e) { e.amountUSD = !isNaN(finalNum) && finalNum >= 0 ? "$" + finalNum.toFixed(2) : inp.value; } }
           // Save GBP
           if (row.dataset.rowType === "itinerary") {
             if (gi && !isNaN(gbpNum) && gbpNum >= 0) { const gm = getCostSheetGbp(); gm[row.dataset.itemKey] = "£" + gbpNum.toFixed(2); localStorage.setItem(COST_SHEET_GBP_KEY, JSON.stringify(gm)); }
           } else { const e = customCostEntries.find((e) => e.id === row.dataset.entryId); if (e) { e.amountGBP = gi && !isNaN(gbpNum) && gbpNum >= 0 ? "£" + gbpNum.toFixed(2) : (gi ? gi.value : ""); saveCustomCostEntries(); } }
-          saveCurrencyPref(inp.dataset.rowKey, "usd");
-          applyCurrencyHighlight(container, inp.dataset.rowKey, "usd");
+          saveCurrencyPref(rk, "usd");
+          applyCurrencyHighlight(container, rk, "usd");
           updateCostSummary();
         });
       });
@@ -4231,29 +4282,45 @@
         inp.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); inp.blur(); } });
         inp.addEventListener("focus", () => { inp.value = inp.value.replace(/^£/, "").trim(); });
         inp.addEventListener("input", () => {
-          const num = parseFloat(inp.value.replace(/[£,\s]/g, ""));
+          const raw = inp.value.replace(/^£/, "").trim();
+          const expr = parseActcExpr(raw, "£");
+          const num = expr ? expr.sum : parseFloat(raw.replace(/[£,\s]/g, ""));
           const ui = container.querySelector(`.js-unified-usd[data-row-key="${inp.dataset.rowKey}"]`);
           if (ui && !isNaN(num) && num >= 0) ui.value = "$" + (num * getRate()).toFixed(2);
           updateCostSummary();
         });
         inp.addEventListener("blur", () => {
           const row = container.querySelector(`.js-unified-row[data-row-key="${inp.dataset.rowKey}"]`); if (!row) return;
-          const num = parseFloat(inp.value.replace(/[£,\s]/g, ""));
-          const ui = container.querySelector(`.js-unified-usd[data-row-key="${inp.dataset.rowKey}"]`);
-          const usdNum = ui ? parseFloat(ui.value.replace(/[$,\s]/g, "")) : NaN;
+          const rk = inp.dataset.rowKey;
+          const raw = inp.value.replace(/^£/, "").trim();
+          const expr = parseActcExpr(raw, "£");
+          const finalNum = expr ? expr.sum : parseFloat(raw.replace(/[£,\s]/g, ""));
+          const ui = container.querySelector(`.js-unified-usd[data-row-key="${rk}"]`);
+          const usdNum = expr ? (finalNum * getRate()) : (ui ? parseFloat(ui.value.replace(/[$,\s]/g, "")) : NaN);
           // Format display
-          if (!isNaN(num) && num >= 0) inp.value = "£" + num.toFixed(2);
+          if (!isNaN(finalNum) && finalNum >= 0) inp.value = "£" + finalNum.toFixed(2);
           if (ui && !isNaN(usdNum) && usdNum >= 0) ui.value = "$" + usdNum.toFixed(2);
+          // Show / save math note
+          const gN = container.querySelector(`.js-actc-gbp-note[data-row-key="${rk}"]`);
+          const uN = container.querySelector(`.js-actc-usd-note[data-row-key="${rk}"]`);
+          if (expr) {
+            const fmt = (v) => "£" + (Number.isInteger(v) ? String(v) : v.toFixed(2).replace(/\.00$/, ""));
+            const noteText = `${expr.numbers.map(fmt).join(" + ")} = ${fmt(expr.sum)}`;
+            if (gN) gN.textContent = `Math: ${noteText}`;
+            if (uN) uN.textContent = "";
+            saveActcCostNoteForRow(rk, "gbp", noteText);
+            saveActcCostNoteForRow(rk, "usd", "");
+          } else { if (gN) gN.textContent = ""; saveActcCostNoteForRow(rk, "gbp", ""); }
           // Save GBP
           if (row.dataset.rowType === "itinerary") {
-            const gm = getCostSheetGbp(); if (!isNaN(num) && num >= 0) { gm[row.dataset.itemKey] = "£" + num.toFixed(2); localStorage.setItem(COST_SHEET_GBP_KEY, JSON.stringify(gm)); }
-          } else { const e = customCostEntries.find((e) => e.id === row.dataset.entryId); if (e) { e.amountGBP = !isNaN(num) && num >= 0 ? "£" + num.toFixed(2) : inp.value; } }
+            const gm = getCostSheetGbp(); if (!isNaN(finalNum) && finalNum >= 0) { gm[row.dataset.itemKey] = "£" + finalNum.toFixed(2); localStorage.setItem(COST_SHEET_GBP_KEY, JSON.stringify(gm)); }
+          } else { const e = customCostEntries.find((e) => e.id === row.dataset.entryId); if (e) { e.amountGBP = !isNaN(finalNum) && finalNum >= 0 ? "£" + finalNum.toFixed(2) : inp.value; } }
           // Save USD
           if (row.dataset.rowType === "itinerary") {
             if (ui && !isNaN(usdNum) && usdNum >= 0) { costState[row.dataset.itemKey] = String(usdNum); localStorage.setItem(COST_STORAGE_KEY, JSON.stringify(costState)); }
           } else { const e = customCostEntries.find((e) => e.id === row.dataset.entryId); if (e) { e.amountUSD = ui && !isNaN(usdNum) && usdNum >= 0 ? "$" + usdNum.toFixed(2) : (ui ? ui.value : ""); saveCustomCostEntries(); } }
-          saveCurrencyPref(inp.dataset.rowKey, "gbp");
-          applyCurrencyHighlight(container, inp.dataset.rowKey, "gbp");
+          saveCurrencyPref(rk, "gbp");
+          applyCurrencyHighlight(container, rk, "gbp");
           updateCostSummary();
         });
       });
