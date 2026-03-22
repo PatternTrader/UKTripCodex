@@ -688,6 +688,7 @@
   .actc-cell:focus { border-color: #1a6bbf; background: #fff; outline: none; box-shadow: 0 0 0 2px rgba(26,107,191,0.18); }
   .actc-cell--poi { min-width: 160px; }
   .actc-cell--research { min-width: 140px; }
+  textarea.actc-cell--research { resize: none; overflow: hidden; line-height: 1.4; min-height: 29px; display: block; white-space: pre-wrap; }
   .actc-cell--cost { width: 80px; text-align: right; }
   .actc-cell--gbp { background: rgba(219,234,254,0.5); }
   .actc-cell--gbp:focus { background: #fff; }
@@ -4216,7 +4217,7 @@
           <td style="width:62px"><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="plannedTime" value="${escapeHtml(plannedTime)}" placeholder="0900"></td>
           <td style="width:140px"><input class="actc-cell actc-cell--poi js-unified-field" data-row-key="${rowKey}" data-field="poi" value="${escapeHtml(poi)}" placeholder="Activity"></td>
           <td style="width:140px"><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="category" value="${escapeHtml(category)}" placeholder="Category"></td>
-          <td><input class="actc-cell actc-cell--research js-unified-field" data-row-key="${rowKey}" data-field="researchedCost" value="${escapeHtml(researchedCost)}" placeholder="Notes"><div class="actc-cost-note js-actc-math-note" data-row-key="${rowKey}"></div></td>
+          <td><textarea class="actc-cell actc-cell--research js-unified-field js-actc-notes-ta" data-row-key="${rowKey}" data-field="researchedCost" placeholder="Notes" rows="1">${escapeHtml(researchedCost)}</textarea><div class="actc-cost-note js-actc-math-note" data-row-key="${rowKey}"></div></td>
           <td style="width:90px"><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="paymentMethod" value="${escapeHtml(paymentMethod)}" placeholder="cash vs. CC"></td>
           <td style="width:90px"><input class="actc-cell actc-cell--cost js-unified-usd" data-row-key="${rowKey}" value="${escapeHtml(usd)}" placeholder="0.00" type="text" inputmode="decimal"></td>
           <td style="width:90px"><input class="actc-cell actc-cell--cost actc-cell--gbp js-unified-gbp" data-row-key="${rowKey}" value="${escapeHtml(gbp)}" placeholder="0.00" type="text" inputmode="decimal"></td>
@@ -4261,6 +4262,16 @@
         const mN = container.querySelector(`.js-actc-math-note[data-row-key="${r.rowKey}"]`);
         const text = n.usd || n.gbp;
         if (mN && text) mN.textContent = `Math: ${text}`;
+      });
+
+      // Auto-resize Notes textareas
+      function autoResizeNotesTa(ta) {
+        ta.style.height = "auto";
+        ta.style.height = ta.scrollHeight + "px";
+      }
+      container.querySelectorAll(".js-actc-notes-ta").forEach((ta) => {
+        autoResizeNotesTa(ta);
+        ta.addEventListener("input", () => autoResizeNotesTa(ta));
       });
 
       // Save text fields
