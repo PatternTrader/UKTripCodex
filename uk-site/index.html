@@ -7156,38 +7156,14 @@
           try { _origSetItem(lsKey, JSON.stringify(data[field])); } catch (_) {}
         }
       }
-      // Stamp local sync timestamp so smartSync doesn't think local is stale and push empty data
+      // Stamp both sync timestamps to cloud value so future sign-ins never falsely push stale local data
       if (data._lastUpdated) {
-        _origSetItem(LOCAL_LAST_SAVE_KEY, String(data._lastUpdated));
+        _origSetItem(LOCAL_LAST_SAVE_KEY,   String(data._lastUpdated));
+        _origSetItem(LOCAL_LAST_CHANGE_KEY, String(data._lastUpdated));
       }
 
       // 2. Refresh outer-scope variables from localStorage so all bind functions see fresh data
-      try { ccCosts    = JSON.parse(localStorage.getItem(CC_COSTS_STORAGE_KEY)      || "{}"); } catch (_) {}
-      try { ccCostsGbp = JSON.parse(localStorage.getItem(CC_COSTS_GBP_STORAGE_KEY)  || "{}"); } catch (_) {}
-      try { ccCostSource= JSON.parse(localStorage.getItem(CC_COST_SOURCE_KEY)       || "{}"); } catch (_) {}
-      try { ccCostNotes = JSON.parse(localStorage.getItem(CC_COST_NOTES_STORAGE_KEY)|| "{}"); } catch (_) {}
-      try { ccLinks     = JSON.parse(localStorage.getItem(CC_LINKS_STORAGE_KEY)     || "{}"); } catch (_) {}
-
-      // 3. Seed food GBP defaults only for items that have never had any value entered
-      const foodDefaults = { breakfast: "£40", lunch: "£50", dinner: "£50" };
-      let foodSeeded = false;
-      if (typeof getFoodSouvenirsItems === "function") {
-        getFoodSouvenirsItems().forEach((item) => {
-          const key = Object.keys(foodDefaults).find((k) => item.id.endsWith(k));
-          if (key && (!ccCostsGbp[item.id] || ccCostsGbp[item.id] === "£")) {
-            ccCostsGbp[item.id] = foodDefaults[key];
-            if (!ccCostSource[item.id]) ccCostSource[item.id] = "gbp";
-            foodSeeded = true;
-          }
-        });
-        if (foodSeeded) {
-          localStorage.setItem(CC_COSTS_GBP_STORAGE_KEY, JSON.stringify(ccCostsGbp));
-          localStorage.setItem(CC_COST_SOURCE_KEY, JSON.stringify(ccCostSource));
-          window._fbSaveAll?.();
-        }
-      }
-
-      // 4. Re-initialize UI — bind functions now read the freshly updated outer-scope vars
+      // 3. Re-initialize UI — each function re-reads fresh data from localStorage
       try { if (typeof initializeCostState === "function") initializeCostState(); } catch (_) {}
       try { if (typeof renderCostSheet === "function") renderCostSheet(); } catch (_) {}
       try { if (typeof bindCostInputs === "function") bindCostInputs(); } catch (_) {}
