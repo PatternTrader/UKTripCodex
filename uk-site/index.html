@@ -6820,7 +6820,9 @@
       try {
         const snap = await getDoc(tripDocRef);
         const cloudTs = snap.exists() ? (snap.data()._lastUpdated || 0) : 0;
-        const localTs = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY) || "0");
+        const localChangeTs = parseInt(localStorage.getItem(LOCAL_LAST_CHANGE_KEY) || "0");
+        const localSyncTs   = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY)   || "0");
+        const localTs = Math.max(localChangeTs, localSyncTs);
 
         if (syncBtn) { syncBtn.classList.remove("is-syncing"); syncBtn.textContent = "☁️ Sync to Cloud"; }
 
