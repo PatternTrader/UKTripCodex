@@ -2146,11 +2146,8 @@
 
     <section class="cost-panel">
       <h2 class="section-title">Actual Travel Costs Spreadsheet</h2>
-      <div class="actc-wrap">
-        <button id="actc-add-row" class="actc-add-row-btn" type="button">+ Add Row</button>
-        <div id="actc-table-wrap"></div>
-      </div>
-      <div class="cost-sheet-wrap" id="cost-sheet"></div>
+      <button id="actc-add-row" class="actc-add-row-btn" type="button">+ Add Row</button>
+      <div id="unified-cost-sheet"></div>
       <div class="cost-summary" id="cost-summary"></div>
     </section>
 
@@ -4061,187 +4058,166 @@
     }
 
     const COST_SHEET_OVERRIDES_KEY = "ukTripCostSheetOverrides";
-    const COST_SHEET_ORDER_KEY = "ukTripCostSheetOrder";
     const COST_SHEET_GBP_KEY = "ukTripCostSheetGbp";
+    const UNIFIED_ORDER_KEY = "ukTripUnifiedSheetOrder";
+    const HIDDEN_IT_ROWS_KEY = "ukTripHiddenItRows";
 
     function getCostSheetOverrides() {
       try { return JSON.parse(localStorage.getItem(COST_SHEET_OVERRIDES_KEY) || "{}"); } catch (_) { return {}; }
-    }
-    function getCostSheetOrder() {
-      try { return JSON.parse(localStorage.getItem(COST_SHEET_ORDER_KEY) || "null"); } catch (_) { return null; }
     }
     function getCostSheetGbp() {
       try { return JSON.parse(localStorage.getItem(COST_SHEET_GBP_KEY) || "{}"); } catch (_) { return {}; }
     }
 
-    function renderCostSheet() {
+    function renderCostSheet() { renderUnifiedCostSheet(); }
+
+    function renderUnifiedCostSheet() {
+      const container = document.getElementById("unified-cost-sheet");
+      if (!container) return;
       const overrides = getCostSheetOverrides();
       const gbpMap = getCostSheetGbp();
-      const savedOrder = getCostSheetOrder();
-      const getRate = () => {
-        const el = document.getElementById("cc-exchange-rate");
-        const v = el ? parseFloat(el.value) : NaN;
-        return (!isNaN(v) && v > 0) ? v : 1.27;
-      };
+      const getRate = () => { const el = document.getElementById("cc-exchange-rate"); const v = el ? parseFloat(el.value) : NaN; return (!isNaN(v) && v > 0) ? v : 1.27; };
 
-      // Build all rows from itinerary
-      const allRows = [];
+      // Migrate old custom entries
+      customCostEntries = customCostEntries.map((e) => e.label !== undefined && e.poi === undefined
+        ? { id: e.id, day: "", date: "", poi: e.label || "", plannedTime: "", researchedCost: "", amountUSD: e.amount || "", amountGBP: "" }
+        : e);
+
+      // Build itinerary rows (prefixed it:)
+      let hiddenItRows = {}; try { hiddenItRows = JSON.parse(localStorage.getItem(HIDDEN_IT_ROWS_KEY) || "{}"); } catch (_) {}
+      const itRows = [];
       itinerary.forEach((day) => {
         day.items.forEach((item, itemIndex) => {
-          const key = getItemKey(day, item, itemIndex);
+          const itemKey = getItemKey(day, item, itemIndex);
+          const rowKey = `it:${itemKey}`;
+          if (hiddenItRows[rowKey]) return;
           const t = visitTimes[item.page] || "";
           const meta = poiMeta[item.page] || { researchedCost: "Cost unknown; verify manually." };
-          const ov = overrides[key] || {};
-          allRows.push({ key, day: ov.day ?? `Day ${day.day}`, date: ov.date ?? day.date, poi: ov.poi ?? item.caption, plannedTime: ov.plannedTime ?? t, researchedCost: ov.researchedCost ?? meta.researchedCost });
+          const ov = overrides[itemKey] || {};
+          itRows.push({ rowKey, type: "itinerary", itemKey, day: ov.day ?? `Day ${day.day}`, date: ov.date ?? day.date, poi: ov.poi ?? item.caption, plannedTime: ov.plannedTime ?? t, researchedCost: ov.researchedCost ?? meta.researchedCost, usd: String(costState[itemKey] ?? ""), gbp: String(gbpMap[itemKey] ?? "") });
         });
       });
 
-      // Apply saved order
-      let orderedRows = allRows;
+      // Build custom rows (prefixed cu:)
+      const cuRows = customCostEntries.map((e) => ({ rowKey: `cu:${e.id}`, type: "custom", entryId: e.id, day: e.day || "", date: e.date || "", poi: e.poi || "", plannedTime: e.plannedTime || "", researchedCost: e.researchedCost || "", usd: e.amountUSD || "", gbp: e.amountGBP || "" }));
+
+      // Apply unified order
+      let savedOrder = null; try { savedOrder = JSON.parse(localStorage.getItem(UNIFIED_ORDER_KEY) || "null"); } catch (_) {}
+      const byKey = {}; [...itRows, ...cuRows].forEach((r) => byKey[r.rowKey] = r);
+      let orderedRows;
       if (savedOrder && Array.isArray(savedOrder)) {
-        const byKey = Object.fromEntries(allRows.map((r) => [r.key, r]));
         const ordered = savedOrder.map((k) => byKey[k]).filter(Boolean);
-        const remaining = allRows.filter((r) => !savedOrder.includes(r.key));
-        orderedRows = [...ordered, ...remaining];
+        const inOrder = new Set(savedOrder);
+        orderedRows = [...ordered, ...[...itRows, ...cuRows].filter((r) => !inOrder.has(r.rowKey))];
+      } else {
+        orderedRows = [...itRows, ...cuRows];
       }
 
-      const rows = orderedRows.map(({ key, day, date, poi, plannedTime, researchedCost }) => {
-        const usdVal = costState[key] ?? "";
-        const gbpVal = gbpMap[key] ?? "";
-        return `
-          <tr class="js-cs-row" data-cs-key="${key}" draggable="true">
-            <td style="width:30px;text-align:center;padding:4px"><span class="actc-drag-handle" title="Drag to reorder">⠿</span></td>
-            <td><input class="actc-cell js-cs-field" data-cs-key="${key}" data-field="day" value="${escapeHtml(day)}" placeholder="Day 1"></td>
-            <td><input class="actc-cell js-cs-field" data-cs-key="${key}" data-field="date" value="${escapeHtml(date)}" placeholder="Apr 2"></td>
-            <td><input class="actc-cell actc-cell--poi js-cs-field" data-cs-key="${key}" data-field="poi" value="${escapeHtml(poi)}" placeholder="Point of Interest"></td>
-            <td><input class="actc-cell js-cs-field" data-cs-key="${key}" data-field="plannedTime" value="${escapeHtml(plannedTime)}" placeholder="9:00 AM"></td>
-            <td><input class="actc-cell actc-cell--research js-cs-field" data-cs-key="${key}" data-field="researchedCost" value="${escapeHtml(researchedCost)}" placeholder="Cost guidance"></td>
-            <td style="width:90px"><input class="actc-cell actc-cell--cost cost-input js-cost-input" data-cost-key="${key}" type="text" inputmode="decimal" value="${usdVal !== "" ? usdVal : ""}" placeholder="0.00"></td>
-            <td style="width:90px"><input class="actc-cell actc-cell--cost actc-cell--gbp js-cs-gbp" data-cs-key="${key}" type="text" inputmode="decimal" value="${escapeHtml(gbpVal)}" placeholder="0.00"></td>
-          </tr>
-        `;
-      });
+      const rows = orderedRows.map(({ rowKey, type, itemKey, entryId, day, date, poi, plannedTime, researchedCost, usd, gbp }) => `
+        <tr class="js-unified-row" data-row-key="${rowKey}" data-row-type="${type}" ${type === "itinerary" ? `data-item-key="${itemKey}"` : `data-entry-id="${entryId}"`} draggable="true">
+          <td style="width:30px;text-align:center;padding:4px"><span class="actc-drag-handle" title="Drag to reorder">⠿</span></td>
+          <td><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="day" value="${escapeHtml(day)}" placeholder="Day 1"></td>
+          <td><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="date" value="${escapeHtml(date)}" placeholder="Apr 2"></td>
+          <td><input class="actc-cell actc-cell--poi js-unified-field" data-row-key="${rowKey}" data-field="poi" value="${escapeHtml(poi)}" placeholder="Point of Interest"></td>
+          <td><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="plannedTime" value="${escapeHtml(plannedTime)}" placeholder="9:00 AM"></td>
+          <td><input class="actc-cell actc-cell--research js-unified-field" data-row-key="${rowKey}" data-field="researchedCost" value="${escapeHtml(researchedCost)}" placeholder="Cost guidance"></td>
+          <td style="width:90px"><input class="actc-cell actc-cell--cost js-unified-usd" data-row-key="${rowKey}" value="${escapeHtml(usd)}" placeholder="0.00" type="text" inputmode="decimal"></td>
+          <td style="width:90px"><input class="actc-cell actc-cell--cost actc-cell--gbp js-unified-gbp" data-row-key="${rowKey}" value="${escapeHtml(gbp)}" placeholder="0.00" type="text" inputmode="decimal"></td>
+          <td style="width:36px"><button type="button" class="actc-remove-btn js-unified-remove" data-row-key="${rowKey}" data-row-type="${type}">✕</button></td>
+        </tr>`).join("");
 
-      const tableHtml = `
-        <div class="actc-table-outer">
-          <table class="actc-table">
-            <thead>
-              <tr>
-                <th></th>
-                <th>Day</th>
-                <th>Date</th>
-                <th>Point of Interest</th>
-                <th>Planned Time</th>
-                <th>Researched Cost Guidance</th>
-                <th>USD ($)</th>
-                <th>GBP (£)</th>
-              </tr>
-            </thead>
-            <tbody id="cs-tbody">${rows.join("")}</tbody>
-          </table>
-        </div>
-      `;
-      const wrap = document.getElementById("cost-sheet");
-      wrap.innerHTML = tableHtml;
+      container.innerHTML = `<div class="actc-table-outer"><table class="actc-table"><thead><tr><th></th><th>Day</th><th>Date</th><th>Point of Interest</th><th>Planned Time</th><th>Researched Cost Guidance</th><th>USD ($)</th><th>GBP (£)</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
 
-      // Bind text fields
-      wrap.querySelectorAll(".js-cs-field").forEach((input) => {
-        input.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); input.blur(); } });
-        input.addEventListener("blur", () => {
-          const key = input.dataset.csKey;
-          const field = input.dataset.field;
-          const ov = getCostSheetOverrides();
-          if (!ov[key]) ov[key] = {};
-          ov[key][field] = input.value;
-          localStorage.setItem(COST_SHEET_OVERRIDES_KEY, JSON.stringify(ov));
-        });
-      });
-
-      // Bind GBP inputs
-      wrap.querySelectorAll(".js-cs-gbp").forEach((input) => {
-        input.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); input.blur(); } });
-        input.addEventListener("blur", () => {
-          const key = input.dataset.csKey;
-          const gbp = getCostSheetGbp();
-          gbp[key] = input.value;
-          localStorage.setItem(COST_SHEET_GBP_KEY, JSON.stringify(gbp));
-          // Auto-fill USD if empty
-          const num = parseFloat(input.value.replace(/[£,\s]/g, ""));
-          if (!isNaN(num) && num > 0) {
-            const usdInput = wrap.querySelector(`.js-cost-input[data-cost-key="${key}"]`);
-            if (usdInput && !usdInput.value.trim()) {
-              const usd = (num * getRate()).toFixed(2);
-              usdInput.value = usd;
-              costState[key] = usd;
-              localStorage.setItem(COST_STORAGE_KEY, JSON.stringify(costState));
-              updateCostSummary();
-            }
-          }
-        });
-        input.addEventListener("input", () => updateCostSummary());
-      });
-
-      // USD auto-fill GBP
-      wrap.querySelectorAll(".js-cost-input").forEach((input) => {
-        input.addEventListener("blur", () => {
-          const key = input.dataset.costKey;
-          const num = parseFloat(String(input.value || "").replace(/[$,\s]/g, ""));
-          if (!isNaN(num) && num > 0) {
-            const gbpInput = wrap.querySelector(`.js-cs-gbp[data-cs-key="${key}"]`);
-            if (gbpInput && !gbpInput.value.trim()) {
-              const gbp = (num / getRate()).toFixed(2);
-              gbpInput.value = gbp;
-              const gbpMap = getCostSheetGbp();
-              gbpMap[key] = gbp;
-              localStorage.setItem(COST_SHEET_GBP_KEY, JSON.stringify(gbpMap));
-            }
+      // Save text fields
+      container.querySelectorAll(".js-unified-field").forEach((inp) => {
+        inp.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); inp.blur(); } });
+        inp.addEventListener("blur", () => {
+          const row = container.querySelector(`.js-unified-row[data-row-key="${inp.dataset.rowKey}"]`);
+          if (!row) return;
+          if (row.dataset.rowType === "itinerary") {
+            const ov = getCostSheetOverrides(); if (!ov[row.dataset.itemKey]) ov[row.dataset.itemKey] = {}; ov[row.dataset.itemKey][inp.dataset.field] = inp.value; localStorage.setItem(COST_SHEET_OVERRIDES_KEY, JSON.stringify(ov));
+          } else {
+            const entry = customCostEntries.find((e) => e.id === row.dataset.entryId); if (entry) { entry[inp.dataset.field] = inp.value; saveCustomCostEntries(); }
           }
         });
       });
 
-      // Drag-and-drop reorder
-      let dragSrcKey = null;
-      wrap.querySelectorAll(".js-cs-row").forEach((row) => {
-        row.addEventListener("dragstart", (e) => { dragSrcKey = row.dataset.csKey; row.classList.add("actc-row-dragging"); e.dataTransfer.effectAllowed = "move"; });
+      // USD inputs
+      container.querySelectorAll(".js-unified-usd").forEach((inp) => {
+        inp.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); inp.blur(); } });
+        inp.addEventListener("blur", () => {
+          const row = container.querySelector(`.js-unified-row[data-row-key="${inp.dataset.rowKey}"]`); if (!row) return;
+          const num = parseFloat(inp.value.replace(/[$,\s]/g, ""));
+          if (row.dataset.rowType === "itinerary") {
+            const k = row.dataset.itemKey; if (!isNaN(num) && num >= 0) { costState[k] = String(num); localStorage.setItem(COST_STORAGE_KEY, JSON.stringify(costState)); }
+          } else { const e = customCostEntries.find((e) => e.id === row.dataset.entryId); if (e) { e.amountUSD = inp.value; saveCustomCostEntries(); } }
+          if (!isNaN(num) && num > 0) { const gi = container.querySelector(`.js-unified-gbp[data-row-key="${inp.dataset.rowKey}"]`); if (gi && !gi.value.trim()) { gi.value = (num / getRate()).toFixed(2); gi.dispatchEvent(new Event("blur")); } }
+          updateCostSummary();
+        });
+        inp.addEventListener("input", updateCostSummary);
+      });
+
+      // GBP inputs
+      container.querySelectorAll(".js-unified-gbp").forEach((inp) => {
+        inp.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); inp.blur(); } });
+        inp.addEventListener("blur", () => {
+          const row = container.querySelector(`.js-unified-row[data-row-key="${inp.dataset.rowKey}"]`); if (!row) return;
+          const num = parseFloat(inp.value.replace(/[£,\s]/g, ""));
+          if (row.dataset.rowType === "itinerary") {
+            const gm = getCostSheetGbp(); gm[row.dataset.itemKey] = inp.value; localStorage.setItem(COST_SHEET_GBP_KEY, JSON.stringify(gm));
+          } else { const e = customCostEntries.find((e) => e.id === row.dataset.entryId); if (e) { e.amountGBP = inp.value; saveCustomCostEntries(); } }
+          if (!isNaN(num) && num > 0) { const ui = container.querySelector(`.js-unified-usd[data-row-key="${inp.dataset.rowKey}"]`); if (ui && !ui.value.trim()) { ui.value = (num * getRate()).toFixed(2); ui.dispatchEvent(new Event("blur")); } }
+          updateCostSummary();
+        });
+        inp.addEventListener("input", updateCostSummary);
+      });
+
+      // Remove rows
+      container.querySelectorAll(".js-unified-remove").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const { rowKey, rowType } = btn.dataset;
+          if (rowType === "itinerary") { let h = {}; try { h = JSON.parse(localStorage.getItem(HIDDEN_IT_ROWS_KEY) || "{}"); } catch (_) {} h[rowKey] = true; localStorage.setItem(HIDDEN_IT_ROWS_KEY, JSON.stringify(h)); }
+          else { const row = container.querySelector(`.js-unified-row[data-row-key="${rowKey}"]`); if (row?.dataset.entryId) { customCostEntries = customCostEntries.filter((e) => e.id !== row.dataset.entryId); saveCustomCostEntries(); } }
+          let ord = null; try { ord = JSON.parse(localStorage.getItem(UNIFIED_ORDER_KEY) || "null"); } catch (_) {}
+          if (Array.isArray(ord)) { localStorage.setItem(UNIFIED_ORDER_KEY, JSON.stringify(ord.filter((k) => k !== rowKey))); }
+          renderUnifiedCostSheet();
+        });
+      });
+
+      // Drag-and-drop
+      let dragSrc = null;
+      container.querySelectorAll(".js-unified-row").forEach((row) => {
+        row.addEventListener("dragstart", (e) => { dragSrc = row.dataset.rowKey; row.classList.add("actc-row-dragging"); e.dataTransfer.effectAllowed = "move"; });
         row.addEventListener("dragend", () => row.classList.remove("actc-row-dragging"));
-        row.addEventListener("dragover", (e) => { e.preventDefault(); e.dataTransfer.dropEffect = "move"; row.classList.add("actc-row-dragover"); });
+        row.addEventListener("dragover", (e) => { e.preventDefault(); row.classList.add("actc-row-dragover"); });
         row.addEventListener("dragleave", () => row.classList.remove("actc-row-dragover"));
         row.addEventListener("drop", (e) => {
-          e.preventDefault();
-          row.classList.remove("actc-row-dragover");
-          if (!dragSrcKey || dragSrcKey === row.dataset.csKey) return;
-          const keys = orderedRows.map((r) => r.key);
-          const si = keys.indexOf(dragSrcKey), di = keys.indexOf(row.dataset.csKey);
+          e.preventDefault(); row.classList.remove("actc-row-dragover");
+          if (!dragSrc || dragSrc === row.dataset.rowKey) return;
+          const keys = orderedRows.map((r) => r.rowKey);
+          const si = keys.indexOf(dragSrc), di = keys.indexOf(row.dataset.rowKey);
           if (si < 0 || di < 0) return;
           keys.splice(di, 0, keys.splice(si, 1)[0]);
-          localStorage.setItem(COST_SHEET_ORDER_KEY, JSON.stringify(keys));
-          renderCostSheet();
+          localStorage.setItem(UNIFIED_ORDER_KEY, JSON.stringify(keys));
+          renderUnifiedCostSheet();
         });
       });
 
-      renderCustomCostSheet();
       updateCostSummary();
     }
 
     function updateCostSummary() {
       let totalUSD = 0;
-      Object.values(costState).forEach((v) => {
-        const n = parseFloat(String(v || "").replace(/[$,\s]/g, ""));
-        if (!Number.isNaN(n)) totalUSD += n;
-      });
-      customCostEntries.forEach((entry) => {
-        const raw = entry.amountUSD !== undefined ? entry.amountUSD : entry.amount;
-        const n = parseFloat(String(raw || "").replace(/[$,\s]/g, ""));
-        if (!Number.isNaN(n)) totalUSD += n;
-      });
+      Object.values(costState).forEach((v) => { const n = parseFloat(String(v || "").replace(/[$,\s]/g, "")); if (!Number.isNaN(n)) totalUSD += n; });
+      customCostEntries.forEach((e) => { const raw = e.amountUSD !== undefined ? e.amountUSD : e.amount; const n = parseFloat(String(raw || "").replace(/[$,\s]/g, "")); if (!Number.isNaN(n)) totalUSD += n; });
       const el = document.getElementById("cost-summary");
       if (el) el.textContent = `Current tracked total: $${totalUSD.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     }
 
-    function renderCustomCostSheet() {
-      const container = document.getElementById("actc-table-wrap");
-      if (!container) return;
+    function renderCustomCostSheet() { renderUnifiedCostSheet(); }
 
+    // Legacy placeholder — unified table handles everything now
+    function _legacyCustomCostPlaceholder() {
       // Migrate old-format entries {id, label, amount} → new format
       customCostEntries = customCostEntries.map((e) => {
         if (e.label !== undefined && e.poi === undefined) {
@@ -4390,11 +4366,9 @@
         day: "", date: "", poi: "", plannedTime: "", researchedCost: "", amountUSD: "", amountGBP: ""
       });
       saveCustomCostEntries();
-      renderCustomCostSheet();
-      // Focus the POI field of the new row
-      const rows = document.querySelectorAll(".js-actc-row");
-      const lastRow = rows[rows.length - 1];
-      lastRow?.querySelector(".actc-cell--poi")?.focus();
+      renderUnifiedCostSheet();
+      const rows = document.querySelectorAll(".js-unified-row");
+      rows[rows.length - 1]?.querySelector(".actc-cell--poi")?.focus();
     }
 
     function bindCustomCostControls() {
