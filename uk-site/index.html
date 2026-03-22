@@ -7028,13 +7028,15 @@
       actcCurrencyPrefs:    "ukTripCostCurrencyPref"
     };
 
-    // Auto-stamp LOCAL_LAST_CHANGE_KEY whenever any synced key is written to localStorage
+    // Auto-stamp LOCAL_LAST_CHANGE_KEY whenever any synced key is written to localStorage.
+    // Suppressed while applyFirestoreData is running (re-rendering cloud data is not a local change).
     const LOCAL_LAST_CHANGE_KEY = "ukTripLastLocalChange";
     const _syncedLsKeys = new Set(Object.values(STORAGE_KEY_MAP));
     const _origSetItem = localStorage.setItem.bind(localStorage);
+    let _applyingCloudData = false;
     localStorage.setItem = (key, value) => {
       _origSetItem(key, value);
-      if (_syncedLsKeys.has(key)) _origSetItem(LOCAL_LAST_CHANGE_KEY, String(Date.now()));
+      if (!_applyingCloudData && _syncedLsKeys.has(key)) _origSetItem(LOCAL_LAST_CHANGE_KEY, String(Date.now()));
     };
 
     // ── Firestore document reference ──────────────────────────────────────────
@@ -7160,6 +7162,8 @@
 
     function applyFirestoreData(data) {
       if (!data) return;
+      _applyingCloudData = true;
+      try {
 
       // 1. Write Firestore data to localStorage — use _origSetItem to avoid
       //    triggering the LOCAL_LAST_CHANGE_KEY auto-stamp (cloud data is not a local change)
@@ -7212,6 +7216,8 @@
       try { if (typeof initializeHotelCheckIns === "function") initializeHotelCheckIns(); } catch (_) {}
       try { if (typeof renderBudgetPie === "function") renderBudgetPie(); } catch (_) {}
       try { if (typeof updateFlightTotal === "function") updateFlightTotal(); } catch (_) {}
+
+      } finally { _applyingCloudData = false; }
     }
 
     // ── UI helpers ────────────────────────────────────────────────────────────
