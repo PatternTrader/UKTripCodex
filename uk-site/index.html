@@ -4102,13 +4102,13 @@
     function normalizeTimeField(val) {
       if (!val) return val;
       const s = val.trim();
-      if (/^\d{4}$/.test(s)) return s; // already hhmm
+      if (/^\d{4}$/.test(s)) return String(parseInt(s, 10)); // hhmm → strip leading zero
       const m = s.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
       if (m) {
         let h = parseInt(m[1], 10); const min = m[2]; const p = (m[3] || "").toUpperCase();
         if (p === "AM" && h === 12) h = 0;
         if (p === "PM" && h !== 12) h += 12;
-        return String(h).padStart(2, "0") + min;
+        return String(h * 100 + parseInt(min, 10)); // no leading zero
       }
       return s;
     }
