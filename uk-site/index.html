@@ -6970,7 +6970,10 @@
       costSheetOverrides:   "ukTripCostSheetOverrides",
       costSheetGbp:         "ukTripCostSheetGbp",
       unifiedSheetOrder:    "ukTripUnifiedSheetOrder",
-      hiddenItRows:         "ukTripHiddenItRows"
+      hiddenItRows:         "ukTripHiddenItRows",
+      actcStarred:          "ukTripActcStarred",
+      actcCostNotes:        "ukTripActcCostNotes",
+      actcCurrencyPrefs:    "ukTripCostCurrencyPref"
     };
 
     // Auto-stamp LOCAL_LAST_CHANGE_KEY whenever any synced key is written to localStorage
@@ -7106,15 +7109,16 @@
     function applyFirestoreData(data) {
       if (!data) return;
 
-      // 1. Write Firestore data to localStorage
+      // 1. Write Firestore data to localStorage — use _origSetItem to avoid
+      //    triggering the LOCAL_LAST_CHANGE_KEY auto-stamp (cloud data is not a local change)
       for (const [field, lsKey] of Object.entries(STORAGE_KEY_MAP)) {
         if (Object.prototype.hasOwnProperty.call(data, field) && data[field] !== undefined) {
-          try { localStorage.setItem(lsKey, JSON.stringify(data[field])); } catch (_) {}
+          try { _origSetItem(lsKey, JSON.stringify(data[field])); } catch (_) {}
         }
       }
-      // Stamp local timestamp so smartSync doesn't think local is stale and push empty data
+      // Stamp local sync timestamp so smartSync doesn't think local is stale and push empty data
       if (data._lastUpdated) {
-        localStorage.setItem(LOCAL_LAST_SAVE_KEY, String(data._lastUpdated));
+        _origSetItem(LOCAL_LAST_SAVE_KEY, String(data._lastUpdated));
       }
 
       // 2. Refresh outer-scope variables from localStorage so all bind functions see fresh data
