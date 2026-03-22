@@ -1931,7 +1931,7 @@
           <ul class="cc-checklist">
             <li class="cc-check-item js-cc-check-item" data-check-id="flight-outbound">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text">Outbound: Wed Apr 2, 6:40pm JFK &rarr; Thu Apr 3, 6:50am LHR — BA 174 (7h 10m, direct)</span>
+              <span class="cc-check-text">Leg 1: Thu Apr 2, 3:00pm LGA &rarr; 4:19pm BOS — VS3280 / Republic for Delta (1h 19m) · Ref: FAJAMJ</span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-outbound" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-outbound" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
@@ -1940,7 +1940,7 @@
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="flight-return">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text">Return Leg 1: Sat Apr 11, 8:10pm LHR &rarr; 10:35pm BOS — BA 239 (7h 25m, direct)</span>
+              <span class="cc-check-text">Leg 2: Thu Apr 2, 7:00pm BOS &rarr; Fri Apr 3, 6:45am LHR — VS4012 / Delta (6h 45m, direct) · Ref: FAJAMJ</span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-return" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-return" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
@@ -1949,12 +1949,21 @@
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="flight-bos-jfk">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text">Return Leg 2: Sun Apr 12, 11:34am BOS &rarr; 12:59pm JFK — AA 4721 / American Eagle (1h 25m, direct)</span>
+              <span class="cc-check-text">Return Leg 3: Sat Apr 12, 6:55pm LHR &rarr; 9:20pm BOS — VS11 / Virgin Atlantic (7h 25m, direct) · Ref: FAJAMJ</span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-bos-jfk" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-bos-jfk" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
               <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-bos-jfk" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="flight-bos-jfk" aria-label="Cost GBP"></div>
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="flight-bos-lga">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text">Return Leg 4: Sun Apr 13, 6:00am BOS &rarr; 7:30am LGA — VS3678 / Republic for Delta (1h 30m) · Ref: FAJAMJ</span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-bos-lga" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-bos-lga" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
+              </span>
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-bos-lga" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="flight-bos-lga" aria-label="Cost GBP"></div>
             </li>
           </ul>
         </article>
@@ -2014,7 +2023,7 @@
             </li>
             <li class="cc-check-item js-cc-check-item" data-check-id="hotel-boston">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text">Book Boston overnight layover (near Logan Airport): Apr 11–12 (1 night, arrive BOS ~10:35pm Apr 11)</span>
+              <span class="cc-check-text">Book Boston overnight layover (near Logan Airport): Apr 12–13 (1 night, arrive BOS ~9:20pm Apr 12, depart LGA 6:00am Apr 13 — very early flight)</span>
               <span class="cc-link-wrap">
                 <input type="url" class="cc-link-input js-cc-link" data-link-id="hotel-boston" placeholder="Paste URL" aria-label="Relevant URL">
                 <a class="cc-link-open js-cc-link-open" data-link-open-id="hotel-boston" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
@@ -2334,12 +2343,14 @@
     const itinerary = [
       {
         day: 1,
-        title: "New York to London Flight",
+        title: "New York to London — LGA → BOS → LHR",
         date: "April 2-3",
         showAllStopsOnTopMap: true,
         items: [
-          { text: "Leave from 303 E. 83rd St, NY, NY to John F. Kennedy International Airport (JFK). Allow 45–75 min depending on traffic; give yourself extra buffer.", page: "303_E_83rd_St_NYC", caption: "Depart from 303 E. 83rd St" },
-          { text: "Depart New York (JFK) at 6:40pm on British Airways BA 174, direct to London Heathrow. Boeing 777, Economy. 7 hr 10 min overnight flight. $3,474 total for 5 passengers (round trip).", page: "John_F._Kennedy_International_Airport", caption: "JFK departure — BA 174", defaultCost: 3474 }
+          { text: "Leave from 303 E. 83rd St, NY, NY to LaGuardia Airport (LGA). Allow 30–50 min by rideshare; depart home by 12:30 PM for a 3:00 PM flight.", page: "303_E_83rd_St_NYC", caption: "Depart from 303 E. 83rd St" },
+          { text: "Depart New York LaGuardia (LGA) at 3:00 PM on VS3280, operated by Republic for Delta, to Boston Logan (BOS). 1 hr 19 min flight. Booking Ref: FAJAMJ.", page: "LaGuardia_Airport", caption: "LGA departure — VS3280" },
+          { text: "Arrive Boston Logan (BOS) at 4:19 PM. 2 hr 41 min layover until 7:00 PM departure. Stay airside — clear the BOS security checkpoint and head to the international terminal.", page: "BOS_Stopover_D1", caption: "BOS layover — 2h 41m" },
+          { text: "Depart Boston Logan (BOS) at 7:00 PM on VS4012, operated by Delta, direct to London Heathrow (LHR). 6 hr 45 min overnight flight. Booking Ref: FAJAMJ.", page: "BOS_Depart_D1", caption: "BOS departure — VS4012", defaultCost: 0 }
         ]
       },
       {
@@ -2349,7 +2360,7 @@
         hotelInsertAfterPage: "Stonehenge",
         checkinInsertBeforePage: "Hotel_Portland_Reset",
         items: [
-          { text: "🛬 6:30–7:45 AM — Land + exit airport. 6:30 land → 6:45 off plane → 6:45–7:30 immigration → 7:30–7:45 walk out (carry-on only, no baggage claim). You're outside faster than most people.", page: "London_Heathrow_Arrival", caption: "Arrive London Heathrow" },
+          { text: "🛬 6:45–8:00 AM — Land + exit airport. 6:45 land → 7:00 off plane → 7:00–7:45 immigration → 7:45–8:00 walk out (carry-on only, no baggage claim). You're outside faster than most people.", page: "London_Heathrow_Arrival", caption: "Arrive London Heathrow" },
           { text: "🪨 9:45–11:15 AM — Stonehenge visit. Shuttle to the stones, walk the loop, audio guide. 75–90 minutes is perfect.", page: "Stonehenge", caption: "Stonehenge" },
           { text: "😴 2:15–3:45 PM — Reset: light rest (max 90-min nap), shower, change clothes. Don't nap longer — it'll wreck your jet lag adjustment.", page: "Hotel_Portland_Reset", caption: "Afternoon reset" },
           { text: "🚶 4:30–6:30 PM — Easy stroll down Oxford Street — 5-min walk from the hotel. Window shop, grab a snack, decompress. No agenda required.", page: "Oxford_Street", caption: "Oxford Street stroll" },
@@ -2463,22 +2474,31 @@
       },
       {
         day: 10,
-        title: "London — Last Day &amp; Departure to Boston",
+        title: "London — Bonus Free Day",
         date: "April 11",
         items: [
-          { text: "Morning and early afternoon free in London — last chance to revisit a favourite spot or pick up anything you missed.", page: "London", caption: "London last morning" },
-          { text: "Depart London Heathrow (LHR) at 8:10pm on British Airways BA 239 to Boston Logan (BOS). Boeing 777, Economy. 7 hr 25 min flight.", page: "London_Heathrow_Departure", caption: "LHR departure — BA 239" },
-          { text: "Arrive Boston Logan (BOS) at 10:35pm. 12 hr 59 min overnight layover in Boston — hotel near airport recommended.", page: "BOS_Arrive_D10", caption: "Arrive Boston Logan" }
+          { text: "Full free day in London — an extra day gained with the new routing! Revisit a favourite spot, explore something you missed, or just wander at leisure.", page: "London", caption: "London bonus free day" },
+          { text: "Evening free — enjoy a relaxed dinner out. Tomorrow is the departure day, so pack your bags tonight and get a good night's sleep.", page: "London_Evening_D10", caption: "Evening in London — pack tonight" }
         ]
       },
       {
         day: 11,
-        title: "Boston Layover — Home to New York",
+        title: "London — Departure Night / LHR to Boston",
         date: "April 12",
         items: [
-          { text: "Overnight layover at a hotel near Boston Logan. Morning free to rest before the final leg home.", page: "Boston_Logan_International_Airport", caption: "Boston overnight layover" },
-          { text: "Depart Boston Logan (BOS) at 11:34am on American Eagle AA 4721 (operated by Republic Airways). Embraer 175, Economy. 1 hr 25 min flight.", page: "BOS_Departure_D11", caption: "BOS departure — AA 4721" },
-          { text: "Arrive John F. Kennedy International Airport (JFK) at 12:59pm. Welcome home!", page: "JFK_Arrive_Home", caption: "Arrive JFK — home!" }
+          { text: "Morning and early afternoon free in London — final hours before the journey home. Leave central London by 4:00 PM to reach Heathrow in time.", page: "London", caption: "London final morning" },
+          { text: "Depart London Heathrow (LHR) at 6:55 PM on VS11, operated by Virgin Atlantic, direct to Boston Logan (BOS). 7 hr 25 min flight. Booking Ref: FAJAMJ.", page: "London_Heathrow_Departure", caption: "LHR departure — VS11 Virgin Atlantic" },
+          { text: "Arrive Boston Logan (BOS) at 9:20 PM. Short overnight layover — hotel near airport essential. Very early 6:00 AM departure the next morning.", page: "BOS_Arrive_D11", caption: "Arrive Boston Logan" }
+        ]
+      },
+      {
+        day: 12,
+        title: "Boston Overnight — Return Home to New York",
+        date: "April 13",
+        items: [
+          { text: "Overnight at hotel near Boston Logan (arrive 9:20 PM Apr 12). Very early wake-up — leave hotel by 4:30 AM for a 6:00 AM departure.", page: "Boston_Logan_International_Airport", caption: "Boston overnight layover" },
+          { text: "Depart Boston Logan (BOS) at 6:00 AM on VS3678, operated by Republic for Delta, to LaGuardia (LGA). 1 hr 30 min flight. Booking Ref: FAJAMJ.", page: "BOS_Departure_D12", caption: "BOS departure — VS3678" },
+          { text: "Arrive LaGuardia Airport (LGA) at 7:30 AM. Welcome home!", page: "LGA_Arrive_Home", caption: "Arrive LGA — home!" }
         ]
       }
 
@@ -2495,17 +2515,20 @@
       8: { town: "Edinburgh", country: "Scotland" },
       9: { town: "London", country: "England" },
       10: { town: "London", country: "England" },
-      11: { town: "Boston / New York", country: "USA" }
+      11: { town: "London", country: "England" },
+      12: { town: "Boston / New York", country: "USA" }
     };
 
     const visitTimes = {
-      // Day 1 — NYC to JFK
-      "303_E_83rd_St_NYC": "13:00",                    // Start packing/prep at 1 PM; depart ~1:25 PM for JFK
-      "John_F._Kennedy_International_Airport": "14:40",  // Arrive JFK 2:40 PM — 4 hrs before 6:40 PM departure
+      // Day 1 — NYC to LGA → BOS → LHR
+      "303_E_83rd_St_NYC": "12:00",                    // Start packing/prep at noon; depart ~12:30 PM for LGA
+      LaGuardia_Airport: "13:30",                      // Arrive LGA ~1:30 PM — 1.5 hrs before 3:00 PM departure
+      BOS_Stopover_D1: "16:19",                        // Arrive BOS 4:19 PM — 2h 41m layover until 7:00 PM
+      BOS_Depart_D1: "19:00",                          // Depart BOS 7:00 PM on VS4012 → LHR
       Newark_Liberty_International_Airport: "15:07",
       Washington_Dulles_International_Airport: "17:20",
       // Day 2 — Arrival + Stonehenge
-      London_Heathrow_Arrival: "06:30",                // Land 6:30 AM; immigration + walk out = 75 min → 07:45 exit
+      London_Heathrow_Arrival: "06:45",                // Land 6:45 AM; immigration + walk out = 75 min → 08:00 exit
       Stonehenge: "09:45",                             // Arrive Stonehenge 9:45 AM; visit 90 min → 11:15
       Hotel_Portland_Reset: "14:15",                   // 2:15 PM — after 180-min drive+check-in from Stonehenge; 90 min → 15:45
       Oxford_Street: "16:30",                          // 4:30 PM stroll — 30 min gap after reset; 120 min → 18:30
@@ -2591,14 +2614,15 @@
       South_Bank_D9: "16:45",                          // 15 min walk/Tube back south; 30 min walk → 17:15
       Tate_Modern: "17:25",                            // 10-min walk E along South Bank; 90 min → 18:55
       "Shakespeare's_Globe": "19:05",                  // Adjacent to Tate Modern; 45 min → 19:50
-      // Day 10 — Last morning + Heathrow
-      London: "10:00",                                 // Morning free in London
-      London_Heathrow_Departure: "20:10",              // At gate for 8:10 PM flight (arrived 18:00 + 130 min check/security)
-      // Day 11
-      BOS_Arrive_D10: "22:35",                           // Arrive BOS 10:35 PM (Day 10)
-      Boston_Logan_International_Airport: "22:35",     // Day 11 overnight at BOS hotel
-      BOS_Departure_D11: "11:34",                      // Depart BOS 11:34 AM
-      JFK_Arrive_Home: "12:59",                        // Arrive JFK 12:59 PM
+      // Day 10 — Bonus free day in London
+      London_Evening_D10: "20:00",                     // Evening free / pack tonight
+      // Day 11 — Departure day LHR
+      London_Heathrow_Departure: "18:55",              // Depart LHR 6:55 PM VS11 (leave central London by 4pm)
+      BOS_Arrive_D11: "21:20",                         // Arrive BOS 9:20 PM
+      // Day 12 — BOS overnight → LGA
+      Boston_Logan_International_Airport: "21:20",     // Day 12 overnight at BOS hotel (arrive ~9:20 PM Apr 12)
+      BOS_Departure_D12: "06:00",                      // Depart BOS 6:00 AM on VS3678
+      LGA_Arrive_Home: "07:30",                        // Arrive LGA 7:30 AM
       // Misc kept
       Edinburgh_Airport: "13:00",
       Airplane: "08:30",
@@ -2614,12 +2638,14 @@
 
     const visitDurationsMin = {
       // Day 1
-      "303_E_83rd_St_NYC": 25,                    // 1:00 PM prep; rideshare departs 1:25 PM
-      "John_F._Kennedy_International_Airport": 240, // 2:40 PM to 6:40 PM = 4 hrs at airport
+      "303_E_83rd_St_NYC": 30,                    // 12:00 PM prep; rideshare departs 12:30 PM
+      LaGuardia_Airport: 90,                      // 1:30 PM arrive → 3:00 PM depart = 90 min at airport
+      BOS_Stopover_D1: 0,                         // 4:19 PM arrive — layover marker; transit bar covers the 2h41m
+      BOS_Depart_D1: 0,                           // 7:00 PM depart — overnight flight, 0 own duration (shown as transit)
       Newark_Liberty_International_Airport: 80,
       Washington_Dulles_International_Airport: 45,
       // Day 2 — all new/split keys
-      London_Heathrow_Arrival: 75,                // 6:30→7:45 AM: land + immigration + walk out = 75 min
+      London_Heathrow_Arrival: 75,                // 6:45→8:00 AM: land + immigration + walk out = 75 min
       LHR_Meet_Driver: 0,                         // Instant handoff at Arrivals — no extra time
       Stonehenge_Drive: 105,                      // 8:00→9:45 AM drive to Stonehenge = 105 min
       Stonehenge: 90,                             // 9:45→11:15 AM visit = 90 min
@@ -2705,14 +2731,16 @@
       South_Bank_D9: 30,                          // 16:45→17:15 riverside walk toward Tate = 30 min
       Tate_Modern: 90,                            // 17:25→18:55 modern art museum = 90 min
       "Shakespeare's_Globe": 45,                  // 19:05→19:50 exterior + brief look = 45 min
-      // Day 10
-      London: 480,                                // 10:00 AM → 6:00 PM last morning free = 480 min
-      London_Heathrow_Departure: 140,             // At gate for 8:10 PM flight; arrival 10:35 PM BOS = 7h 25m = 445 min in air (badge shows gate time)
-      // Day 11
-      BOS_Arrive_D10: 0,                           // Arrive BOS — transit item, 0 own duration
-      Boston_Logan_International_Airport: 670,    // Day 11: overnight at BOS hotel until morning departure
-      BOS_Departure_D11: 85,                      // 11:34 AM → 12:59 PM = 85 min flight
-      JFK_Arrive_Home: 0,                         // Arrive home — 0 duration
+      // Day 10 — Bonus free day
+      London: 480,                                // Free morning in London = 480 min
+      London_Evening_D10: 120,                    // Evening in London ~2 hrs
+      // Day 11 — Departure from LHR
+      London_Heathrow_Departure: 140,             // At gate for 6:55 PM flight VS11; arrival 9:20 PM BOS = 7h 25m (badge shows gate time)
+      BOS_Arrive_D11: 0,                          // Arrive BOS — transit item, 0 own duration
+      // Day 12 — BOS overnight → LGA
+      Boston_Logan_International_Airport: 510,    // Day 12: overnight at BOS hotel ~8h30m until 4:30 AM wake-up
+      BOS_Departure_D12: 90,                      // 6:00 AM → 7:30 AM = 90 min flight
+      LGA_Arrive_Home: 0,                         // Arrive home — 0 duration
       // Misc
       Airplane: 671,
       Royal_Mile: 60,
@@ -2728,7 +2756,9 @@
     const dayTransportPlans = {
       1: [
         { mode: "Starting point", bufferMin: 0, note: "Departing from home — 303 E. 83rd St. Prep and pack." },
-        { mode: "Rideshare / taxi", bufferMin: 75, note: "Depart ~1:25 PM. Transfer from Upper East Side to JFK; allow 45–75 min depending on traffic. Arrive JFK 2:40 PM — 4 hrs before 6:40 PM departure." }
+        { mode: "Rideshare / taxi to LGA", bufferMin: 50, note: "Depart home 12:30 PM. Transfer from Upper East Side to LaGuardia; allow 30–50 min traffic. Arrive LGA ~1:30 PM — 90 min before 3:00 PM departure." },
+        { mode: "Airplane VS3280 (LGA → BOS)", bufferMin: 79, note: "Departs LGA 3:00 PM, arrives BOS 4:19 PM. 1 hr 19 min flight. 2h 41m layover in Boston follows." },
+        { mode: "BOS Terminal layover", bufferMin: 161, note: "Layover 4:19 PM → 7:00 PM = 2h 41m. Stay airside, grab food, rest before overnight flight." }
       ],
       2: [
         // Entry [i] = transit BEFORE item[i]. Day 2 has 5 items (indices 0–4).
@@ -2794,16 +2824,21 @@
         { mode: "Walk (adjacent — Tate Modern → Globe)", bufferMin: 10, note: "Tate Modern ends 18:55 → 10-min walk to Shakespeare's Globe. 18:55→19:05." }
       ],
       10: [
-        // Entry [i] = transit BEFORE item[i]. Day 10 has 3 items (indices 0–2).
-        { mode: "Wake up / morning prep", bufferMin: 30, note: "Morning free in London — start day at leisure by 10:00 AM." },
-        { mode: "Heathrow Express or taxi", bufferMin: 130, note: "Leave central London by 6:00 PM. Heathrow Express (~15 min from Paddington) or taxi. Allow time for check-in + security before 8:10 PM departure." },
-        { mode: "Airplane (BA 239)", bufferMin: 5, note: "Departs LHR 8:10 PM, arrives Boston Logan 10:35 PM. 7h 25m flight." }
+        // Entry [i] = transit BEFORE item[i]. Day 10 has 2 items (indices 0–1). Bonus free day.
+        { mode: "Morning free", bufferMin: 0, note: "Full free day — extra day gained with the new routing! No schedule." },
+        { mode: "Evening wind-down", bufferMin: 600, note: "Afternoon to evening free. Pack bags tonight — departure is tomorrow Apr 12." }
       ],
       11: [
         // Entry [i] = transit BEFORE item[i]. Day 11 has 3 items (indices 0–2).
-        { mode: "Hotel shuttle / taxi to BOS", bufferMin: 0, note: "Overnight hotel at BOS — no transit before morning layover item." },
-        { mode: "Walk to BOS terminal / check-in", bufferMin: 90, note: "Allow 90 min before 11:34 AM departure — bag drop, security, boarding." },
-        { mode: "Airplane (AA 4721)", bufferMin: 0, note: "BOS to JFK, 1h 25m. Departs 11:34 AM, arrives 12:59 PM." }
+        { mode: "Morning free", bufferMin: 0, note: "Morning in London — enjoy final hours. Leave central London by 4:00 PM." },
+        { mode: "Heathrow Express or taxi", bufferMin: 130, note: "Leave central London 4:00 PM. Heathrow Express (~15 min from Paddington) or taxi. Allow time for check-in + security before 6:55 PM departure." },
+        { mode: "Airplane (VS11 Virgin Atlantic)", bufferMin: 5, note: "Departs LHR 6:55 PM, arrives Boston Logan 9:20 PM. 7h 25m flight." }
+      ],
+      12: [
+        // Entry [i] = transit BEFORE item[i]. Day 12 has 3 items (indices 0–2).
+        { mode: "Very early wake-up at BOS hotel", bufferMin: 0, note: "Overnight at BOS hotel. Wake ~4:00 AM — leave by 4:30 AM for 6:00 AM departure." },
+        { mode: "Taxi/shuttle to BOS terminal", bufferMin: 90, note: "Allow 90 min before 6:00 AM departure — bag drop, security, boarding. Be at airport by 4:30 AM." },
+        { mode: "Airplane (VS3678 Republic for Delta)", bufferMin: 0, note: "BOS to LGA, 1h 30m. Departs 6:00 AM, arrives 7:30 AM. Welcome home!" }
       ]
     };
 
@@ -2811,12 +2846,17 @@
       2: "Arrive LHR at 6:50am on April 3. Elizabeth Line from Terminal 5 → Tottenham Court Road, then taxi to 134 Great Portland St. Thames Clippers from Westminster Pier to Greenwich (~45–60 min).",
       5: "LNER 9:03am from London Kings Cross — book at lner.co.uk. Arrive Edinburgh Waverley 1:32pm.",
       9: "Lumo 8:26am from Edinburgh Waverley — book at lumo.co.uk. Arrive London Kings Cross 12:46pm.",
-      10: "BA 239 departs LHR at 8:10pm — leave central London by ~6:00pm. Heathrow Express from Paddington ~15 min.",
-      11: "Overnight layover in Boston. AA 4721 departs BOS 11:34am, arrives JFK 12:59pm — be at airport by 10:00am."
+      1: "Depart home ~12:30 PM for LGA. VS3280 departs LGA 3:00 PM, connects BOS (2h 41m layover). VS4012 departs BOS 7:00 PM, arrives LHR Apr 3, 6:45 AM. Booking Ref: FAJAMJ.",
+      10: "Bonus free day in London — no flights today. Pack bags tonight. Departure is April 12.",
+      11: "VS11 (Virgin Atlantic) departs LHR 6:55 PM — leave central London by 4:00 PM. Heathrow Express from Paddington ~15 min. Arrive BOS 9:20 PM. Book hotel near airport.",
+      12: "Very early departure — VS3678 departs BOS 6:00 AM, arrives LGA 7:30 AM. Be at airport by 4:30 AM. Book hotel near BOS Logan for the overnight. Booking Ref: FAJAMJ."
     };
 
     const poiCoordinates = {
       "303_E_83rd_St_NYC": [40.7759, -73.9528],
+      LaGuardia_Airport: [40.7773, -73.8726],
+      BOS_Stopover_D1: [42.3656, -71.0096],
+      BOS_Depart_D1: [42.3656, -71.0096],
       "John_F._Kennedy_International_Airport": [40.6413, -73.7781],
       Newark_Liberty_International_Airport: [40.6895, -74.1745],
       Washington_Dulles_International_Airport: [38.9531, -77.4565],
@@ -2864,10 +2904,12 @@
       London_Return_Checkin: [51.5015, -0.1097],           // 65 The Cut, Southwark
       South_Bank_D9: [51.5076, -0.1160],                  // South Bank walk (Day 9 — same coords as Day 4 South Bank)
 
-      // Day 10-11 Boston/JFK keys
-      BOS_Arrive_D10: [42.3656, -71.0096],                // Boston Logan (arrive)
-      BOS_Departure_D11: [42.3656, -71.0096],             // Boston Logan (depart)
-      JFK_Arrive_Home: [40.6413, -73.7781],               // JFK
+      // Day 10 evening London
+      London_Evening_D10: [51.5074, -0.1278],             // Central London evening
+      // Day 11 LHR departure / Day 12 BOS→LGA
+      BOS_Arrive_D11: [42.3656, -71.0096],                // Boston Logan (arrive Day 11)
+      BOS_Departure_D12: [42.3656, -71.0096],             // Boston Logan (depart Day 12)
+      LGA_Arrive_Home: [40.7773, -73.8726],               // LaGuardia (arrive home)
 
       London_Hotel_Base: [51.5196, -0.1439],
       Edinburgh_Hotel_Base: [55.9500, -3.1883],
@@ -3355,8 +3397,13 @@
       "Cairngorms_National_Park": ["cairngorms", "highlands"],
       "Pitlochry": ["pitlochry", "perthshire"],
       "South_Bank_D9": ["south bank", "southbank"],
-      "BOS_Arrive_D10": ["boston", "logan", "bos"],
-      "BOS_Departure_D11": ["boston", "logan", "bos"],
+      "LaGuardia_Airport": ["laguardia", "lga", "airport"],
+      "BOS_Stopover_D1": ["boston", "logan", "bos"],
+      "BOS_Depart_D1": ["boston", "logan", "bos"],
+      "BOS_Arrive_D11": ["boston", "logan", "bos"],
+      "BOS_Departure_D12": ["boston", "logan", "bos"],
+      "LGA_Arrive_Home": ["laguardia", "lga", "airport"],
+      "London_Evening_D10": ["london", "evening", "city"],
       "JFK_Arrive_Home": ["jfk", "kennedy", "airport", "home"],
       "Stonehenge": ["stonehenge"],
       "Hotel_Great_Portland_St": ["portland", "great portland"],
@@ -3527,8 +3574,13 @@
       London_Return_Checkin: { why: "Check in to Airbnb at 65 The Cut, Southwark — drop bags and settle.", researchedCost: "Airbnb booking required." },
       South_Bank_D9: { why: "Riverside walk from the Airbnb eastward toward Tate Modern.", researchedCost: "Free public riverside walk." },
       Boston_Logan_International_Airport: { why: "Overnight layover at Boston Logan before final leg home to JFK.", researchedCost: "Hotel near airport required." },
-      BOS_Arrive_D10: { why: "Arrive Boston Logan 10:35 PM — overnight layover before final leg.", researchedCost: "Hotel near airport required." },
-      BOS_Departure_D11: { why: "Final flight — Boston Logan (BOS) to JFK on AA 4721.", researchedCost: "Airfare included in trip booking." },
+      LaGuardia_Airport: { why: "Depart LGA 3:00 PM on VS3280 to BOS — first leg of outbound journey.", researchedCost: "Airfare included in trip booking. Ref: FAJAMJ." },
+      BOS_Stopover_D1: { why: "Layover at Boston Logan 4:19–7:00 PM — 2h 41m connection before overnight flight to LHR.", researchedCost: "Stay airside." },
+      BOS_Depart_D1: { why: "Depart BOS 7:00 PM on VS4012 (Delta) — overnight flight to London Heathrow.", researchedCost: "Airfare included in trip booking. Ref: FAJAMJ." },
+      London_Evening_D10: { why: "Free evening in London on the bonus extra day. Pack bags tonight for tomorrow's departure.", researchedCost: "Dinner out." },
+      BOS_Arrive_D11: { why: "Arrive Boston Logan 9:20 PM — short overnight layover before 6:00 AM departure.", researchedCost: "Hotel near airport required." },
+      BOS_Departure_D12: { why: "Final flight home — Boston Logan (BOS) to LaGuardia (LGA) on VS3678.", researchedCost: "Airfare included in trip booking. Ref: FAJAMJ." },
+      LGA_Arrive_Home: { why: "Arrive LaGuardia 7:30 AM. Welcome home!", researchedCost: "" },
       JFK_Arrive_Home: { why: "Home stretch — arrive JFK 12:59 PM. Welcome back!", researchedCost: "No cost." }
     };
 
