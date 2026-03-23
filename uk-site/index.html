@@ -7189,20 +7189,38 @@
         _origSetItem(LOCAL_LAST_CHANGE_KEY, "0");
       }
 
-      // 2. Refresh outer-scope variables from localStorage so all bind functions see fresh data
-      // 3. Re-initialize UI — each function re-reads fresh data from localStorage
-      try { if (typeof initializeCostState === "function") initializeCostState(); } catch (_) {}
-      try { if (typeof renderCostSheet === "function") renderCostSheet(); } catch (_) {}
-      try { if (typeof bindCostInputs === "function") bindCostInputs(); } catch (_) {}
-      try { if (typeof bindTransportLinks === "function") bindTransportLinks(); } catch (_) {}
-      try { if (typeof bindPoiLinks === "function") bindPoiLinks(); } catch (_) {}
-      try { if (typeof bindCustomCostControls === "function") bindCustomCostControls(); } catch (_) {}
-      try { if (typeof initializeCommandChecklist === "function") initializeCommandChecklist(); } catch (_) {}
-      try { if (typeof initializeDateInputs === "function") initializeDateInputs(); } catch (_) {}
-      try { if (typeof initializeDragReorder === "function") initializeDragReorder(); } catch (_) {}
-      try { if (typeof initializeHotelCheckIns === "function") initializeHotelCheckIns(); } catch (_) {}
-      try { if (typeof renderBudgetPie === "function") renderBudgetPie(); } catch (_) {}
-      try { if (typeof updateFlightTotal === "function") updateFlightTotal(); } catch (_) {}
+      // 2. Re-initialize UI — each function re-reads fresh data from localStorage
+      try { if (typeof initializeCostState === "function") initializeCostState(); } catch (e) { console.warn("[applyFirestoreData] initializeCostState:", e); }
+      try { if (typeof renderCostSheet === "function") renderCostSheet(); } catch (e) { console.warn("[applyFirestoreData] renderCostSheet:", e); }
+      try { if (typeof bindCostInputs === "function") bindCostInputs(); } catch (e) { console.warn("[applyFirestoreData] bindCostInputs:", e); }
+      try { if (typeof bindTransportLinks === "function") bindTransportLinks(); } catch (e) { console.warn("[applyFirestoreData] bindTransportLinks:", e); }
+      try { if (typeof bindPoiLinks === "function") bindPoiLinks(); } catch (e) { console.warn("[applyFirestoreData] bindPoiLinks:", e); }
+      try { if (typeof bindCustomCostControls === "function") bindCustomCostControls(); } catch (e) { console.warn("[applyFirestoreData] bindCustomCostControls:", e); }
+      try { if (typeof initializeCommandChecklist === "function") initializeCommandChecklist(); } catch (e) { console.warn("[applyFirestoreData] initializeCommandChecklist:", e); }
+      try { if (typeof initializeDateInputs === "function") initializeDateInputs(); } catch (e) { console.warn("[applyFirestoreData] initializeDateInputs:", e); }
+      try { if (typeof initializeDragReorder === "function") initializeDragReorder(); } catch (e) { console.warn("[applyFirestoreData] initializeDragReorder:", e); }
+      try { if (typeof initializeHotelCheckIns === "function") initializeHotelCheckIns(); } catch (e) { console.warn("[applyFirestoreData] initializeHotelCheckIns:", e); }
+      try { if (typeof renderBudgetPie === "function") renderBudgetPie(); } catch (e) { console.warn("[applyFirestoreData] renderBudgetPie:", e); }
+      try { if (typeof updateFlightTotal === "function") updateFlightTotal(); } catch (e) { console.warn("[applyFirestoreData] updateFlightTotal:", e); }
+
+      // 3. Direct DOM patch for Hotel Research stars — bypasses initializeCommandChecklist's
+      //    closure system so the correct star state is always reflected even if the above threw.
+      try {
+        const _atState = JSON.parse(localStorage.getItem(STORAGE_KEY_MAP.commandAttention) || "{}") || {};
+        console.log("[applyFirestoreData] commandAttention →", JSON.stringify(_atState));
+        document.querySelectorAll(".js-cc-check-item[data-check-id]").forEach(function(el) {
+          const _id = el.getAttribute("data-check-id");
+          if (!_id) return;
+          const _on = Boolean(_atState[_id]);
+          el.classList.toggle("needs-attention", _on);
+          const _star = el.querySelector(".js-cc-attention-star");
+          if (_star) {
+            _star.classList.toggle("is-active", _on);
+            _star.setAttribute("aria-pressed", String(_on));
+            _star.title = _on ? "Marked for special attention" : "Mark for special attention";
+          }
+        });
+      } catch (e) { console.warn("[applyFirestoreData] attention DOM patch:", e); }
 
       } finally {
         _applyingCloudData = false; window._applyingCloudData = false;
