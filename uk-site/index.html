@@ -1907,6 +1907,7 @@
             <button class="cc-sync-action-btn cc-sync-action-btn--cancel" id="cc-sync-cancel">✕ Cancel</button>
           </div>
         </div>
+        <div id="sync-debug-bar" style="font-size:0.7rem;font-family:monospace;color:#555;padding:4px 10px 2px;display:flex;gap:18px;flex-wrap:wrap;border-top:1px solid rgba(0,0,0,0.07);background:rgba(0,0,0,0.03);"></div>
       </div>
       <div class="budget-pie-wrap">
         <h3 class="budget-pie-title">Budget Breakdown</h3>
@@ -7056,6 +7057,29 @@
       return new Date(ts).toLocaleString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
     }
 
+    // ── Sync debug bar ────────────────────────────────────────────────────────
+    let _lastKnownCloudTs = 0;
+    function fmt(ts) {
+      if (!ts || ts === 0) return "—";
+      return new Date(ts).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) + ` (${fmtTs(ts)})`;
+    }
+    function updateSyncDebugBar(cloudTs) {
+      const bar = document.getElementById("sync-debug-bar");
+      if (!bar) return;
+      if (cloudTs !== undefined) _lastKnownCloudTs = cloudTs;
+      const lc = parseInt(localStorage.getItem(LOCAL_LAST_CHANGE_KEY) || "0");
+      const ls = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY)   || "0");
+      const cl = _lastKnownCloudTs;
+      const localWins = lc > ls + 5000;
+      bar.innerHTML = [
+        `<span title="Stamped when you edit data locally"><b>Last local change:</b> ${fmt(lc)}</span>`,
+        `<span title="Stamped when sync completes"><b>Last local save:</b> ${fmt(ls)}</span>`,
+        `<span title="Cloud _lastUpdated from Firestore"><b>Cloud last updated:</b> ${fmt(cl)}</span>`,
+        `<span style="color:${localWins?"#b35900":"#2a7a2a"};font-weight:600" title="What the smart sync decided on last sign-in">→ ${localWins ? "LOCAL wins (would push)" : cl > ls + 10000 ? "CLOUD wins (would pull)" : "IN SYNC (no action)"}</span>`,
+      ].join("");
+    }
+    setInterval(() => updateSyncDebugBar(), 5000);
+
     // ── Status helper (works from module scope) ───────────────────────────────
     function setStatus(msg, isError) {
       const el = document.getElementById("cc-backup-status");
@@ -7078,6 +7102,7 @@
         payload._lastUpdated = Date.now();
         await setDoc(tripDocRef, payload, { merge: true });
         localStorage.setItem(LOCAL_LAST_SAVE_KEY, String(payload._lastUpdated));
+        updateSyncDebugBar(payload._lastUpdated);
       } catch (err) {
         console.warn("[Firebase] saveAllToFirestore error:", err);
       }
@@ -7177,7 +7202,10 @@
       try { if (typeof renderBudgetPie === "function") renderBudgetPie(); } catch (_) {}
       try { if (typeof updateFlightTotal === "function") updateFlightTotal(); } catch (_) {}
 
-      } finally { _applyingCloudData = false; }
+      } finally {
+        _applyingCloudData = false;
+        updateSyncDebugBar();
+      }
     }
 
     // ── UI helpers ────────────────────────────────────────────────────────────
@@ -7257,6 +7285,7 @@
       // Allowed — hide overlay, show user in toolbar
       hideOverlay();
       setUserStatusBar(email);
+      updateSyncDebugBar();
 
       // Smart load: compare local-change timestamp vs cloud timestamp before overwriting
       try {
@@ -7265,23 +7294,27 @@
         const localChangeTs = parseInt(localStorage.getItem(LOCAL_LAST_CHANGE_KEY) || "0");
         const localSyncTs   = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY) || "0");
         const localTs = Math.max(localChangeTs, localSyncTs);
+        console.log(`[SyncDebug] sign-in: cloudTs=${cloudTs} localChangeTs=${localChangeTs} localSyncTs=${localSyncTs} localTs=${localTs}`);
+        updateSyncDebugBar(cloudTs);
 
         if (!snap.exists() || localTs === 0) {
-          // No cloud data yet, or first ever load — load cloud if it exists
-          if (snap.exists()) { _snapshotIgnoreNext = true; applyFirestoreData(snap.data()); localStorage.setItem(LOCAL_LAST_SAVE_KEY, String(cloudTs)); }
+          console.log("[SyncDebug] → LOAD (no local or first load)");
+          if (snap.exists()) { _snapshotIgnoreNext = true; applyFirestoreData(snap.data()); _origSetItem(LOCAL_LAST_SAVE_KEY, String(cloudTs)); }
         } else if (localTs > cloudTs + 10000) {
-          // Local is newer (user made changes after last cloud sync) — push local up
+          console.log("[SyncDebug] → PUSH (local newer)");
           setStatus("Local data is newer — pushing to cloud…", false);
           await saveAllToFirestore();
           setStatus("✓ Auto-saved local changes to cloud.", false);
           setTimeout(() => setStatus(""), 3000);
         } else if (cloudTs > localTs + 10000) {
-          // Cloud is meaningfully newer (another user synced) — load from cloud
+          console.log("[SyncDebug] → PULL (cloud newer)");
           _snapshotIgnoreNext = true;
           applyFirestoreData(snap.data());
-          localStorage.setItem(LOCAL_LAST_SAVE_KEY, String(cloudTs));
+          _origSetItem(LOCAL_LAST_SAVE_KEY, String(cloudTs));
+        } else {
+          console.log("[SyncDebug] → IN SYNC (no action)");
         }
-        // else: within 10s of each other — treat as in sync, no action needed
+        updateSyncDebugBar(cloudTs);
       } catch (err) {
         console.warn("[Firebase] initial getDoc error:", err);
       }
@@ -7295,10 +7328,13 @@
         const localChangeTs = parseInt(localStorage.getItem(LOCAL_LAST_CHANGE_KEY) || "0");
         const localSyncTs   = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY)   || "0");
         const localTs = Math.max(localChangeTs, localSyncTs);
+        console.log(`[SyncDebug] snapshot: cloudTs=${cloudTs} localTs=${localTs} diff=${cloudTs-localTs}`);
+        updateSyncDebugBar(cloudTs);
         if (cloudTs > localTs + 10000) {
-          // Cloud is genuinely newer (another user synced) — apply it
+          console.log("[SyncDebug] snapshot → PULL (cloud newer)");
           applyFirestoreData(snap.data());
           _origSetItem(LOCAL_LAST_SAVE_KEY, String(cloudTs));
+          updateSyncDebugBar(cloudTs);
         }
       }, (err) => {
         console.warn("[Firebase] onSnapshot error:", err);
