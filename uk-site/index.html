@@ -7075,7 +7075,7 @@
         `<span title="Stamped when you edit data locally"><b>Last local change:</b> ${fmt(lc)}</span>`,
         `<span title="Stamped when sync completes"><b>Last local save:</b> ${fmt(ls)}</span>`,
         `<span title="Cloud _lastUpdated from Firestore"><b>Cloud last updated:</b> ${fmt(cl)}</span>`,
-        `<span style="color:${localWins?"#b35900":"#2a7a2a"};font-weight:600" title="What the smart sync decided on last sign-in">→ ${localWins ? "LOCAL wins (would push)" : cl > ls + 10000 ? "CLOUD wins (would pull)" : "IN SYNC (no action)"}</span>`,
+        `<span style="color:${localWins?"#b35900":cl>ls?"#1a5fa8":"#2a7a2a"};font-weight:600" title="lc=${lc} ls=${ls} cl=${cl}">→ ${localWins ? "LOCAL wins (push)" : cl > ls ? `CLOUD wins (pull) +${cl-ls}ms` : "IN SYNC (no action)"}</span>`,
       ].join("");
     }
     setInterval(() => updateSyncDebugBar(), 5000);
