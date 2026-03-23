@@ -5198,7 +5198,7 @@
           delete _fresh[id];
         }
         commandAttentionState = _fresh; // keep closure variable in sync for this call's scope
-        console.log("[StarDebug] setCommandAttentionState id=" + id + " active=" + nextActive + " applyingCloud=" + _applyingCloudData);
+        console.log("[StarDebug] setCommandAttentionState id=" + id + " active=" + nextActive);
         localStorage.setItem(COMMAND_ATTENTION_STORAGE_KEY, JSON.stringify(_fresh));
         updateFlightTotal();
       }
