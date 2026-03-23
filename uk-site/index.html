@@ -7287,36 +7287,29 @@
       setUserStatusBar(email);
       updateSyncDebugBar();
 
-      // Smart load: compare local-change timestamp vs cloud timestamp before overwriting
+      // On sign-in: ALWAYS pull from cloud if cloud has data.
+      // Never auto-push on sign-in — pushing only happens via the explicit "Sync to Cloud" button.
+      // This prevents contaminated LOCAL_LAST_CHANGE_KEY values from overwriting shared cloud data.
       try {
         const snap = await getDoc(tripDocRef);
         const cloudTs = snap.exists() ? (snap.data()._lastUpdated || 0) : 0;
-        const localChangeTs = parseInt(localStorage.getItem(LOCAL_LAST_CHANGE_KEY) || "0");
-        const localSyncTs   = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY) || "0");
-        // hasRealLocalChanges: user actually edited something since their last cloud sync
-        const hasRealLocalChanges = localChangeTs > localSyncTs + 5000;
-        console.log(`[SyncDebug] sign-in: cloudTs=${cloudTs} localChangeTs=${localChangeTs} localSyncTs=${localSyncTs} hasRealLocal=${hasRealLocalChanges}`);
+        const localSyncTs = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY) || "0");
+        console.log(`[SyncDebug] sign-in: cloudTs=${cloudTs} localSyncTs=${localSyncTs}`);
         updateSyncDebugBar(cloudTs);
 
-        if (!snap.exists() || localSyncTs === 0) {
-          // First ever load — pull cloud down if it exists
-          console.log("[SyncDebug] → LOAD (first load)");
-          if (snap.exists()) { _snapshotIgnoreNext = true; applyFirestoreData(snap.data()); _origSetItem(LOCAL_LAST_SAVE_KEY, String(cloudTs)); }
-        } else if (hasRealLocalChanges && localChangeTs > cloudTs + 10000) {
-          // User made real local edits after their last sync AND they're 10s+ newer than cloud → push
-          console.log("[SyncDebug] → PUSH (real local changes newer than cloud)");
-          setStatus("Local data is newer — pushing to cloud…", false);
-          await saveAllToFirestore();
-          setStatus("✓ Auto-saved local changes to cloud.", false);
-          setTimeout(() => setStatus(""), 3000);
-        } else if (cloudTs > localSyncTs) {
-          // Cloud has ANYTHING newer than what we last synced → always pull
-          console.log("[SyncDebug] → PULL (cloud newer than last sync)");
-          _snapshotIgnoreNext = true;
-          applyFirestoreData(snap.data());
-          _origSetItem(LOCAL_LAST_SAVE_KEY, String(cloudTs));
-        } else {
-          console.log("[SyncDebug] → IN SYNC (no action)");
+        if (snap.exists()) {
+          if (cloudTs > localSyncTs) {
+            // Cloud is newer than what we last synced — pull it down
+            console.log("[SyncDebug] → PULL (cloud newer than last sync)");
+            _snapshotIgnoreNext = true;
+            applyFirestoreData(snap.data());
+          } else if (localSyncTs === 0) {
+            // First ever load
+            console.log("[SyncDebug] → LOAD (first load)");
+            applyFirestoreData(snap.data());
+          } else {
+            console.log("[SyncDebug] → IN SYNC (no action)");
+          }
         }
         updateSyncDebugBar(cloudTs);
       } catch (err) {
