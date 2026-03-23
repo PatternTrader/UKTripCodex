@@ -5186,12 +5186,19 @@
           starBtn.setAttribute("aria-pressed", String(nextActive));
           starBtn.title = nextActive ? "Marked for special attention" : "Mark for special attention";
         }
+        // Always read fresh from localStorage before writing back — this avoids the
+        // closure-variable staleness bug where a re-init (applyFirestoreData) creates
+        // a new commandAttentionState but star-button click handlers still close over
+        // the original empty object from the first initializeCommandChecklist call.
+        let _fresh = {};
+        try { _fresh = JSON.parse(localStorage.getItem(COMMAND_ATTENTION_STORAGE_KEY) || "{}") || {}; } catch (_e) {}
         if (nextActive) {
-          commandAttentionState[id] = true;
+          _fresh[id] = true;
         } else {
-          delete commandAttentionState[id];
+          delete _fresh[id];
         }
-        localStorage.setItem(COMMAND_ATTENTION_STORAGE_KEY, JSON.stringify(commandAttentionState));
+        commandAttentionState = _fresh; // keep closure variable in sync for this call's scope
+        localStorage.setItem(COMMAND_ATTENTION_STORAGE_KEY, JSON.stringify(_fresh));
         updateFlightTotal();
       }
 
@@ -5650,7 +5657,11 @@
           starBtn.addEventListener("click", (event) => {
             event.preventDefault();
             event.stopPropagation();
-            setCommandAttentionState(itemEl, id, !Boolean(commandAttentionState[id]));
+            // Read fresh from localStorage — closure variable may be stale if
+            // initializeCommandChecklist was called again after applyFirestoreData.
+            let _cur = {};
+            try { _cur = JSON.parse(localStorage.getItem(COMMAND_ATTENTION_STORAGE_KEY) || "{}") || {}; } catch (_e) {}
+            setCommandAttentionState(itemEl, id, !Boolean(_cur[id]));
           });
           const checkBtn = itemEl.querySelector(".cc-check-btn");
           checkBtn?.insertAdjacentElement("afterend", starBtn);
