@@ -7293,21 +7293,25 @@
         const cloudTs = snap.exists() ? (snap.data()._lastUpdated || 0) : 0;
         const localChangeTs = parseInt(localStorage.getItem(LOCAL_LAST_CHANGE_KEY) || "0");
         const localSyncTs   = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY) || "0");
-        const localTs = Math.max(localChangeTs, localSyncTs);
-        console.log(`[SyncDebug] sign-in: cloudTs=${cloudTs} localChangeTs=${localChangeTs} localSyncTs=${localSyncTs} localTs=${localTs}`);
+        // hasRealLocalChanges: user actually edited something since their last cloud sync
+        const hasRealLocalChanges = localChangeTs > localSyncTs + 5000;
+        console.log(`[SyncDebug] sign-in: cloudTs=${cloudTs} localChangeTs=${localChangeTs} localSyncTs=${localSyncTs} hasRealLocal=${hasRealLocalChanges}`);
         updateSyncDebugBar(cloudTs);
 
-        if (!snap.exists() || localTs === 0) {
-          console.log("[SyncDebug] → LOAD (no local or first load)");
+        if (!snap.exists() || localSyncTs === 0) {
+          // First ever load — pull cloud down if it exists
+          console.log("[SyncDebug] → LOAD (first load)");
           if (snap.exists()) { _snapshotIgnoreNext = true; applyFirestoreData(snap.data()); _origSetItem(LOCAL_LAST_SAVE_KEY, String(cloudTs)); }
-        } else if (localTs > cloudTs + 10000) {
-          console.log("[SyncDebug] → PUSH (local newer)");
+        } else if (hasRealLocalChanges && localChangeTs > cloudTs + 10000) {
+          // User made real local edits after their last sync AND they're 10s+ newer than cloud → push
+          console.log("[SyncDebug] → PUSH (real local changes newer than cloud)");
           setStatus("Local data is newer — pushing to cloud…", false);
           await saveAllToFirestore();
           setStatus("✓ Auto-saved local changes to cloud.", false);
           setTimeout(() => setStatus(""), 3000);
-        } else if (cloudTs > localTs + 10000) {
-          console.log("[SyncDebug] → PULL (cloud newer)");
+        } else if (cloudTs > localSyncTs) {
+          // Cloud has ANYTHING newer than what we last synced → always pull
+          console.log("[SyncDebug] → PULL (cloud newer than last sync)");
           _snapshotIgnoreNext = true;
           applyFirestoreData(snap.data());
           _origSetItem(LOCAL_LAST_SAVE_KEY, String(cloudTs));
@@ -7327,11 +7331,11 @@
         const cloudTs = snap.data()._lastUpdated || 0;
         const localChangeTs = parseInt(localStorage.getItem(LOCAL_LAST_CHANGE_KEY) || "0");
         const localSyncTs   = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY)   || "0");
-        const localTs = Math.max(localChangeTs, localSyncTs);
-        console.log(`[SyncDebug] snapshot: cloudTs=${cloudTs} localTs=${localTs} diff=${cloudTs-localTs}`);
+        const localSyncTs2 = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY) || "0");
+        console.log(`[SyncDebug] snapshot: cloudTs=${cloudTs} localSyncTs=${localSyncTs2} diff=${cloudTs-localSyncTs2}`);
         updateSyncDebugBar(cloudTs);
-        if (cloudTs > localTs + 10000) {
-          console.log("[SyncDebug] snapshot → PULL (cloud newer)");
+        if (cloudTs > localSyncTs2) {
+          console.log("[SyncDebug] snapshot → PULL (cloud newer than last sync)");
           applyFirestoreData(snap.data());
           _origSetItem(LOCAL_LAST_SAVE_KEY, String(cloudTs));
           updateSyncDebugBar(cloudTs);
