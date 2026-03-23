@@ -7070,12 +7070,13 @@
       const lc = parseInt(localStorage.getItem(LOCAL_LAST_CHANGE_KEY) || "0");
       const ls = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY)   || "0");
       const cl = _lastKnownCloudTs;
-      const localWins = lc > ls + 5000;
+      const hasUnsaved = lc > ls + 2000;
+      const lcDisplay = lc > 0 ? fmt(lc) : "—";
       bar.innerHTML = [
-        `<span title="Stamped when you edit data locally"><b>Last local change:</b> ${fmt(lc)}</span>`,
-        `<span title="Stamped when sync completes"><b>Last local save:</b> ${fmt(ls)}</span>`,
+        `<span title="Non-zero only when you have edits not yet synced to cloud"><b>Unsaved changes since:</b> ${lcDisplay}</span>`,
+        `<span title="Stamped when Sync to Cloud completes or cloud data is loaded"><b>Last cloud sync:</b> ${fmt(ls)}</span>`,
         `<span title="Cloud _lastUpdated from Firestore"><b>Cloud last updated:</b> ${fmt(cl)}</span>`,
-        `<span style="color:${localWins?"#b35900":cl>ls?"#1a5fa8":"#2a7a2a"};font-weight:600" title="lc=${lc} ls=${ls} cl=${cl}">→ ${localWins ? "LOCAL wins (push)" : cl > ls ? `CLOUD wins (pull) +${cl-ls}ms` : "IN SYNC (no action)"}</span>`,
+        `<span style="color:${hasUnsaved?"#b35900":cl>ls?"#1a5fa8":"#2a7a2a"};font-weight:600" title="lc=${lc} ls=${ls} cl=${cl}">→ ${hasUnsaved ? "UNSAVED LOCAL CHANGES" : cl > ls ? `CLOUD wins (pull) +${cl-ls}ms` : "IN SYNC"}</span>`,
       ].join("");
     }
     setInterval(() => updateSyncDebugBar(), 5000);
@@ -7181,10 +7182,11 @@
           try { _origSetItem(lsKey, JSON.stringify(data[field])); } catch (_) {}
         }
       }
-      // Stamp both sync timestamps to cloud value so future sign-ins never falsely push stale local data
+      // After loading from cloud: record when we last synced, and clear any local-change stamp
+      // so hasUnsavedChanges = false and the live listener can still apply future updates.
       if (data._lastUpdated) {
         _origSetItem(LOCAL_LAST_SAVE_KEY,   String(data._lastUpdated));
-        _origSetItem(LOCAL_LAST_CHANGE_KEY, String(data._lastUpdated));
+        _origSetItem(LOCAL_LAST_CHANGE_KEY, "0");
       }
 
       // 2. Refresh outer-scope variables from localStorage so all bind functions see fresh data
