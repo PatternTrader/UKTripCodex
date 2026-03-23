@@ -3656,7 +3656,9 @@
       const _origSet = localStorage.setItem.bind(localStorage);
       localStorage.setItem = function(key, value) {
         _origSet(key, value);
-        if (_TRIP_KEYS.has(key)) {
+        // Do NOT auto-save while cloud data is being applied — that would immediately
+        // write stale local data back to Firestore, overwriting the cloud data we just loaded.
+        if (_TRIP_KEYS.has(key) && !window._applyingCloudData) {
           window._fbSaveAll?.();
         }
       };
@@ -7029,6 +7031,7 @@
     const _syncedLsKeys = new Set(Object.values(STORAGE_KEY_MAP));
     const _origSetItem = localStorage.setItem.bind(localStorage);
     let _applyingCloudData = false;
+    window._applyingCloudData = false;   // shared with patchLocalStorageForFirebase
     localStorage.setItem = (key, value) => {
       _origSetItem(key, value);
       if (!_applyingCloudData && _syncedLsKeys.has(key)) _origSetItem(LOCAL_LAST_CHANGE_KEY, String(Date.now()));
@@ -7172,7 +7175,7 @@
 
     function applyFirestoreData(data) {
       if (!data) return;
-      _applyingCloudData = true;
+      _applyingCloudData = true; window._applyingCloudData = true;
       try {
 
       // 1. Write Firestore data to localStorage — use _origSetItem to avoid
@@ -7205,7 +7208,7 @@
       try { if (typeof updateFlightTotal === "function") updateFlightTotal(); } catch (_) {}
 
       } finally {
-        _applyingCloudData = false;
+        _applyingCloudData = false; window._applyingCloudData = false;
         updateSyncDebugBar();
       }
     }
