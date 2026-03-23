@@ -7316,21 +7316,25 @@
         console.warn("[Firebase] initial getDoc error:", err);
       }
 
-      // Subscribe to real-time updates — only apply if cloud is meaningfully newer than local
+      // Subscribe to real-time updates
       if (_unsubSnapshot) _unsubSnapshot();
       _unsubSnapshot = onSnapshot(tripDocRef, (snap) => {
         if (_snapshotIgnoreNext) { _snapshotIgnoreNext = false; return; }
         if (!snap.exists()) return;
-        const cloudTs = snap.data()._lastUpdated || 0;
+        const cloudTs      = snap.data()._lastUpdated || 0;
         const localChangeTs = parseInt(localStorage.getItem(LOCAL_LAST_CHANGE_KEY) || "0");
         const localSyncTs   = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY)   || "0");
-        const localSyncTs2 = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY) || "0");
-        console.log(`[SyncDebug] snapshot: cloudTs=${cloudTs} localSyncTs=${localSyncTs2} diff=${cloudTs-localSyncTs2}`);
+        const hasUnsavedChanges = localChangeTs > localSyncTs + 2000;
+        console.log(`[SyncDebug] snapshot: cloudTs=${cloudTs} localSyncTs=${localSyncTs} localChangeTs=${localChangeTs} unsaved=${hasUnsavedChanges}`);
         updateSyncDebugBar(cloudTs);
-        if (cloudTs > localSyncTs2) {
-          console.log("[SyncDebug] snapshot → PULL (cloud newer than last sync)");
+        if (hasUnsavedChanges) {
+          // User has made local changes not yet synced — don't overwrite them
+          console.log("[SyncDebug] snapshot → SKIP (user has unsaved local changes)");
+          return;
+        }
+        if (cloudTs > localSyncTs) {
+          console.log("[SyncDebug] snapshot → PULL (cloud newer, no unsaved local changes)");
           applyFirestoreData(snap.data());
-          _origSetItem(LOCAL_LAST_SAVE_KEY, String(cloudTs));
           updateSyncDebugBar(cloudTs);
         }
       }, (err) => {
