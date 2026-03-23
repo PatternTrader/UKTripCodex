@@ -3649,19 +3649,16 @@
       "ukTripCCOrderV1"
     ];
 
-    // ── Firebase sync: patch localStorage.setItem so any write to a trip key
-    //    automatically triggers the debounced Firestore save (window._fbSaveAll).
+    // ── Firebase sync: localStorage.setItem passthrough
+    //    Auto-save was removed — it caused every star click / user action to immediately
+    //    push to Firestore, triggering onSnapshot on all other browsers, which pulled and
+    //    overwrote those same changes (creating an infinite re-starring / sync loop).
+    //    The ONLY push mechanism is now the explicit "Sync to Cloud" button.
+    //    The Firebase module's override (below) still stamps LOCAL_LAST_CHANGE_KEY so the
+    //    debug bar can show "Unsaved changes since …" correctly.
     (function patchLocalStorageForFirebase() {
-      const _TRIP_KEYS = new Set(COMMAND_CENTER_BACKUP_STORAGE_KEYS);
-      const _origSet = localStorage.setItem.bind(localStorage);
-      localStorage.setItem = function(key, value) {
-        _origSet(key, value);
-        // Do NOT auto-save while cloud data is being applied — that would immediately
-        // write stale local data back to Firestore, overwriting the cloud data we just loaded.
-        if (_TRIP_KEYS.has(key) && !window._applyingCloudData) {
-          window._fbSaveAll?.();
-        }
-      };
+      // No-op: nothing extra needed here now that auto-save is removed.
+      // Kept as a named IIFE so existing call-sites / search references still find it.
     })();
 
     const EMPTY_IMAGE_PLACEHOLDER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800'><rect width='1200' height='800' fill='white'/></svg>";
