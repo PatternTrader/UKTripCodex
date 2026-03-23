@@ -5198,6 +5198,7 @@
           delete _fresh[id];
         }
         commandAttentionState = _fresh; // keep closure variable in sync for this call's scope
+        console.log("[StarDebug] setCommandAttentionState id=" + id + " active=" + nextActive + " applyingCloud=" + _applyingCloudData);
         localStorage.setItem(COMMAND_ATTENTION_STORAGE_KEY, JSON.stringify(_fresh));
         updateFlightTotal();
       }
@@ -7111,11 +7112,16 @@
             catch (_) { payload[field] = raw; }
           }
         }
+        // DEBUG: log what star state we are about to push
+        console.log("[SaveDebug] pushing commandAttention =", JSON.stringify(payload.commandAttention));
+        console.trace("[SaveDebug] saveAllToFirestore called from:");
         payload._lastUpdated = Date.now();
+        _snapshotIgnoreNext = true; // suppress echo — we already have what we're saving
         await setDoc(tripDocRef, payload, { merge: true });
         localStorage.setItem(LOCAL_LAST_SAVE_KEY, String(payload._lastUpdated));
         updateSyncDebugBar(payload._lastUpdated);
       } catch (err) {
+        _snapshotIgnoreNext = false;
         console.warn("[Firebase] saveAllToFirestore error:", err);
       }
     }
@@ -7218,7 +7224,8 @@
       //    closure system so the correct star state is always reflected even if the above threw.
       try {
         const _atState = JSON.parse(localStorage.getItem(STORAGE_KEY_MAP.commandAttention) || "{}") || {};
-        console.log("[applyFirestoreData] commandAttention →", JSON.stringify(_atState));
+        console.log("[ApplyDebug] applyFirestoreData applying commandAttention =", JSON.stringify(_atState));
+        console.trace("[ApplyDebug] applyFirestoreData called from:");
         document.querySelectorAll(".js-cc-check-item[data-check-id]").forEach(function(el) {
           const _id = el.getAttribute("data-check-id");
           if (!_id) return;
