@@ -7101,6 +7101,9 @@
       el.style.color = isError ? "#b23b3b" : "#5d6978";
     }
 
+    // ── Guard: block sync until cloud data has been received at least once ───────
+    let _cloudDataReceived = false;
+
     // ── Gather all state from localStorage and write to Firestore ─────────────
     async function saveAllToFirestore() {
       try {
@@ -7112,13 +7115,13 @@
             catch (_) { payload[field] = raw; }
           }
         }
-        // DEBUG: log what star state we are about to push
-        console.log("[SaveDebug] pushing commandAttention =", JSON.stringify(payload.commandAttention));
-        console.trace("[SaveDebug] saveAllToFirestore called from:");
         payload._lastUpdated = Date.now();
         _snapshotIgnoreNext = true; // suppress echo — we already have what we're saving
         await setDoc(tripDocRef, payload, { merge: true });
-        localStorage.setItem(LOCAL_LAST_SAVE_KEY, String(payload._lastUpdated));
+        // After a successful save, stamp LOCAL_LAST_SAVE_KEY AND reset LOCAL_LAST_CHANGE_KEY
+        // so the snapshot listener never sees stale "unsaved changes" after a sync.
+        _origSetItem(LOCAL_LAST_SAVE_KEY, String(payload._lastUpdated));
+        _origSetItem(LOCAL_LAST_CHANGE_KEY, "0");
         updateSyncDebugBar(payload._lastUpdated);
       } catch (err) {
         _snapshotIgnoreNext = false;
@@ -7130,23 +7133,22 @@
     async function smartSync() {
       const syncBtn = document.getElementById("cc-sync-cloud");
       const statusRow = document.getElementById("cc-sync-status-row");
-      const timestampsEl = document.getElementById("cc-sync-timestamps");
+
+      // Safety guard: never push before we've received cloud data at least once.
+      // Without this, opening the site on a fresh machine and clicking Sync before
+      // the initial cloud pull completes would overwrite Firestore with blank data.
+      if (!_cloudDataReceived) {
+        setStatus("⏳ Still loading cloud data — please wait a moment.", true);
+        setTimeout(() => setStatus(""), 4000);
+        return;
+      }
 
       if (syncBtn) { syncBtn.classList.add("is-syncing"); syncBtn.textContent = "☁️ Checking…"; }
 
       try {
-        const snap = await getDoc(tripDocRef);
-        const cloudTs = snap.exists() ? (snap.data()._lastUpdated || 0) : 0;
-        const localChangeTs = parseInt(localStorage.getItem(LOCAL_LAST_CHANGE_KEY) || "0");
-        const localSyncTs   = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY)   || "0");
-        const localTs = Math.max(localChangeTs, localSyncTs);
-
-        if (syncBtn) { syncBtn.classList.remove("is-syncing"); syncBtn.textContent = "☁️ Sync to Cloud"; }
-
-        // Always push — "Sync to Cloud" means the user wants their data saved now.
-        // Hide any leftover conflict banner from a previous check.
         if (statusRow) statusRow.style.display = "none";
         await saveAllToFirestore();
+        if (syncBtn) { syncBtn.classList.remove("is-syncing"); syncBtn.textContent = "☁️ Sync to Cloud"; }
         setStatus("✓ Synced to cloud!", false);
         setTimeout(() => setStatus(""), 3000);
       } catch (err) {
@@ -7189,6 +7191,7 @@
 
     function applyFirestoreData(data) {
       if (!data) return;
+      _cloudDataReceived = true; // unlock Sync button — we've received at least one cloud snapshot
       _applyingCloudData = true; window._applyingCloudData = true;
       try {
 
@@ -7346,7 +7349,10 @@
             console.log("[SyncDebug] → LOAD (first load)");
             applyFirestoreData(snap.data());
           } else {
+            // Already in sync — local data matches cloud. Still mark cloud as received
+            // so the Sync button is unlocked (safe to push since data is confirmed good).
             console.log("[SyncDebug] → IN SYNC (no action)");
+            _cloudDataReceived = true;
           }
         }
         updateSyncDebugBar(cloudTs);
