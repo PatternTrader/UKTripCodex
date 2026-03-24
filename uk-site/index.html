@@ -1891,12 +1891,12 @@
         <h2 class="section-title">Dad-Level Trip Command Center</h2>
         <div class="cc-toolbar">
           <button type="button" class="cc-utility-btn cc-utility-btn--sync" id="cc-sync-cloud">☁️ Sync to Cloud</button>
-          <input type="file" id="cc-import-file" accept="application/json" style="display:none">
+          <input type="file" id="cc-import-file" accept="application/json" hidden>
           <label class="cc-exchange-label" title="Exchange rate: 1 US dollar = X British pounds">$1&nbsp;=&nbsp;£<input type="number" id="cc-exchange-rate-inverse" class="cc-exchange-input" value="0.79" min="0.0001" step="0.0001" aria-label="USD to GBP exchange rate"></label>
           <label class="cc-exchange-label" title="Exchange rate: 1 British pound = X US dollars">£1&nbsp;=&nbsp;$<input type="number" id="cc-exchange-rate" class="cc-exchange-input" value="1.27" min="0.01" step="0.01" aria-label="GBP to USD exchange rate"></label>
           <span class="cc-toolbar-status" id="cc-backup-status" aria-live="polite"></span>
           <span id="fb-user-status" style="margin-left:auto;font-size:0.78rem;color:#5d6978;display:flex;align-items:center;gap:8px;white-space:nowrap;"></span>
-          <label for="cc-import-file" class="cc-utility-btn cc-utility-btn--import" id="cc-import-data" role="button" tabindex="0">📥 Import Costs</label>
+          <button type="button" class="cc-utility-btn cc-utility-btn--import" id="cc-import-data">📥 Import Costs</button>
           <button type="button" class="cc-utility-btn cc-utility-btn--export" id="cc-export-data">📤 Export Costs</button>
         </div>
         <div class="cc-sync-status-row" id="cc-sync-status-row">
@@ -1907,7 +1907,6 @@
             <button class="cc-sync-action-btn cc-sync-action-btn--cancel" id="cc-sync-cancel">✕ Cancel</button>
           </div>
         </div>
-        <div id="sync-debug-bar" style="font-size:0.7rem;font-family:monospace;color:#555;padding:4px 10px 2px;display:flex;gap:18px;flex-wrap:wrap;border-top:1px solid rgba(0,0,0,0.07);background:rgba(0,0,0,0.03);"></div>
       </div>
       <div class="budget-pie-wrap">
         <h3 class="budget-pie-title">Budget Breakdown</h3>
@@ -1930,23 +1929,41 @@
             </div>
           </div>
           <ul class="cc-checklist">
-            <li class="cc-check-item js-cc-check-item" data-check-id="flight-to-london">
+            <li class="cc-check-item js-cc-check-item" data-check-id="flight-outbound">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text">NYC &rarr; London · Ref: FAJAMJ · Leg 1: Thu Apr 2, 3:00pm LGA &rarr; 4:19pm BOS — VS3280, Republic Airline Inc. (Delta Basic Economy, 1h 19m) · Leg 2: Thu Apr 2, 7:00pm BOS &rarr; Fri Apr 3, 6:45am LHR — VS4012, Delta (Delta Basic Economy, direct, 11h 45m)</span>
+              <span class="cc-check-text">Leg 1: Thu Apr 2, 3:00pm LGA &rarr; 4:19pm BOS — VS3280 / Republic for Delta (1h 19m) · Ref: FAJAMJ</span>
               <span class="cc-link-wrap">
-                <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-to-london" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-to-london" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-outbound" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-outbound" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-to-london" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="flight-to-london" aria-label="Cost GBP"></div>
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-outbound" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="flight-outbound" aria-label="Cost GBP"></div>
             </li>
-            <li class="cc-check-item js-cc-check-item" data-check-id="flight-to-nyc">
+            <li class="cc-check-item js-cc-check-item" data-check-id="flight-return">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text">London &rarr; NYC · Ref: FAJAMJ · Leg 3: Sat Apr 12, 6:55pm LHR &rarr; 9:20pm BOS — VS11, Virgin Atlantic (Economy Light, direct, 7h 25m) · Leg 4: Sun Apr 13, 6:00am BOS &rarr; 7:30am LGA — VS3678, Republic Airline Inc. (Delta Basic Economy, 1h 30m)</span>
+              <span class="cc-check-text">Leg 2: Thu Apr 2, 7:00pm BOS &rarr; Fri Apr 3, 6:45am LHR — VS4012 / Delta (6h 45m, direct) · Ref: FAJAMJ</span>
               <span class="cc-link-wrap">
-                <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-to-nyc" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-to-nyc" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-return" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-return" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-to-nyc" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="flight-to-nyc" aria-label="Cost GBP"></div>
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-return" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="flight-return" aria-label="Cost GBP"></div>
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="flight-bos-jfk">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text">Return Leg 3: Sat Apr 12, 6:55pm LHR &rarr; 9:20pm BOS — VS11 / Virgin Atlantic (7h 25m, direct) · Ref: FAJAMJ</span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-bos-jfk" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-bos-jfk" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
+              </span>
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-bos-jfk" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="flight-bos-jfk" aria-label="Cost GBP"></div>
+            </li>
+            <li class="cc-check-item js-cc-check-item" data-check-id="flight-bos-lga">
+              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
+              <span class="cc-check-text">Return Leg 4: Sun Apr 13, 6:00am BOS &rarr; 7:30am LGA — VS3678 / Republic for Delta (1h 30m) · Ref: FAJAMJ</span>
+              <span class="cc-link-wrap">
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-bos-lga" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-bos-lga" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
+              </span>
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-bos-lga" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="flight-bos-lga" aria-label="Cost GBP"></div>
             </li>
           </ul>
         </article>
@@ -2330,8 +2347,8 @@
         date: "April 2-3",
         showAllStopsOnTopMap: true,
         items: [
-          { text: "Leave from 303 E. 83rd St, NY, NY to LaGuardia Airport (LGA). Depart home by 9:30 AM — allow ~90 min by rideshare for morning traffic. Arrive LGA by 11:00 AM (4 hrs ahead of 3:00 PM flight due to reduced TSA staffing).", page: "303_E_83rd_St_NYC", caption: "Depart from 303 E. 83rd St" },
-          { text: "Arrive LaGuardia (LGA) by 11:00 AM — 4 hrs before VS3280 departure at 3:00 PM. Check in, clear security, and board. VS3280 (Republic for Delta) LGA → BOS, 3:00 PM → 4:19 PM. Booking Ref: FAJAMJ.", page: "LaGuardia_Airport", caption: "LGA — arrive 11 AM, depart 3 PM VS3280" },
+          { text: "Leave from 303 E. 83rd St, NY, NY to LaGuardia Airport (LGA). Allow 30–50 min by rideshare; depart home by 12:30 PM for a 3:00 PM flight.", page: "303_E_83rd_St_NYC", caption: "Depart from 303 E. 83rd St" },
+          { text: "Depart New York LaGuardia (LGA) at 3:00 PM on VS3280, operated by Republic for Delta, to Boston Logan (BOS). 1 hr 19 min flight. Booking Ref: FAJAMJ.", page: "LaGuardia_Airport", caption: "LGA departure — VS3280" },
           { text: "Arrive Boston Logan (BOS) at 4:19 PM. 2 hr 41 min layover until 7:00 PM departure. Stay airside — clear the BOS security checkpoint and head to the international terminal.", page: "BOS_Stopover_D1", caption: "BOS layover — 2h 41m" },
           { text: "Depart Boston Logan (BOS) at 7:00 PM on VS4012, operated by Delta, direct to London Heathrow (LHR). 6 hr 45 min overnight flight. Booking Ref: FAJAMJ.", page: "BOS_Depart_D1", caption: "BOS departure — VS4012", defaultCost: 0 }
         ]
@@ -2478,7 +2495,6 @@
         day: 12,
         title: "Boston Overnight — Return Home to New York",
         date: "April 13",
-        showAllStopsOnTopMap: true,
         items: [
           { text: "Overnight at hotel near Boston Logan (arrive 9:20 PM Apr 12). Very early wake-up — leave hotel by 4:30 AM for a 6:00 AM departure.", page: "Boston_Logan_International_Airport", caption: "Boston overnight layover" },
           { text: "Depart Boston Logan (BOS) at 6:00 AM on VS3678, operated by Republic for Delta, to LaGuardia (LGA). 1 hr 30 min flight. Booking Ref: FAJAMJ.", page: "BOS_Departure_D12", caption: "BOS departure — VS3678" },
@@ -2505,8 +2521,8 @@
 
     const visitTimes = {
       // Day 1 — NYC to LGA → BOS → LHR
-      "303_E_83rd_St_NYC": "09:00",                    // Start prep at 9 AM; depart home ~9:30 AM for LGA
-      LaGuardia_Airport: "11:00",                      // Arrive LGA 11:00 AM — 4 hrs before 3:00 PM departure
+      "303_E_83rd_St_NYC": "12:00",                    // Start packing/prep at noon; depart ~12:30 PM for LGA
+      LaGuardia_Airport: "13:30",                      // Arrive LGA ~1:30 PM — 1.5 hrs before 3:00 PM departure
       BOS_Stopover_D1: "16:19",                        // Arrive BOS 4:19 PM — 2h 41m layover until 7:00 PM
       BOS_Depart_D1: "19:00",                          // Depart BOS 7:00 PM on VS4012 → LHR
       Newark_Liberty_International_Airport: "15:07",
@@ -2622,8 +2638,8 @@
 
     const visitDurationsMin = {
       // Day 1
-      "303_E_83rd_St_NYC": 30,                    // 9:00 AM prep; rideshare departs ~9:30 AM
-      LaGuardia_Airport: 240,                     // 11:00 AM arrive → 3:00 PM depart = 4 hrs at airport
+      "303_E_83rd_St_NYC": 30,                    // 12:00 PM prep; rideshare departs 12:30 PM
+      LaGuardia_Airport: 90,                      // 1:30 PM arrive → 3:00 PM depart = 90 min at airport
       BOS_Stopover_D1: 0,                         // 4:19 PM arrive — layover marker; transit bar covers the 2h41m
       BOS_Depart_D1: 0,                           // 7:00 PM depart — overnight flight, 0 own duration (shown as transit)
       Newark_Liberty_International_Airport: 80,
@@ -2740,7 +2756,7 @@
     const dayTransportPlans = {
       1: [
         { mode: "Starting point", bufferMin: 0, note: "Departing from home — 303 E. 83rd St. Prep and pack." },
-        { mode: "Rideshare / taxi to LGA", bufferMin: 90, note: "Depart home ~9:30 AM. Transfer from Upper East Side to LaGuardia; allow ~90 min for morning traffic. Arrive LGA by 11:00 AM — 4 hrs before 3:00 PM departure (reduced TSA staffing)." },
+        { mode: "Rideshare / taxi to LGA", bufferMin: 50, note: "Depart home 12:30 PM. Transfer from Upper East Side to LaGuardia; allow 30–50 min traffic. Arrive LGA ~1:30 PM — 90 min before 3:00 PM departure." },
         { mode: "Airplane VS3280 (LGA → BOS)", bufferMin: 79, note: "Departs LGA 3:00 PM, arrives BOS 4:19 PM. 1 hr 19 min flight. 2h 41m layover in Boston follows." },
         { mode: "BOS Terminal layover", bufferMin: 161, note: "Layover 4:19 PM → 7:00 PM = 2h 41m. Stay airside, grab food, rest before overnight flight." }
       ],
@@ -2830,7 +2846,7 @@
       2: "Arrive LHR at 6:50am on April 3. Elizabeth Line from Terminal 5 → Tottenham Court Road, then taxi to 134 Great Portland St. Thames Clippers from Westminster Pier to Greenwich (~45–60 min).",
       5: "LNER 9:03am from London Kings Cross — book at lner.co.uk. Arrive Edinburgh Waverley 1:32pm.",
       9: "Lumo 8:26am from Edinburgh Waverley — book at lumo.co.uk. Arrive London Kings Cross 12:46pm.",
-      1: "Depart home ~9:30 AM for LGA — arrive by 11:00 AM (4 hrs early, reduced TSA staffing). VS3280 departs LGA 3:00 PM → BOS 4:19 PM (2h 41m layover). VS4012 departs BOS 7:00 PM → LHR Apr 3, 6:45 AM. Ref: FAJAMJ.",
+      1: "Depart home ~12:30 PM for LGA. VS3280 departs LGA 3:00 PM, connects BOS (2h 41m layover). VS4012 departs BOS 7:00 PM, arrives LHR Apr 3, 6:45 AM. Booking Ref: FAJAMJ.",
       10: "Bonus free day in London — no flights today. Pack bags tonight. Departure is April 12.",
       11: "VS11 (Virgin Atlantic) departs LHR 6:55 PM — leave central London by 4:00 PM. Heathrow Express from Paddington ~15 min. Arrive BOS 9:20 PM. Book hotel near airport.",
       12: "Very early departure — VS3678 departs BOS 6:00 AM, arrives LGA 7:30 AM. Be at airport by 4:30 AM. Book hotel near BOS Logan for the overnight. Booking Ref: FAJAMJ."
@@ -2892,7 +2908,6 @@
       London_Evening_D10: [51.5074, -0.1278],             // Central London evening
       // Day 11 LHR departure / Day 12 BOS→LGA
       BOS_Arrive_D11: [42.3656, -71.0096],                // Boston Logan (arrive Day 11)
-      Boston_Logan_International_Airport: [42.3656, -71.0096], // Boston Logan (overnight Day 12)
       BOS_Departure_D12: [42.3656, -71.0096],             // Boston Logan (depart Day 12)
       LGA_Arrive_Home: [40.7773, -73.8726],               // LaGuardia (arrive home)
 
@@ -3649,16 +3664,17 @@
       "ukTripCCOrderV1"
     ];
 
-    // ── Firebase sync: localStorage.setItem passthrough
-    //    Auto-save was removed — it caused every star click / user action to immediately
-    //    push to Firestore, triggering onSnapshot on all other browsers, which pulled and
-    //    overwrote those same changes (creating an infinite re-starring / sync loop).
-    //    The ONLY push mechanism is now the explicit "Sync to Cloud" button.
-    //    The Firebase module's override (below) still stamps LOCAL_LAST_CHANGE_KEY so the
-    //    debug bar can show "Unsaved changes since …" correctly.
+    // ── Firebase sync: patch localStorage.setItem so any write to a trip key
+    //    automatically triggers the debounced Firestore save (window._fbSaveAll).
     (function patchLocalStorageForFirebase() {
-      // No-op: nothing extra needed here now that auto-save is removed.
-      // Kept as a named IIFE so existing call-sites / search references still find it.
+      const _TRIP_KEYS = new Set(COMMAND_CENTER_BACKUP_STORAGE_KEYS);
+      const _origSet = localStorage.setItem.bind(localStorage);
+      localStorage.setItem = function(key, value) {
+        _origSet(key, value);
+        if (_TRIP_KEYS.has(key)) {
+          window._fbSaveAll?.();
+        }
+      };
     })();
 
     const EMPTY_IMAGE_PLACEHOLDER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800'><rect width='1200' height='800' fill='white'/></svg>";
@@ -5186,20 +5202,12 @@
           starBtn.setAttribute("aria-pressed", String(nextActive));
           starBtn.title = nextActive ? "Marked for special attention" : "Mark for special attention";
         }
-        // Always read fresh from localStorage before writing back — this avoids the
-        // closure-variable staleness bug where a re-init (applyFirestoreData) creates
-        // a new commandAttentionState but star-button click handlers still close over
-        // the original empty object from the first initializeCommandChecklist call.
-        let _fresh = {};
-        try { _fresh = JSON.parse(localStorage.getItem(COMMAND_ATTENTION_STORAGE_KEY) || "{}") || {}; } catch (_e) {}
         if (nextActive) {
-          _fresh[id] = true;
+          commandAttentionState[id] = true;
         } else {
-          delete _fresh[id];
+          delete commandAttentionState[id];
         }
-        commandAttentionState = _fresh; // keep closure variable in sync for this call's scope
-        console.log("[StarDebug] setCommandAttentionState id=" + id + " active=" + nextActive);
-        localStorage.setItem(COMMAND_ATTENTION_STORAGE_KEY, JSON.stringify(_fresh));
+        localStorage.setItem(COMMAND_ATTENTION_STORAGE_KEY, JSON.stringify(commandAttentionState));
         updateFlightTotal();
       }
 
@@ -5658,11 +5666,7 @@
           starBtn.addEventListener("click", (event) => {
             event.preventDefault();
             event.stopPropagation();
-            // Read fresh from localStorage — closure variable may be stale if
-            // initializeCommandChecklist was called again after applyFirestoreData.
-            let _cur = {};
-            try { _cur = JSON.parse(localStorage.getItem(COMMAND_ATTENTION_STORAGE_KEY) || "{}") || {}; } catch (_e) {}
-            setCommandAttentionState(itemEl, id, !Boolean(_cur[id]));
+            setCommandAttentionState(itemEl, id, !Boolean(commandAttentionState[id]));
           });
           const checkBtn = itemEl.querySelector(".cc-check-btn");
           checkBtn?.insertAdjacentElement("afterend", starBtn);
@@ -5871,13 +5875,12 @@
       const legendEl = document.getElementById("budget-pie-legend");
       if (!(canvas instanceof HTMLCanvasElement) || !legendEl) return;
 
-      // All five colors are visually distinct — no two share a hue family
       const SLICES = [
-        { card: "flight",  label: "Flights",                        lines: ["Flights"],             color: "#f97316" }, // orange
-        { card: "hotel",   label: "Hotels",                         lines: ["Hotels"],              color: "#3b82f6" }, // blue
-        { card: "booking", label: "Scotland Tour (incl. Lodging)",  lines: ["Scotland", "Tour"],    color: "#facc15" }, // yellow
-        { card: "review",  label: "Points of Interest",             lines: ["Points of", "Int."],   color: "#a855f7" }, // purple
-        { card: "food",    label: "Food & Souvenirs",               lines: ["Food &", "Souvenirs"], color: "#34d399" }  // green
+        { card: "flight",  label: "Flights",   color: "#f97316" },
+        { card: "hotel",   label: "Hotels",    color: "#4ade80" },
+        { card: "booking", label: "Scotland Tour (incl. Lodging)", color: "#facc15" },
+        { card: "review",  label: "Points of Interest", color: "#fb923c" },
+        { card: "food",    label: "Food & Souvenirs",   color: "#34d399" }
       ];
 
       const values = SLICES.map((s) => {
@@ -5890,27 +5893,25 @@
       const ctx = canvas.getContext("2d");
       const W = canvas.width;
       const H = canvas.height;
-      const cx = W / 2, cy = H / 2;
-      const outerR = W / 2 - 6;
-      const innerR = W / 5;
       ctx.clearRect(0, 0, W, H);
 
       if (total === 0) {
         legendEl.innerHTML = `<li class="budget-pie-empty">Enter costs above to see breakdown.</li>`;
         ctx.fillStyle = "#e8edf2";
-        ctx.beginPath(); ctx.arc(cx, cy, outerR, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath();
+        ctx.arc(W / 2, H / 2, W / 2 - 6, 0, Math.PI * 2);
+        ctx.fill();
         return;
       }
 
-      // Draw slices
       const sliceAngles = [];
       let startAngle = -Math.PI / 2;
       values.forEach((val, i) => {
         if (val <= 0) { sliceAngles.push(null); return; }
         const sweep = (val / total) * Math.PI * 2;
         ctx.beginPath();
-        ctx.moveTo(cx, cy);
-        ctx.arc(cx, cy, outerR, startAngle, startAngle + sweep);
+        ctx.moveTo(W / 2, H / 2);
+        ctx.arc(W / 2, H / 2, W / 2 - 6, startAngle, startAngle + sweep);
         ctx.closePath();
         ctx.fillStyle = SLICES[i].color;
         ctx.fill();
@@ -5919,34 +5920,28 @@
       });
 
       // Centre hole for donut effect
-      ctx.beginPath(); ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
-      ctx.fillStyle = "#fff"; ctx.fill();
+      ctx.beginPath();
+      ctx.arc(W / 2, H / 2, W / 5, 0, Math.PI * 2);
+      ctx.fillStyle = "#fff";
+      ctx.fill();
 
-      // Helper: draw multiple text lines centred on (x, y)
-      function drawLines(lines, x, y, lineH) {
-        const top = y - ((lines.length - 1) * lineH) / 2;
-        lines.forEach((ln, i) => ctx.fillText(ln, x, top + i * lineH));
-      }
-
-      // Slice labels — push slightly outward (70 %) to give room for two-line labels
-      const labelR = outerR * 0.70;
+      // Slice labels
+      const labelR = (W / 2 - 6) * 0.65;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillStyle = "#111";
+      ctx.fillStyle = "#000";
+      ctx.font = "bold 13px sans-serif";
       sliceAngles.forEach((a, i) => {
         if (!a || values[i] <= 0) return;
         const pct = Math.round((values[i] / total) * 100);
-        if (pct < 5) return; // skip tiny slices
+        if (pct < 5) return;
         const midAngle = a.start + a.sweep / 2;
-        const x = cx + labelR * Math.cos(midAngle);
-        const y = cy + labelR * Math.sin(midAngle);
-        const lines = SLICES[i].lines;
-        // percentage line
-        ctx.font = "bold 12px sans-serif";
-        ctx.fillText(pct + "%", x, y - (lines.length > 1 ? 14 : 10));
-        // label lines (one or two)
-        ctx.font = "10px sans-serif";
-        drawLines(lines, x, y + (lines.length > 1 ? 2 : 5), 12);
+        const x = W / 2 + labelR * Math.cos(midAngle);
+        const y = H / 2 + labelR * Math.sin(midAngle);
+        ctx.font = "bold 13px sans-serif";
+        ctx.fillText(pct + "%", x, y - 7);
+        ctx.font = "11px sans-serif";
+        ctx.fillText(SLICES[i].label, x, y + 8);
       });
 
       // Legend — sorted greatest to least
@@ -6055,11 +6050,10 @@
         if (window._fbLoadFromCloud) window._fbLoadFromCloud();
       });
 
-      document.getElementById("cc-sync-push-anyway")?.addEventListener("click", async () => {
+      document.getElementById("cc-sync-push-anyway")?.addEventListener("click", () => {
         document.getElementById("cc-sync-status-row").style.display = "none";
-        const saveFn = window._fbSaveNow || window._fbSaveAll;
-        if (saveFn) {
-          await saveFn();
+        if (window._fbSaveAll) {
+          window._fbSaveAll();
           setBackupStatus("✓ Pushed to cloud!", false);
           setTimeout(() => setBackupStatus(""), 3000);
         }
@@ -6103,10 +6097,12 @@
         setBackupStatus("Backup exported.", false);
       });
 
-      // Import button is now a <label for="cc-import-file"> — clicking it natively
-      // opens the file picker without needing fileInput.click() (which some browsers block).
-      // Reset the value beforehand so selecting the same file twice still fires "change".
-      fileInput?.addEventListener("click", () => { fileInput.value = ""; });
+      importBtn?.addEventListener("click", () => {
+        if (fileInput instanceof HTMLInputElement) {
+          fileInput.value = "";
+          fileInput.click();
+        }
+      });
 
       fileInput?.addEventListener("change", async () => {
         const file = fileInput.files?.[0];
@@ -7032,16 +7028,13 @@
       actcCurrencyPrefs:    "ukTripCostCurrencyPref"
     };
 
-    // Auto-stamp LOCAL_LAST_CHANGE_KEY whenever any synced key is written to localStorage.
-    // Suppressed while applyFirestoreData is running (re-rendering cloud data is not a local change).
+    // Auto-stamp LOCAL_LAST_CHANGE_KEY whenever any synced key is written to localStorage
     const LOCAL_LAST_CHANGE_KEY = "ukTripLastLocalChange";
     const _syncedLsKeys = new Set(Object.values(STORAGE_KEY_MAP));
     const _origSetItem = localStorage.setItem.bind(localStorage);
-    let _applyingCloudData = false;
-    window._applyingCloudData = false;   // shared with patchLocalStorageForFirebase
     localStorage.setItem = (key, value) => {
       _origSetItem(key, value);
-      if (!_applyingCloudData && _syncedLsKeys.has(key)) _origSetItem(LOCAL_LAST_CHANGE_KEY, String(Date.now()));
+      if (_syncedLsKeys.has(key)) _origSetItem(LOCAL_LAST_CHANGE_KEY, String(Date.now()));
     };
 
     // ── Firestore document reference ──────────────────────────────────────────
@@ -7067,30 +7060,6 @@
       return new Date(ts).toLocaleString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
     }
 
-    // ── Sync debug bar ────────────────────────────────────────────────────────
-    let _lastKnownCloudTs = 0;
-    function fmt(ts) {
-      if (!ts || ts === 0) return "—";
-      return new Date(ts).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) + ` (${fmtTs(ts)})`;
-    }
-    function updateSyncDebugBar(cloudTs) {
-      const bar = document.getElementById("sync-debug-bar");
-      if (!bar) return;
-      if (cloudTs !== undefined) _lastKnownCloudTs = cloudTs;
-      const lc = parseInt(localStorage.getItem(LOCAL_LAST_CHANGE_KEY) || "0");
-      const ls = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY)   || "0");
-      const cl = _lastKnownCloudTs;
-      const hasUnsaved = lc > ls + 2000;
-      const lcDisplay = lc > 0 ? fmt(lc) : "—";
-      bar.innerHTML = [
-        `<span title="Non-zero only when you have edits not yet synced to cloud"><b>Unsaved changes since:</b> ${lcDisplay}</span>`,
-        `<span title="Stamped when Sync to Cloud completes or cloud data is loaded"><b>Last cloud sync:</b> ${fmt(ls)}</span>`,
-        `<span title="Cloud _lastUpdated from Firestore"><b>Cloud last updated:</b> ${fmt(cl)}</span>`,
-        `<span style="color:${hasUnsaved?"#b35900":cl>ls?"#1a5fa8":"#2a7a2a"};font-weight:600" title="lc=${lc} ls=${ls} cl=${cl}">→ ${hasUnsaved ? "UNSAVED LOCAL CHANGES" : cl > ls ? `CLOUD wins (pull) +${cl-ls}ms` : "IN SYNC"}</span>`,
-      ].join("");
-    }
-    setInterval(() => updateSyncDebugBar(), 5000);
-
     // ── Status helper (works from module scope) ───────────────────────────────
     function setStatus(msg, isError) {
       const el = document.getElementById("cc-backup-status");
@@ -7098,9 +7067,6 @@
       el.textContent = msg || "";
       el.style.color = isError ? "#b23b3b" : "#5d6978";
     }
-
-    // ── Guard: block sync until cloud data has been received at least once ───────
-    let _cloudDataReceived = false;
 
     // ── Gather all state from localStorage and write to Firestore ─────────────
     async function saveAllToFirestore() {
@@ -7114,15 +7080,9 @@
           }
         }
         payload._lastUpdated = Date.now();
-        _snapshotIgnoreNext = true; // suppress echo — we already have what we're saving
         await setDoc(tripDocRef, payload, { merge: true });
-        // After a successful save, stamp LOCAL_LAST_SAVE_KEY AND reset LOCAL_LAST_CHANGE_KEY
-        // so the snapshot listener never sees stale "unsaved changes" after a sync.
-        _origSetItem(LOCAL_LAST_SAVE_KEY, String(payload._lastUpdated));
-        _origSetItem(LOCAL_LAST_CHANGE_KEY, "0");
-        updateSyncDebugBar(payload._lastUpdated);
+        localStorage.setItem(LOCAL_LAST_SAVE_KEY, String(payload._lastUpdated));
       } catch (err) {
-        _snapshotIgnoreNext = false;
         console.warn("[Firebase] saveAllToFirestore error:", err);
       }
     }
@@ -7131,24 +7091,35 @@
     async function smartSync() {
       const syncBtn = document.getElementById("cc-sync-cloud");
       const statusRow = document.getElementById("cc-sync-status-row");
-
-      // Safety guard: never push before we've received cloud data at least once.
-      // Without this, opening the site on a fresh machine and clicking Sync before
-      // the initial cloud pull completes would overwrite Firestore with blank data.
-      if (!_cloudDataReceived) {
-        setStatus("⏳ Still loading cloud data — please wait a moment.", true);
-        setTimeout(() => setStatus(""), 4000);
-        return;
-      }
+      const timestampsEl = document.getElementById("cc-sync-timestamps");
 
       if (syncBtn) { syncBtn.classList.add("is-syncing"); syncBtn.textContent = "☁️ Checking…"; }
 
       try {
-        if (statusRow) statusRow.style.display = "none";
-        await saveAllToFirestore();
+        const snap = await getDoc(tripDocRef);
+        const cloudTs = snap.exists() ? (snap.data()._lastUpdated || 0) : 0;
+        const localChangeTs = parseInt(localStorage.getItem(LOCAL_LAST_CHANGE_KEY) || "0");
+        const localSyncTs   = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY)   || "0");
+        const localTs = Math.max(localChangeTs, localSyncTs);
+
         if (syncBtn) { syncBtn.classList.remove("is-syncing"); syncBtn.textContent = "☁️ Sync to Cloud"; }
-        setStatus("✓ Synced to cloud!", false);
-        setTimeout(() => setStatus(""), 3000);
+
+        if (cloudTs > localTs + 60000) {
+          // Cloud is newer — warn before overwriting
+          if (timestampsEl) {
+            timestampsEl.innerHTML =
+              `⚠️ <strong>Cloud is newer than your local data.</strong>&nbsp;&nbsp;` +
+              `Cloud: <strong>${fmtTs(cloudTs)}</strong>&nbsp;&nbsp;·&nbsp;&nbsp;` +
+              `Local last synced: <strong>${localTs ? fmtTs(localTs) : "never"}</strong>`;
+          }
+          if (statusRow) statusRow.style.display = "flex";
+        } else {
+          // Local is same or newer — safe to push
+          await saveAllToFirestore();
+          if (statusRow) statusRow.style.display = "none";
+          setStatus("✓ Synced to cloud!", false);
+          setTimeout(() => setStatus(""), 3000);
+        }
       } catch (err) {
         if (syncBtn) { syncBtn.classList.remove("is-syncing"); syncBtn.textContent = "☁️ Sync to Cloud"; }
         setStatus("Sync check failed. Try again.", true);
@@ -7189,9 +7160,6 @@
 
     function applyFirestoreData(data) {
       if (!data) return;
-      _cloudDataReceived = true; // unlock Sync button — we've received at least one cloud snapshot
-      _applyingCloudData = true; window._applyingCloudData = true;
-      try {
 
       // 1. Write Firestore data to localStorage — use _origSetItem to avoid
       //    triggering the LOCAL_LAST_CHANGE_KEY auto-stamp (cloud data is not a local change)
@@ -7200,51 +7168,50 @@
           try { _origSetItem(lsKey, JSON.stringify(data[field])); } catch (_) {}
         }
       }
-      // After loading from cloud: record when we last synced, and clear any local-change stamp
-      // so hasUnsavedChanges = false and the live listener can still apply future updates.
+      // Stamp local sync timestamp so smartSync doesn't think local is stale and push empty data
       if (data._lastUpdated) {
-        _origSetItem(LOCAL_LAST_SAVE_KEY,   String(data._lastUpdated));
-        _origSetItem(LOCAL_LAST_CHANGE_KEY, "0");
+        _origSetItem(LOCAL_LAST_SAVE_KEY, String(data._lastUpdated));
       }
 
-      // 2. Re-initialize UI — each function re-reads fresh data from localStorage
-      try { if (typeof initializeCostState === "function") initializeCostState(); } catch (e) { console.warn("[applyFirestoreData] initializeCostState:", e); }
-      try { if (typeof renderCostSheet === "function") renderCostSheet(); } catch (e) { console.warn("[applyFirestoreData] renderCostSheet:", e); }
-      try { if (typeof bindCostInputs === "function") bindCostInputs(); } catch (e) { console.warn("[applyFirestoreData] bindCostInputs:", e); }
-      try { if (typeof bindTransportLinks === "function") bindTransportLinks(); } catch (e) { console.warn("[applyFirestoreData] bindTransportLinks:", e); }
-      try { if (typeof bindPoiLinks === "function") bindPoiLinks(); } catch (e) { console.warn("[applyFirestoreData] bindPoiLinks:", e); }
-      try { if (typeof bindCustomCostControls === "function") bindCustomCostControls(); } catch (e) { console.warn("[applyFirestoreData] bindCustomCostControls:", e); }
-      try { if (typeof initializeCommandChecklist === "function") initializeCommandChecklist(); } catch (e) { console.warn("[applyFirestoreData] initializeCommandChecklist:", e); }
-      try { if (typeof initializeDateInputs === "function") initializeDateInputs(); } catch (e) { console.warn("[applyFirestoreData] initializeDateInputs:", e); }
-      try { if (typeof initializeDragReorder === "function") initializeDragReorder(); } catch (e) { console.warn("[applyFirestoreData] initializeDragReorder:", e); }
-      try { if (typeof initializeHotelCheckIns === "function") initializeHotelCheckIns(); } catch (e) { console.warn("[applyFirestoreData] initializeHotelCheckIns:", e); }
-      try { if (typeof renderBudgetPie === "function") renderBudgetPie(); } catch (e) { console.warn("[applyFirestoreData] renderBudgetPie:", e); }
-      try { if (typeof updateFlightTotal === "function") updateFlightTotal(); } catch (e) { console.warn("[applyFirestoreData] updateFlightTotal:", e); }
+      // 2. Refresh outer-scope variables from localStorage so all bind functions see fresh data
+      try { ccCosts    = JSON.parse(localStorage.getItem(CC_COSTS_STORAGE_KEY)      || "{}"); } catch (_) {}
+      try { ccCostsGbp = JSON.parse(localStorage.getItem(CC_COSTS_GBP_STORAGE_KEY)  || "{}"); } catch (_) {}
+      try { ccCostSource= JSON.parse(localStorage.getItem(CC_COST_SOURCE_KEY)       || "{}"); } catch (_) {}
+      try { ccCostNotes = JSON.parse(localStorage.getItem(CC_COST_NOTES_STORAGE_KEY)|| "{}"); } catch (_) {}
+      try { ccLinks     = JSON.parse(localStorage.getItem(CC_LINKS_STORAGE_KEY)     || "{}"); } catch (_) {}
 
-      // 3. Direct DOM patch for Hotel Research stars — bypasses initializeCommandChecklist's
-      //    closure system so the correct star state is always reflected even if the above threw.
-      try {
-        const _atState = JSON.parse(localStorage.getItem(STORAGE_KEY_MAP.commandAttention) || "{}") || {};
-        console.log("[ApplyDebug] applyFirestoreData applying commandAttention =", JSON.stringify(_atState));
-        console.trace("[ApplyDebug] applyFirestoreData called from:");
-        document.querySelectorAll(".js-cc-check-item[data-check-id]").forEach(function(el) {
-          const _id = el.getAttribute("data-check-id");
-          if (!_id) return;
-          const _on = Boolean(_atState[_id]);
-          el.classList.toggle("needs-attention", _on);
-          const _star = el.querySelector(".js-cc-attention-star");
-          if (_star) {
-            _star.classList.toggle("is-active", _on);
-            _star.setAttribute("aria-pressed", String(_on));
-            _star.title = _on ? "Marked for special attention" : "Mark for special attention";
+      // 3. Seed food GBP defaults only for items that have never had any value entered
+      const foodDefaults = { breakfast: "£40", lunch: "£50", dinner: "£50" };
+      let foodSeeded = false;
+      if (typeof getFoodSouvenirsItems === "function") {
+        getFoodSouvenirsItems().forEach((item) => {
+          const key = Object.keys(foodDefaults).find((k) => item.id.endsWith(k));
+          if (key && (!ccCostsGbp[item.id] || ccCostsGbp[item.id] === "£")) {
+            ccCostsGbp[item.id] = foodDefaults[key];
+            if (!ccCostSource[item.id]) ccCostSource[item.id] = "gbp";
+            foodSeeded = true;
           }
         });
-      } catch (e) { console.warn("[applyFirestoreData] attention DOM patch:", e); }
-
-      } finally {
-        _applyingCloudData = false; window._applyingCloudData = false;
-        updateSyncDebugBar();
+        if (foodSeeded) {
+          localStorage.setItem(CC_COSTS_GBP_STORAGE_KEY, JSON.stringify(ccCostsGbp));
+          localStorage.setItem(CC_COST_SOURCE_KEY, JSON.stringify(ccCostSource));
+          window._fbSaveAll?.();
+        }
       }
+
+      // 4. Re-initialize UI — bind functions now read the freshly updated outer-scope vars
+      try { if (typeof initializeCostState === "function") initializeCostState(); } catch (_) {}
+      try { if (typeof renderCostSheet === "function") renderCostSheet(); } catch (_) {}
+      try { if (typeof bindCostInputs === "function") bindCostInputs(); } catch (_) {}
+      try { if (typeof bindTransportLinks === "function") bindTransportLinks(); } catch (_) {}
+      try { if (typeof bindPoiLinks === "function") bindPoiLinks(); } catch (_) {}
+      try { if (typeof bindCustomCostControls === "function") bindCustomCostControls(); } catch (_) {}
+      try { if (typeof initializeCommandChecklist === "function") initializeCommandChecklist(); } catch (_) {}
+      try { if (typeof initializeDateInputs === "function") initializeDateInputs(); } catch (_) {}
+      try { if (typeof initializeDragReorder === "function") initializeDragReorder(); } catch (_) {}
+      try { if (typeof initializeHotelCheckIns === "function") initializeHotelCheckIns(); } catch (_) {}
+      try { if (typeof renderBudgetPie === "function") renderBudgetPie(); } catch (_) {}
+      try { if (typeof updateFlightTotal === "function") updateFlightTotal(); } catch (_) {}
     }
 
     // ── UI helpers ────────────────────────────────────────────────────────────
@@ -7324,60 +7291,47 @@
       // Allowed — hide overlay, show user in toolbar
       hideOverlay();
       setUserStatusBar(email);
-      updateSyncDebugBar();
 
-      // On sign-in: ALWAYS pull from cloud if cloud has data.
-      // Never auto-push on sign-in — pushing only happens via the explicit "Sync to Cloud" button.
-      // This prevents contaminated LOCAL_LAST_CHANGE_KEY values from overwriting shared cloud data.
+      // Smart load: compare local-change timestamp vs cloud timestamp before overwriting
       try {
         const snap = await getDoc(tripDocRef);
         const cloudTs = snap.exists() ? (snap.data()._lastUpdated || 0) : 0;
-        const localSyncTs = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY) || "0");
-        console.log(`[SyncDebug] sign-in: cloudTs=${cloudTs} localSyncTs=${localSyncTs}`);
-        updateSyncDebugBar(cloudTs);
+        const localChangeTs = parseInt(localStorage.getItem(LOCAL_LAST_CHANGE_KEY) || "0");
+        const localSyncTs   = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY) || "0");
+        const localTs = Math.max(localChangeTs, localSyncTs);
 
-        if (snap.exists()) {
-          if (cloudTs > localSyncTs) {
-            // Cloud is newer than what we last synced — pull it down
-            console.log("[SyncDebug] → PULL (cloud newer than last sync)");
-            _snapshotIgnoreNext = true;
-            applyFirestoreData(snap.data());
-          } else if (localSyncTs === 0) {
-            // First ever load
-            console.log("[SyncDebug] → LOAD (first load)");
-            applyFirestoreData(snap.data());
-          } else {
-            // Already in sync — local data matches cloud. Still mark cloud as received
-            // so the Sync button is unlocked (safe to push since data is confirmed good).
-            console.log("[SyncDebug] → IN SYNC (no action)");
-            _cloudDataReceived = true;
-          }
+        if (!snap.exists() || localTs === 0) {
+          // No cloud data yet, or first ever load — load cloud if it exists
+          if (snap.exists()) { _snapshotIgnoreNext = true; applyFirestoreData(snap.data()); localStorage.setItem(LOCAL_LAST_SAVE_KEY, String(cloudTs)); }
+        } else if (localTs > cloudTs + 10000) {
+          // Local is newer (user made changes after last cloud sync) — push local up
+          setStatus("Local data is newer — pushing to cloud…", false);
+          await saveAllToFirestore();
+          setStatus("✓ Auto-saved local changes to cloud.", false);
+          setTimeout(() => setStatus(""), 3000);
+        } else if (cloudTs > localTs + 10000) {
+          // Cloud is meaningfully newer (another user synced) — load from cloud
+          _snapshotIgnoreNext = true;
+          applyFirestoreData(snap.data());
+          localStorage.setItem(LOCAL_LAST_SAVE_KEY, String(cloudTs));
         }
-        updateSyncDebugBar(cloudTs);
+        // else: within 10s of each other — treat as in sync, no action needed
       } catch (err) {
         console.warn("[Firebase] initial getDoc error:", err);
       }
 
-      // Subscribe to real-time updates
+      // Subscribe to real-time updates — only apply if cloud is meaningfully newer than local
       if (_unsubSnapshot) _unsubSnapshot();
       _unsubSnapshot = onSnapshot(tripDocRef, (snap) => {
         if (_snapshotIgnoreNext) { _snapshotIgnoreNext = false; return; }
         if (!snap.exists()) return;
-        const cloudTs      = snap.data()._lastUpdated || 0;
+        const cloudTs = snap.data()._lastUpdated || 0;
         const localChangeTs = parseInt(localStorage.getItem(LOCAL_LAST_CHANGE_KEY) || "0");
         const localSyncTs   = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY)   || "0");
-        const hasUnsavedChanges = localChangeTs > localSyncTs + 2000;
-        console.log(`[SyncDebug] snapshot: cloudTs=${cloudTs} localSyncTs=${localSyncTs} localChangeTs=${localChangeTs} unsaved=${hasUnsavedChanges}`);
-        updateSyncDebugBar(cloudTs);
-        if (hasUnsavedChanges) {
-          // User has made local changes not yet synced — don't overwrite them
-          console.log("[SyncDebug] snapshot → SKIP (user has unsaved local changes)");
-          return;
-        }
-        if (cloudTs > localSyncTs) {
-          console.log("[SyncDebug] snapshot → PULL (cloud newer, no unsaved local changes)");
+        const localTs = Math.max(localChangeTs, localSyncTs);
+        if (cloudTs > localTs + 10000) {
+          // Cloud is genuinely newer (another user synced) — apply it
           applyFirestoreData(snap.data());
-          updateSyncDebugBar(cloudTs);
         }
       }, (err) => {
         console.warn("[Firebase] onSnapshot error:", err);
@@ -7386,7 +7340,6 @@
 
     // ── Expose functions to the non-module script ─────────────────────────────
     window._fbSaveAll       = debouncedSave;
-    window._fbSaveNow       = saveAllToFirestore;
     window._fbSmartSync     = smartSync;
     window._fbLoadFromCloud = loadFromCloud;
 
