@@ -1891,12 +1891,12 @@
         <h2 class="section-title">Dad-Level Trip Command Center</h2>
         <div class="cc-toolbar">
           <button type="button" class="cc-utility-btn cc-utility-btn--sync" id="cc-sync-cloud">☁️ Sync to Cloud</button>
-          <input type="file" id="cc-import-file" accept="application/json" hidden>
+          <input type="file" id="cc-import-file" accept="application/json" style="display:none">
           <label class="cc-exchange-label" title="Exchange rate: 1 US dollar = X British pounds">$1&nbsp;=&nbsp;£<input type="number" id="cc-exchange-rate-inverse" class="cc-exchange-input" value="0.79" min="0.0001" step="0.0001" aria-label="USD to GBP exchange rate"></label>
           <label class="cc-exchange-label" title="Exchange rate: 1 British pound = X US dollars">£1&nbsp;=&nbsp;$<input type="number" id="cc-exchange-rate" class="cc-exchange-input" value="1.27" min="0.01" step="0.01" aria-label="GBP to USD exchange rate"></label>
           <span class="cc-toolbar-status" id="cc-backup-status" aria-live="polite"></span>
           <span id="fb-user-status" style="margin-left:auto;font-size:0.78rem;color:#5d6978;display:flex;align-items:center;gap:8px;white-space:nowrap;"></span>
-          <button type="button" class="cc-utility-btn cc-utility-btn--import" id="cc-import-data">📥 Import Costs</button>
+          <label for="cc-import-file" class="cc-utility-btn cc-utility-btn--import" role="button" tabindex="0">📥 Import Costs</label>
           <button type="button" class="cc-utility-btn cc-utility-btn--export" id="cc-export-data">📤 Export Costs</button>
         </div>
         <div class="cc-sync-status-row" id="cc-sync-status-row">
@@ -6097,12 +6097,9 @@
         setBackupStatus("Backup exported.", false);
       });
 
-      importBtn?.addEventListener("click", () => {
-        if (fileInput instanceof HTMLInputElement) {
-          fileInput.value = "";
-          fileInput.click();
-        }
-      });
+      // importBtn is now a <label for="cc-import-file"> so it natively opens the file
+      // picker without needing a programmatic .click() call (which Chrome blocks on
+      // hidden inputs).
 
       fileInput?.addEventListener("change", async () => {
         const file = fileInput.files?.[0];
