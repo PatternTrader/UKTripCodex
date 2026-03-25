@@ -7313,14 +7313,16 @@
         if (pushAnywayBtn) pushAnywayBtn.style.display = "";
       }
 
-      // On sign-in: always pull from cloud if it is newer — NEVER auto-push.
-      // Pushing is only done via the "Sync to Cloud" button (writer only).
+      // On sign-in:
+      //   Writer: NEVER auto-pull — writer is the source of truth. Their local data wins.
+      //           They push explicitly via "Sync to Cloud".
+      //   Reader: pull from cloud if cloud is newer.
       try {
         const snap = await getDoc(tripDocRef);
         const cloudTs = snap.exists() ? (snap.data()._lastUpdated || 0) : 0;
         const localSyncTs = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY) || "0");
 
-        if (snap.exists() && cloudTs > localSyncTs) {
+        if (!_currentUserIsWriter && snap.exists() && cloudTs > localSyncTs) {
           _snapshotIgnoreNext = true;
           applyFirestoreData(snap.data());
           localStorage.setItem(LOCAL_LAST_SAVE_KEY, String(cloudTs));
@@ -7329,17 +7331,19 @@
         console.warn("[Firebase] initial getDoc error:", err);
       }
 
-      // Subscribe to real-time updates — only apply if cloud is meaningfully newer than local
+      // Subscribe to real-time updates
       if (_unsubSnapshot) _unsubSnapshot();
       _unsubSnapshot = onSnapshot(tripDocRef, (snap) => {
         if (_snapshotIgnoreNext) { _snapshotIgnoreNext = false; return; }
         if (!snap.exists()) return;
+        // Writer: never apply incoming snapshots — their local data is the source of truth.
+        if (_currentUserIsWriter) return;
         const cloudTs = snap.data()._lastUpdated || 0;
         const localChangeTs = parseInt(localStorage.getItem(LOCAL_LAST_CHANGE_KEY) || "0");
         const localSyncTs   = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY)   || "0");
         const localTs = Math.max(localChangeTs, localSyncTs);
         if (cloudTs > localTs + 10000) {
-          // Cloud is genuinely newer (another user synced) — apply it
+          // Cloud is genuinely newer (writer synced) — apply it
           applyFirestoreData(snap.data());
         }
       }, (err) => {
