@@ -5219,12 +5219,12 @@
           starBtn.setAttribute("aria-pressed", String(nextActive));
           starBtn.title = nextActive ? "Marked for special attention" : "Mark for special attention";
         }
-        if (nextActive) {
-          commandAttentionState[id] = true;
-        } else {
-          delete commandAttentionState[id];
-        }
-        localStorage.setItem(COMMAND_ATTENTION_STORAGE_KEY, JSON.stringify(commandAttentionState));
+        // Always read fresh from localStorage to avoid stale closure state
+        let _fresh = {};
+        try { _fresh = JSON.parse(localStorage.getItem(COMMAND_ATTENTION_STORAGE_KEY) || "{}") || {}; } catch (_e) {}
+        if (nextActive) { _fresh[id] = true; } else { delete _fresh[id]; }
+        commandAttentionState = _fresh;
+        localStorage.setItem(COMMAND_ATTENTION_STORAGE_KEY, JSON.stringify(_fresh));
         updateFlightTotal();
       }
 
@@ -5456,9 +5456,18 @@
         };
 
         if (input.dataset.bound === "true") {
+          // Re-apply value from fresh ccCosts/ccCostsGbp data (important after cloud pull)
+          const freshSrc = ccCostSource[id];
+          if (freshSrc === "gbp" && ccCostsGbp[id]) {
+            input.value = ccCosts[id] || "$";
+          } else if (ccCosts[id]) {
+            input.value = ccCosts[id];
+          } else {
+            input.value = "$";
+          }
           renderCostNote();
           applyPairHighlight(id, ccCostSource[id] || null);
-          if (src !== "gbp") fillComputedGbp(id, parseFloat(String(input.value || "").replace(/[$,\s]/g, "")));
+          if (freshSrc !== "gbp") fillComputedGbp(id, parseFloat(String(input.value || "").replace(/[$,\s]/g, "")));
           attachDateInputToCostInput(input);
           autofillTodayForCostInput(input);
           return;
@@ -5683,7 +5692,9 @@
           starBtn.addEventListener("click", (event) => {
             event.preventDefault();
             event.stopPropagation();
-            setCommandAttentionState(itemEl, id, !Boolean(commandAttentionState[id]));
+            let _cur = {};
+            try { _cur = JSON.parse(localStorage.getItem(COMMAND_ATTENTION_STORAGE_KEY) || "{}") || {}; } catch (_e) {}
+            setCommandAttentionState(itemEl, id, !Boolean(_cur[id]));
           });
           const checkBtn = itemEl.querySelector(".cc-check-btn");
           checkBtn?.insertAdjacentElement("afterend", starBtn);
