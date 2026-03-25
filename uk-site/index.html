@@ -6962,16 +6962,11 @@
       loadHotelCheckinData();
       renderHotelCheckinGrid();
 
-      // Restore any previously saved hotel markers
-      const hasSavedCoords = HOTEL_STAY_DEFS.some((def) => {
-        const saved = hotelCheckinData[def.id] || {};
-        return saved.lat && saved.lng;
-      });
-      if (hasSavedCoords) {
-        refreshHotelMarkersOnAllMaps();
-        refreshDayRouteLines();
-        refreshRouteMap();
-      }
+      // Always refresh hotel markers so stale markers are cleared when data changes
+      // (e.g. after a cloud pull that removes hotels). Each refresh fn guards internally.
+      refreshHotelMarkersOnAllMaps();
+      refreshDayRouteLines();
+      refreshRouteMap();
 
       renderHotelCheckInOutBanners();
     }
