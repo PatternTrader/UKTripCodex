@@ -6173,11 +6173,13 @@
       });
     }
 
+    // Single shared drag source — survives multiple initializeDragReorder calls
+    let _ccDragSrc = null;
+
     function initializeDragReorder() {
       const CC_ORDER_STORAGE_KEY = "ukTripCCOrderV1";
       let savedOrders = {};
       try { savedOrders = JSON.parse(localStorage.getItem(CC_ORDER_STORAGE_KEY) || "{}"); } catch (_) {}
-      let dragSrc = null;
 
       function attachDragHandle(item, list) {
         if (!(item instanceof HTMLElement) || !(list instanceof HTMLElement)) return;
@@ -6190,15 +6192,15 @@
         item.insertBefore(handle, item.firstChild);
 
         handle.addEventListener("dragstart", (e) => {
-          dragSrc = item;
+          _ccDragSrc = item;
           e.dataTransfer.effectAllowed = "move";
           e.dataTransfer.setData("text/plain", "");
           setTimeout(() => { item.style.opacity = "0.4"; }, 0);
         });
 
         handle.addEventListener("dragend", () => {
-          if (dragSrc) dragSrc.style.opacity = "";
-          dragSrc = null;
+          if (_ccDragSrc) _ccDragSrc.style.opacity = "";
+          _ccDragSrc = null;
           list.querySelectorAll(".js-cc-check-item").forEach((i) => i.classList.remove("cc-drag-over"));
         });
       }
@@ -6218,17 +6220,21 @@
           });
         }
 
-        // Inject drag handles
+        // Inject drag handles on any items that don't have one yet
         list.querySelectorAll(".js-cc-check-item").forEach((item) => {
           attachDragHandle(item, list);
         });
+
+        // Only attach list-level listeners once
+        if (list.dataset.dragListening === "true") return;
+        list.dataset.dragListening = "true";
 
         list.addEventListener("dragover", (e) => {
           e.preventDefault();
           e.dataTransfer.dropEffect = "move";
           const target = e.target.closest(".js-cc-check-item");
           list.querySelectorAll(".js-cc-check-item").forEach((i) => i.classList.remove("cc-drag-over"));
-          if (target && target !== dragSrc) target.classList.add("cc-drag-over");
+          if (target && target !== _ccDragSrc) target.classList.add("cc-drag-over");
         });
 
         list.addEventListener("dragleave", (e) => {
@@ -6241,15 +6247,15 @@
           e.preventDefault();
           const target = e.target.closest(".js-cc-check-item");
           list.querySelectorAll(".js-cc-check-item").forEach((i) => i.classList.remove("cc-drag-over"));
-          if (!dragSrc || !target || dragSrc === target || !list.contains(dragSrc)) return;
+          if (!_ccDragSrc || !target || _ccDragSrc === target || !list.contains(_ccDragSrc)) return;
           const rect = target.getBoundingClientRect();
           if (e.clientY < rect.top + rect.height / 2) {
-            list.insertBefore(dragSrc, target);
+            list.insertBefore(_ccDragSrc, target);
           } else {
-            list.insertBefore(dragSrc, target.nextSibling);
+            list.insertBefore(_ccDragSrc, target.nextSibling);
           }
-          dragSrc.style.opacity = "";
-          dragSrc = null;
+          _ccDragSrc.style.opacity = "";
+          _ccDragSrc = null;
           const items = Array.from(list.querySelectorAll(".js-cc-check-item[data-check-id]"));
           savedOrders[cardId] = items.map((i) => i.getAttribute("data-check-id"));
           localStorage.setItem(CC_ORDER_STORAGE_KEY, JSON.stringify(savedOrders));
