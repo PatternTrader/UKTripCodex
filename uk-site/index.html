@@ -1469,7 +1469,7 @@
     flex: 0 0 auto;
     user-select: none;
     line-height: 1;
-    padding: 1px 0;
+    padding: 2px 8px;
     touch-action: none;
   }
   .cc-drag-handle:active { cursor: grabbing; }
@@ -4245,7 +4245,7 @@
       }
 
       const rows = orderedRows.map(({ rowKey, type, itemKey, entryId, day, date, poi, plannedTime, category, researchedCost, paymentMethod, usd, gbp }) => `
-        <tr class="js-unified-row" data-row-key="${rowKey}" data-row-type="${type}" ${type === "itinerary" ? `data-item-key="${itemKey}"` : `data-entry-id="${entryId}"`} draggable="true">
+        <tr class="js-unified-row" data-row-key="${rowKey}" data-row-type="${type}" ${type === "itinerary" ? `data-item-key="${itemKey}"` : `data-entry-id="${entryId}"`} draggable="false">
           <td style="width:30px;text-align:center;padding:4px"><span class="actc-drag-handle" title="Drag to reorder">⠿</span></td>
           <td style="width:34px;text-align:center;padding:2px"><button type="button" class="actc-star-btn js-actc-star" data-row-key="${rowKey}" aria-pressed="false" title="Star to include in Grand Total">★</button></td>
           <td style="width:52px"><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="day" value="${escapeHtml(day)}" placeholder="Day 1"></td>
@@ -4435,8 +4435,13 @@
       // Drag-and-drop
       let dragSrc = null;
       container.querySelectorAll(".js-unified-row").forEach((row) => {
-        row.addEventListener("dragstart", (e) => { dragSrc = row.dataset.rowKey; row.classList.add("actc-row-dragging"); e.dataTransfer.effectAllowed = "move"; });
-        row.addEventListener("dragend", () => row.classList.remove("actc-row-dragging"));
+        const hdl = row.querySelector(".actc-drag-handle");
+        if (hdl) {
+          hdl.addEventListener("mousedown", () => row.setAttribute("draggable", "true"));
+          hdl.addEventListener("mouseup",   () => row.setAttribute("draggable", "false"));
+        }
+        row.addEventListener("dragstart", (e) => { dragSrc = row.dataset.rowKey; row.classList.add("actc-row-dragging"); e.dataTransfer.effectAllowed = "move"; e.dataTransfer.setData("text/plain", ""); });
+        row.addEventListener("dragend", () => { row.setAttribute("draggable", "false"); row.classList.remove("actc-row-dragging"); });
         row.addEventListener("dragover", (e) => { e.preventDefault(); row.classList.add("actc-row-dragover"); });
         row.addEventListener("dragleave", () => row.classList.remove("actc-row-dragover"));
         row.addEventListener("drop", (e) => {
@@ -4492,7 +4497,7 @@
       }
 
       const rows = customCostEntries.map((entry) => `
-        <tr class="js-actc-row" data-actc-id="${entry.id}" draggable="true">
+        <tr class="js-actc-row" data-actc-id="${entry.id}" draggable="false">
           <td style="width:30px;text-align:center"><span class="actc-drag-handle" title="Drag to reorder">⠿</span></td>
           <td style="width:60px"><input class="actc-cell js-actc-field" data-actc-id="${entry.id}" data-field="day" value="${escapeHtml(entry.day || "")}" placeholder="Day 3"></td>
           <td style="width:70px"><input class="actc-cell js-actc-field" data-actc-id="${entry.id}" data-field="date" value="${escapeHtml(entry.date || "")}" placeholder="Apr 4"></td>
@@ -4592,12 +4597,18 @@
       // Drag-and-drop reorder
       let dragSrcId = null;
       container.querySelectorAll(".js-actc-row").forEach((row) => {
+        const hdl = row.querySelector(".actc-drag-handle");
+        if (hdl) {
+          hdl.addEventListener("mousedown", () => row.setAttribute("draggable", "true"));
+          hdl.addEventListener("mouseup",   () => row.setAttribute("draggable", "false"));
+        }
         row.addEventListener("dragstart", (e) => {
           dragSrcId = row.dataset.actcId;
           row.classList.add("actc-row-dragging");
           e.dataTransfer.effectAllowed = "move";
+          e.dataTransfer.setData("text/plain", "");
         });
-        row.addEventListener("dragend", () => row.classList.remove("actc-row-dragging"));
+        row.addEventListener("dragend", () => { row.setAttribute("draggable", "false"); row.classList.remove("actc-row-dragging"); });
         row.addEventListener("dragover", (e) => { e.preventDefault(); e.dataTransfer.dropEffect = "move"; row.classList.add("actc-row-dragover"); });
         row.addEventListener("dragleave", () => row.classList.remove("actc-row-dragover"));
         row.addEventListener("drop", (e) => {
@@ -6121,32 +6132,42 @@
       });
     }
 
+    // Module-scope drag source — survives multiple initializeDragReorder() calls
+    let _ccDragSrc = null;
+
     function initializeDragReorder() {
       const CC_ORDER_STORAGE_KEY = "ukTripCCOrderV1";
       let savedOrders = {};
       try { savedOrders = JSON.parse(localStorage.getItem(CC_ORDER_STORAGE_KEY) || "{}"); } catch (_) {}
-      let dragSrc = null;
 
       function attachDragHandle(item, list) {
         if (!(item instanceof HTMLElement) || !(list instanceof HTMLElement)) return;
         if (item.querySelector(".cc-drag-handle")) return;
         const handle = document.createElement("span");
         handle.className = "cc-drag-handle";
-        handle.setAttribute("draggable", "true");
         handle.setAttribute("aria-hidden", "true");
         handle.textContent = "\u2807";
         item.insertBefore(handle, item.firstChild);
 
-        handle.addEventListener("dragstart", (e) => {
-          dragSrc = item;
+        // Gate draggable on the whole item — only enable when handle is pressed,
+        // so clicks on checkboxes/inputs inside never accidentally start a drag.
+        item.setAttribute("draggable", "false");
+        const enableDrag  = () => item.setAttribute("draggable", "true");
+        const disableDrag = () => item.setAttribute("draggable", "false");
+        handle.addEventListener("mousedown", enableDrag);
+        handle.addEventListener("mouseup",   disableDrag);
+
+        item.addEventListener("dragstart", (e) => {
+          _ccDragSrc = item;
           e.dataTransfer.effectAllowed = "move";
           e.dataTransfer.setData("text/plain", "");
           setTimeout(() => { item.style.opacity = "0.4"; }, 0);
         });
 
-        handle.addEventListener("dragend", () => {
-          if (dragSrc) dragSrc.style.opacity = "";
-          dragSrc = null;
+        item.addEventListener("dragend", () => {
+          if (_ccDragSrc) _ccDragSrc.style.opacity = "";
+          _ccDragSrc = null;
+          disableDrag();
           list.querySelectorAll(".js-cc-check-item").forEach((i) => i.classList.remove("cc-drag-over"));
         });
       }
@@ -6171,12 +6192,16 @@
           attachDragHandle(item, list);
         });
 
+        // Only attach list-level listeners once — guard prevents duplicates on re-init
+        if (list.dataset.dragListening === "true") return;
+        list.dataset.dragListening = "true";
+
         list.addEventListener("dragover", (e) => {
           e.preventDefault();
           e.dataTransfer.dropEffect = "move";
           const target = e.target.closest(".js-cc-check-item");
           list.querySelectorAll(".js-cc-check-item").forEach((i) => i.classList.remove("cc-drag-over"));
-          if (target && target !== dragSrc) target.classList.add("cc-drag-over");
+          if (target && target !== _ccDragSrc) target.classList.add("cc-drag-over");
         });
 
         list.addEventListener("dragleave", (e) => {
@@ -6189,15 +6214,15 @@
           e.preventDefault();
           const target = e.target.closest(".js-cc-check-item");
           list.querySelectorAll(".js-cc-check-item").forEach((i) => i.classList.remove("cc-drag-over"));
-          if (!dragSrc || !target || dragSrc === target || !list.contains(dragSrc)) return;
+          if (!_ccDragSrc || !target || _ccDragSrc === target || !list.contains(_ccDragSrc)) return;
           const rect = target.getBoundingClientRect();
           if (e.clientY < rect.top + rect.height / 2) {
-            list.insertBefore(dragSrc, target);
+            list.insertBefore(_ccDragSrc, target);
           } else {
-            list.insertBefore(dragSrc, target.nextSibling);
+            list.insertBefore(_ccDragSrc, target.nextSibling);
           }
-          dragSrc.style.opacity = "";
-          dragSrc = null;
+          _ccDragSrc.style.opacity = "";
+          _ccDragSrc = null;
           const items = Array.from(list.querySelectorAll(".js-cc-check-item[data-check-id]"));
           savedOrders[cardId] = items.map((i) => i.getAttribute("data-check-id"));
           localStorage.setItem(CC_ORDER_STORAGE_KEY, JSON.stringify(savedOrders));
