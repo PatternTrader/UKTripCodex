@@ -1053,6 +1053,7 @@
   /* Smart-sync warning row */
   .cc-ts-bar {
     display: flex;
+    width: 100%;
     gap: 18px;
     padding: 5px 14px;
     background: #f0f4f8;
@@ -1922,7 +1923,7 @@
             <button class="cc-sync-action-btn cc-sync-action-btn--cancel" id="cc-sync-cancel">✕ Cancel</button>
           </div>
         </div>
-        <div class="cc-ts-bar" id="cc-ts-bar" style="display:none;"></div>
+        <div class="cc-ts-bar" id="cc-ts-bar"></div>
       </div>
       <div class="budget-pie-wrap">
         <h3 class="budget-pie-title">Budget Breakdown</h3>
@@ -7134,6 +7135,7 @@
     }
 
     setInterval(updateTsBar, 5000);
+    updateTsBar(); // show immediately on module load
 
     // ── Status helper (works from module scope) ───────────────────────────────
     function setStatus(msg, isError) {
