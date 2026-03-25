@@ -1051,22 +1051,6 @@
   }
 
   /* Smart-sync warning row */
-  .cc-ts-bar {
-    display: flex;
-    width: 100%;
-    gap: 18px;
-    padding: 5px 14px;
-    background: #f0f4f8;
-    border: 1px solid #d1d8e0;
-    border-radius: 6px;
-    margin-bottom: 8px;
-    font-size: 0.74rem;
-    color: #5d6978;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  .cc-ts-bar strong { color: #334155; }
-  .cc-ts-bar .cc-ts-stale { color: #b45309; font-weight: 600; }
   .cc-sync-status-row {
     display: none;
     align-items: center;
@@ -1485,7 +1469,7 @@
     flex: 0 0 auto;
     user-select: none;
     line-height: 1;
-    padding: 2px 6px;
+    padding: 1px 0;
     touch-action: none;
   }
   .cc-drag-handle:active { cursor: grabbing; }
@@ -1907,12 +1891,12 @@
         <h2 class="section-title">Dad-Level Trip Command Center</h2>
         <div class="cc-toolbar">
           <button type="button" class="cc-utility-btn cc-utility-btn--sync" id="cc-sync-cloud">☁️ Sync to Cloud</button>
-          <input type="file" id="cc-import-file" accept="application/json" style="display:none">
+          <input type="file" id="cc-import-file" accept="application/json" hidden>
           <label class="cc-exchange-label" title="Exchange rate: 1 US dollar = X British pounds">$1&nbsp;=&nbsp;£<input type="number" id="cc-exchange-rate-inverse" class="cc-exchange-input" value="0.79" min="0.0001" step="0.0001" aria-label="USD to GBP exchange rate"></label>
           <label class="cc-exchange-label" title="Exchange rate: 1 British pound = X US dollars">£1&nbsp;=&nbsp;$<input type="number" id="cc-exchange-rate" class="cc-exchange-input" value="1.27" min="0.01" step="0.01" aria-label="GBP to USD exchange rate"></label>
           <span class="cc-toolbar-status" id="cc-backup-status" aria-live="polite"></span>
           <span id="fb-user-status" style="margin-left:auto;font-size:0.78rem;color:#5d6978;display:flex;align-items:center;gap:8px;white-space:nowrap;"></span>
-          <label for="cc-import-file" class="cc-utility-btn cc-utility-btn--import" role="button" tabindex="0">📥 Import Costs</label>
+          <button type="button" class="cc-utility-btn cc-utility-btn--import" id="cc-import-data">📥 Import Costs</button>
           <button type="button" class="cc-utility-btn cc-utility-btn--export" id="cc-export-data">📤 Export Costs</button>
         </div>
         <div class="cc-sync-status-row" id="cc-sync-status-row">
@@ -1923,7 +1907,6 @@
             <button class="cc-sync-action-btn cc-sync-action-btn--cancel" id="cc-sync-cancel">✕ Cancel</button>
           </div>
         </div>
-        <div class="cc-ts-bar" id="cc-ts-bar"></div>
       </div>
       <div class="budget-pie-wrap">
         <h3 class="budget-pie-title">Budget Breakdown</h3>
@@ -1946,41 +1929,23 @@
             </div>
           </div>
           <ul class="cc-checklist">
-            <li class="cc-check-item js-cc-check-item" data-check-id="flight-outbound">
+            <li class="cc-check-item js-cc-check-item" data-check-id="flight-to-london">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text">Leg 1: Thu Apr 2, 3:00pm LGA &rarr; 4:19pm BOS — VS3280 / Republic for Delta (1h 19m) · Ref: FAJAMJ</span>
+              <span class="cc-check-text">NYC &rarr; London · Ref: FAJAMJ · Leg 1: Thu Apr 2, 3:00pm LGA &rarr; 4:19pm BOS — VS3280, Republic Airline Inc. (Delta Basic Economy, 1h 19m) · Leg 2: Thu Apr 2, 7:00pm BOS &rarr; Fri Apr 3, 6:45am LHR — VS4012, Delta (Delta Basic Economy, direct, 11h 45m)</span>
               <span class="cc-link-wrap">
-                <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-outbound" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-outbound" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-to-london" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-to-london" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-outbound" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="flight-outbound" aria-label="Cost GBP"></div>
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-to-london" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="flight-to-london" aria-label="Cost GBP"></div>
             </li>
-            <li class="cc-check-item js-cc-check-item" data-check-id="flight-return">
+            <li class="cc-check-item js-cc-check-item" data-check-id="flight-to-nyc">
               <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text">Leg 2: Thu Apr 2, 7:00pm BOS &rarr; Fri Apr 3, 6:45am LHR — VS4012 / Delta (6h 45m, direct) · Ref: FAJAMJ</span>
+              <span class="cc-check-text">London &rarr; NYC · Ref: FAJAMJ · Leg 3: Sat Apr 12, 6:55pm LHR &rarr; 9:20pm BOS — VS11, Virgin Atlantic (Economy Light, direct, 7h 25m) · Leg 4: Sun Apr 13, 6:00am BOS &rarr; 7:30am LGA — VS3678, Republic Airline Inc. (Delta Basic Economy, 1h 30m)</span>
               <span class="cc-link-wrap">
-                <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-return" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-return" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
+                <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-to-nyc" placeholder="Paste URL" aria-label="Relevant URL">
+                <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-to-nyc" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
               </span>
-              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-return" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="flight-return" aria-label="Cost GBP"></div>
-            </li>
-            <li class="cc-check-item js-cc-check-item" data-check-id="flight-bos-jfk">
-              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text">Return Leg 3: Sat Apr 12, 6:55pm LHR &rarr; 9:20pm BOS — VS11 / Virgin Atlantic (7h 25m, direct) · Ref: FAJAMJ</span>
-              <span class="cc-link-wrap">
-                <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-bos-jfk" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-bos-jfk" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
-              </span>
-              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-bos-jfk" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="flight-bos-jfk" aria-label="Cost GBP"></div>
-            </li>
-            <li class="cc-check-item js-cc-check-item" data-check-id="flight-bos-lga">
-              <button type="button" class="cc-check-btn" aria-label="Toggle checklist item" aria-pressed="false"></button>
-              <span class="cc-check-text">Return Leg 4: Sun Apr 13, 6:00am BOS &rarr; 7:30am LGA — VS3678 / Republic for Delta (1h 30m) · Ref: FAJAMJ</span>
-              <span class="cc-link-wrap">
-                <input type="url" class="cc-link-input js-cc-link" data-link-id="flight-bos-lga" placeholder="Paste URL" aria-label="Relevant URL">
-                <a class="cc-link-open js-cc-link-open" data-link-open-id="flight-bos-lga" href="#" target="_blank" rel="noopener noreferrer" hidden>Visit</a>
-              </span>
-              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-bos-lga" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="flight-bos-lga" aria-label="Cost GBP"></div>
+              <div class="cc-cost-pair"><span class="cc-cost-col-label">USD</span><input type="text" class="cc-cost-input js-cc-cost" data-cost-id="flight-to-nyc" aria-label="Cost USD"><span class="cc-cost-col-label">GBP</span><input type="text" class="cc-cost-input cc-cost-input--gbp js-cc-cost-gbp" data-cost-gbp-id="flight-to-nyc" aria-label="Cost GBP"></div>
             </li>
           </ul>
         </article>
@@ -2364,8 +2329,8 @@
         date: "April 2-3",
         showAllStopsOnTopMap: true,
         items: [
-          { text: "Leave from 303 E. 83rd St, NY, NY to LaGuardia Airport (LGA). Allow 30–50 min by rideshare; depart home by 12:30 PM for a 3:00 PM flight.", page: "303_E_83rd_St_NYC", caption: "Depart from 303 E. 83rd St" },
-          { text: "Depart New York LaGuardia (LGA) at 3:00 PM on VS3280, operated by Republic for Delta, to Boston Logan (BOS). 1 hr 19 min flight. Booking Ref: FAJAMJ.", page: "LaGuardia_Airport", caption: "LGA departure — VS3280" },
+          { text: "Leave from 303 E. 83rd St, NY, NY to LaGuardia Airport (LGA). Depart home by 9:30 AM — allow ~90 min by rideshare for morning traffic. Arrive LGA by 11:00 AM (4 hrs ahead of 3:00 PM flight due to reduced TSA staffing).", page: "303_E_83rd_St_NYC", caption: "Depart from 303 E. 83rd St" },
+          { text: "Arrive LaGuardia (LGA) by 11:00 AM — 4 hrs before VS3280 departure at 3:00 PM. Check in, clear security, and board. VS3280 (Republic for Delta) LGA → BOS, 3:00 PM → 4:19 PM. Booking Ref: FAJAMJ.", page: "LaGuardia_Airport", caption: "LGA — arrive 11 AM, depart 3 PM VS3280" },
           { text: "Arrive Boston Logan (BOS) at 4:19 PM. 2 hr 41 min layover until 7:00 PM departure. Stay airside — clear the BOS security checkpoint and head to the international terminal.", page: "BOS_Stopover_D1", caption: "BOS layover — 2h 41m" },
           { text: "Depart Boston Logan (BOS) at 7:00 PM on VS4012, operated by Delta, direct to London Heathrow (LHR). 6 hr 45 min overnight flight. Booking Ref: FAJAMJ.", page: "BOS_Depart_D1", caption: "BOS departure — VS4012", defaultCost: 0 }
         ]
@@ -2512,6 +2477,7 @@
         day: 12,
         title: "Boston Overnight — Return Home to New York",
         date: "April 13",
+        showAllStopsOnTopMap: true,
         items: [
           { text: "Overnight at hotel near Boston Logan (arrive 9:20 PM Apr 12). Very early wake-up — leave hotel by 4:30 AM for a 6:00 AM departure.", page: "Boston_Logan_International_Airport", caption: "Boston overnight layover" },
           { text: "Depart Boston Logan (BOS) at 6:00 AM on VS3678, operated by Republic for Delta, to LaGuardia (LGA). 1 hr 30 min flight. Booking Ref: FAJAMJ.", page: "BOS_Departure_D12", caption: "BOS departure — VS3678" },
@@ -2538,8 +2504,8 @@
 
     const visitTimes = {
       // Day 1 — NYC to LGA → BOS → LHR
-      "303_E_83rd_St_NYC": "12:00",                    // Start packing/prep at noon; depart ~12:30 PM for LGA
-      LaGuardia_Airport: "13:30",                      // Arrive LGA ~1:30 PM — 1.5 hrs before 3:00 PM departure
+      "303_E_83rd_St_NYC": "09:00",                    // Start prep at 9 AM; depart home ~9:30 AM for LGA
+      LaGuardia_Airport: "11:00",                      // Arrive LGA 11:00 AM — 4 hrs before 3:00 PM departure
       BOS_Stopover_D1: "16:19",                        // Arrive BOS 4:19 PM — 2h 41m layover until 7:00 PM
       BOS_Depart_D1: "19:00",                          // Depart BOS 7:00 PM on VS4012 → LHR
       Newark_Liberty_International_Airport: "15:07",
@@ -2655,8 +2621,8 @@
 
     const visitDurationsMin = {
       // Day 1
-      "303_E_83rd_St_NYC": 30,                    // 12:00 PM prep; rideshare departs 12:30 PM
-      LaGuardia_Airport: 90,                      // 1:30 PM arrive → 3:00 PM depart = 90 min at airport
+      "303_E_83rd_St_NYC": 30,                    // 9:00 AM prep; rideshare departs ~9:30 AM
+      LaGuardia_Airport: 240,                     // 11:00 AM arrive → 3:00 PM depart = 4 hrs at airport
       BOS_Stopover_D1: 0,                         // 4:19 PM arrive — layover marker; transit bar covers the 2h41m
       BOS_Depart_D1: 0,                           // 7:00 PM depart — overnight flight, 0 own duration (shown as transit)
       Newark_Liberty_International_Airport: 80,
@@ -2773,7 +2739,7 @@
     const dayTransportPlans = {
       1: [
         { mode: "Starting point", bufferMin: 0, note: "Departing from home — 303 E. 83rd St. Prep and pack." },
-        { mode: "Rideshare / taxi to LGA", bufferMin: 50, note: "Depart home 12:30 PM. Transfer from Upper East Side to LaGuardia; allow 30–50 min traffic. Arrive LGA ~1:30 PM — 90 min before 3:00 PM departure." },
+        { mode: "Rideshare / taxi to LGA", bufferMin: 90, note: "Depart home ~9:30 AM. Transfer from Upper East Side to LaGuardia; allow ~90 min for morning traffic. Arrive LGA by 11:00 AM — 4 hrs before 3:00 PM departure (reduced TSA staffing)." },
         { mode: "Airplane VS3280 (LGA → BOS)", bufferMin: 79, note: "Departs LGA 3:00 PM, arrives BOS 4:19 PM. 1 hr 19 min flight. 2h 41m layover in Boston follows." },
         { mode: "BOS Terminal layover", bufferMin: 161, note: "Layover 4:19 PM → 7:00 PM = 2h 41m. Stay airside, grab food, rest before overnight flight." }
       ],
@@ -2863,7 +2829,7 @@
       2: "Arrive LHR at 6:50am on April 3. Elizabeth Line from Terminal 5 → Tottenham Court Road, then taxi to 134 Great Portland St. Thames Clippers from Westminster Pier to Greenwich (~45–60 min).",
       5: "LNER 9:03am from London Kings Cross — book at lner.co.uk. Arrive Edinburgh Waverley 1:32pm.",
       9: "Lumo 8:26am from Edinburgh Waverley — book at lumo.co.uk. Arrive London Kings Cross 12:46pm.",
-      1: "Depart home ~12:30 PM for LGA. VS3280 departs LGA 3:00 PM, connects BOS (2h 41m layover). VS4012 departs BOS 7:00 PM, arrives LHR Apr 3, 6:45 AM. Booking Ref: FAJAMJ.",
+      1: "Depart home ~9:30 AM for LGA — arrive by 11:00 AM (4 hrs early, reduced TSA staffing). VS3280 departs LGA 3:00 PM → BOS 4:19 PM (2h 41m layover). VS4012 departs BOS 7:00 PM → LHR Apr 3, 6:45 AM. Ref: FAJAMJ.",
       10: "Bonus free day in London — no flights today. Pack bags tonight. Departure is April 12.",
       11: "VS11 (Virgin Atlantic) departs LHR 6:55 PM — leave central London by 4:00 PM. Heathrow Express from Paddington ~15 min. Arrive BOS 9:20 PM. Book hotel near airport.",
       12: "Very early departure — VS3678 departs BOS 6:00 AM, arrives LGA 7:30 AM. Be at airport by 4:30 AM. Book hotel near BOS Logan for the overnight. Booking Ref: FAJAMJ."
@@ -2925,6 +2891,7 @@
       London_Evening_D10: [51.5074, -0.1278],             // Central London evening
       // Day 11 LHR departure / Day 12 BOS→LGA
       BOS_Arrive_D11: [42.3656, -71.0096],                // Boston Logan (arrive Day 11)
+      Boston_Logan_International_Airport: [42.3656, -71.0096], // Boston Logan (overnight Day 12)
       BOS_Departure_D12: [42.3656, -71.0096],             // Boston Logan (depart Day 12)
       LGA_Arrive_Home: [40.7773, -73.8726],               // LaGuardia (arrive home)
 
@@ -4278,7 +4245,7 @@
       }
 
       const rows = orderedRows.map(({ rowKey, type, itemKey, entryId, day, date, poi, plannedTime, category, researchedCost, paymentMethod, usd, gbp }) => `
-        <tr class="js-unified-row" data-row-key="${rowKey}" data-row-type="${type}" ${type === "itinerary" ? `data-item-key="${itemKey}"` : `data-entry-id="${entryId}"`}>
+        <tr class="js-unified-row" data-row-key="${rowKey}" data-row-type="${type}" ${type === "itinerary" ? `data-item-key="${itemKey}"` : `data-entry-id="${entryId}"`} draggable="true">
           <td style="width:30px;text-align:center;padding:4px"><span class="actc-drag-handle" title="Drag to reorder">⠿</span></td>
           <td style="width:34px;text-align:center;padding:2px"><button type="button" class="actc-star-btn js-actc-star" data-row-key="${rowKey}" aria-pressed="false" title="Star to include in Grand Total">★</button></td>
           <td style="width:52px"><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="day" value="${escapeHtml(day)}" placeholder="Day 1"></td>
@@ -4465,18 +4432,11 @@
         });
       });
 
-      // Drag-and-drop — gate draggable on mousedown of handle so inputs in the
-      // row don't accidentally start a drag when the user clicks to type.
+      // Drag-and-drop
       let dragSrc = null;
       container.querySelectorAll(".js-unified-row").forEach((row) => {
-        row.setAttribute("draggable", "false");
-        const hdl = row.querySelector(".actc-drag-handle");
-        if (hdl) {
-          hdl.addEventListener("mousedown", () => row.setAttribute("draggable", "true"));
-          hdl.addEventListener("mouseup",   () => row.setAttribute("draggable", "false"));
-        }
-        row.addEventListener("dragstart", (e) => { dragSrc = row.dataset.rowKey; row.classList.add("actc-row-dragging"); e.dataTransfer.effectAllowed = "move"; e.dataTransfer.setData("text/plain", ""); });
-        row.addEventListener("dragend", () => { row.setAttribute("draggable", "false"); row.classList.remove("actc-row-dragging"); });
+        row.addEventListener("dragstart", (e) => { dragSrc = row.dataset.rowKey; row.classList.add("actc-row-dragging"); e.dataTransfer.effectAllowed = "move"; });
+        row.addEventListener("dragend", () => row.classList.remove("actc-row-dragging"));
         row.addEventListener("dragover", (e) => { e.preventDefault(); row.classList.add("actc-row-dragover"); });
         row.addEventListener("dragleave", () => row.classList.remove("actc-row-dragover"));
         row.addEventListener("drop", (e) => {
@@ -5226,12 +5186,12 @@
           starBtn.setAttribute("aria-pressed", String(nextActive));
           starBtn.title = nextActive ? "Marked for special attention" : "Mark for special attention";
         }
-        // Always read fresh from localStorage to avoid stale closure state
-        let _fresh = {};
-        try { _fresh = JSON.parse(localStorage.getItem(COMMAND_ATTENTION_STORAGE_KEY) || "{}") || {}; } catch (_e) {}
-        if (nextActive) { _fresh[id] = true; } else { delete _fresh[id]; }
-        commandAttentionState = _fresh;
-        localStorage.setItem(COMMAND_ATTENTION_STORAGE_KEY, JSON.stringify(_fresh));
+        if (nextActive) {
+          commandAttentionState[id] = true;
+        } else {
+          delete commandAttentionState[id];
+        }
+        localStorage.setItem(COMMAND_ATTENTION_STORAGE_KEY, JSON.stringify(commandAttentionState));
         updateFlightTotal();
       }
 
@@ -5463,18 +5423,9 @@
         };
 
         if (input.dataset.bound === "true") {
-          // Re-apply value from fresh ccCosts/ccCostsGbp data (important after cloud pull)
-          const freshSrc = ccCostSource[id];
-          if (freshSrc === "gbp" && ccCostsGbp[id]) {
-            input.value = ccCosts[id] || "$";
-          } else if (ccCosts[id]) {
-            input.value = ccCosts[id];
-          } else {
-            input.value = "$";
-          }
           renderCostNote();
           applyPairHighlight(id, ccCostSource[id] || null);
-          if (freshSrc !== "gbp") fillComputedGbp(id, parseFloat(String(input.value || "").replace(/[$,\s]/g, "")));
+          if (src !== "gbp") fillComputedGbp(id, parseFloat(String(input.value || "").replace(/[$,\s]/g, "")));
           attachDateInputToCostInput(input);
           autofillTodayForCostInput(input);
           return;
@@ -5699,9 +5650,7 @@
           starBtn.addEventListener("click", (event) => {
             event.preventDefault();
             event.stopPropagation();
-            let _cur = {};
-            try { _cur = JSON.parse(localStorage.getItem(COMMAND_ATTENTION_STORAGE_KEY) || "{}") || {}; } catch (_e) {}
-            setCommandAttentionState(itemEl, id, !Boolean(_cur[id]));
+            setCommandAttentionState(itemEl, id, !Boolean(commandAttentionState[id]));
           });
           const checkBtn = itemEl.querySelector(".cc-check-btn");
           checkBtn?.insertAdjacentElement("afterend", starBtn);
@@ -5754,14 +5703,6 @@
         const list = card?.querySelector(".cc-checklist");
         if (!(card instanceof HTMLElement) || !(list instanceof HTMLElement)) return;
         const savedItems = Array.isArray(commandCustomItems[cardId]) ? commandCustomItems[cardId] : [];
-        const savedIds = new Set(savedItems.map((i) => i?.id).filter(Boolean));
-
-        // Remove custom DOM items that are no longer in the saved list (e.g. after a cloud pull)
-        list.querySelectorAll(`.js-cc-check-item[data-check-id^="custom-"]`).forEach((el) => {
-          const elId = el.getAttribute("data-check-id");
-          if (elId && !savedIds.has(elId)) el.remove();
-        });
-
         savedItems.forEach((item) => {
           if (!item || typeof item.id !== "string" || typeof item.text !== "string") return;
           if (!list.querySelector(`.js-cc-check-item[data-check-id="${item.id}"]`)) {
@@ -5918,12 +5859,13 @@
       const legendEl = document.getElementById("budget-pie-legend");
       if (!(canvas instanceof HTMLCanvasElement) || !legendEl) return;
 
+      // All five colors are visually distinct — no two share a hue family
       const SLICES = [
-        { card: "flight",  label: "Flights",                       display: ["Flights"],               color: "#ef4444" },
-        { card: "hotel",   label: "Hotels",                        display: ["Hotels"],                color: "#3b82f6" },
-        { card: "booking", label: "Scotland Tour (incl. Lodging)", display: ["Scotland", "Tour"],      color: "#facc15" },
-        { card: "review",  label: "Points of Interest",            display: ["Points of", "Interest"], color: "#a855f7" },
-        { card: "food",    label: "Food & Souvenirs",              display: ["Food &", "Souvenirs"],   color: "#22c55e" }
+        { card: "flight",  label: "Flights",                        lines: ["Flights"],             color: "#f97316" }, // orange
+        { card: "hotel",   label: "Hotels",                         lines: ["Hotels"],              color: "#3b82f6" }, // blue
+        { card: "booking", label: "Scotland Tour (incl. Lodging)",  lines: ["Scotland", "Tour"],    color: "#facc15" }, // yellow
+        { card: "review",  label: "Points of Interest",             lines: ["Points of", "Int."],   color: "#a855f7" }, // purple
+        { card: "food",    label: "Food & Souvenirs",               lines: ["Food &", "Souvenirs"], color: "#34d399" }  // green
       ];
 
       const values = SLICES.map((s) => {
@@ -5936,25 +5878,27 @@
       const ctx = canvas.getContext("2d");
       const W = canvas.width;
       const H = canvas.height;
+      const cx = W / 2, cy = H / 2;
+      const outerR = W / 2 - 6;
+      const innerR = W / 5;
       ctx.clearRect(0, 0, W, H);
 
       if (total === 0) {
         legendEl.innerHTML = `<li class="budget-pie-empty">Enter costs above to see breakdown.</li>`;
         ctx.fillStyle = "#e8edf2";
-        ctx.beginPath();
-        ctx.arc(W / 2, H / 2, W / 2 - 6, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.beginPath(); ctx.arc(cx, cy, outerR, 0, Math.PI * 2); ctx.fill();
         return;
       }
 
+      // Draw slices
       const sliceAngles = [];
       let startAngle = -Math.PI / 2;
       values.forEach((val, i) => {
         if (val <= 0) { sliceAngles.push(null); return; }
         const sweep = (val / total) * Math.PI * 2;
         ctx.beginPath();
-        ctx.moveTo(W / 2, H / 2);
-        ctx.arc(W / 2, H / 2, W / 2 - 6, startAngle, startAngle + sweep);
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, outerR, startAngle, startAngle + sweep);
         ctx.closePath();
         ctx.fillStyle = SLICES[i].color;
         ctx.fill();
@@ -5963,40 +5907,34 @@
       });
 
       // Centre hole for donut effect
-      ctx.beginPath();
-      ctx.arc(W / 2, H / 2, W / 5, 0, Math.PI * 2);
-      ctx.fillStyle = "#fff";
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
+      ctx.fillStyle = "#fff"; ctx.fill();
 
-      // Slice labels — % + pre-wrapped short display label
-      const labelR = (W / 2 - 6) * 0.65;
+      // Helper: draw multiple text lines centred on (x, y)
+      function drawLines(lines, x, y, lineH) {
+        const top = y - ((lines.length - 1) * lineH) / 2;
+        lines.forEach((ln, i) => ctx.fillText(ln, x, top + i * lineH));
+      }
+
+      // Slice labels — push slightly outward (70 %) to give room for two-line labels
+      const labelR = outerR * 0.70;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
+      ctx.fillStyle = "#111";
       sliceAngles.forEach((a, i) => {
         if (!a || values[i] <= 0) return;
         const pct = Math.round((values[i] / total) * 100);
-        if (pct < 5) return;
+        if (pct < 5) return; // skip tiny slices
         const midAngle = a.start + a.sweep / 2;
-        const x = W / 2 + labelR * Math.cos(midAngle);
-        const y = H / 2 + labelR * Math.sin(midAngle);
-        ctx.fillStyle = "#fff";
-        if (pct >= 12) {
-          // Large slice: % on top + 1–2 short label lines below, all centred as a group
-          const dispLines = SLICES[i].display;
-          const lh = 11; // line-height
-          const totalLines = 1 + dispLines.length;
-          const blockH = (totalLines - 1) * lh;
-          ctx.font = "bold 12px sans-serif";
-          ctx.fillText(pct + "%", x, y - blockH / 2);
-          ctx.font = "9px sans-serif";
-          dispLines.forEach((line, li) => {
-            ctx.fillText(line, x, y - blockH / 2 + (li + 1) * lh);
-          });
-        } else {
-          // Smaller slice: percentage only
-          ctx.font = "bold 12px sans-serif";
-          ctx.fillText(pct + "%", x, y);
-        }
+        const x = cx + labelR * Math.cos(midAngle);
+        const y = cy + labelR * Math.sin(midAngle);
+        const lines = SLICES[i].lines;
+        // percentage line
+        ctx.font = "bold 12px sans-serif";
+        ctx.fillText(pct + "%", x, y - (lines.length > 1 ? 14 : 10));
+        // label lines (one or two)
+        ctx.font = "10px sans-serif";
+        drawLines(lines, x, y + (lines.length > 1 ? 2 : 5), 12);
       });
 
       // Legend — sorted greatest to least
@@ -6152,9 +6090,12 @@
         setBackupStatus("Backup exported.", false);
       });
 
-      // importBtn is now a <label for="cc-import-file"> so it natively opens the file
-      // picker without needing a programmatic .click() call (which Chrome blocks on
-      // hidden inputs).
+      importBtn?.addEventListener("click", () => {
+        if (fileInput instanceof HTMLInputElement) {
+          fileInput.value = "";
+          fileInput.click();
+        }
+      });
 
       fileInput?.addEventListener("change", async () => {
         const file = fileInput.files?.[0];
@@ -6180,50 +6121,32 @@
       });
     }
 
-    // Single shared drag source — survives multiple initializeDragReorder calls
-    let _ccDragSrc = null;
-
     function initializeDragReorder() {
       const CC_ORDER_STORAGE_KEY = "ukTripCCOrderV1";
       let savedOrders = {};
       try { savedOrders = JSON.parse(localStorage.getItem(CC_ORDER_STORAGE_KEY) || "{}"); } catch (_) {}
+      let dragSrc = null;
 
       function attachDragHandle(item, list) {
         if (!(item instanceof HTMLElement) || !(list instanceof HTMLElement)) return;
         if (item.querySelector(".cc-drag-handle")) return;
         const handle = document.createElement("span");
         handle.className = "cc-drag-handle";
+        handle.setAttribute("draggable", "true");
         handle.setAttribute("aria-hidden", "true");
         handle.textContent = "\u2807";
         item.insertBefore(handle, item.firstChild);
 
-        // draggable lives on the item so the whole row is the drag surface;
-        // mousedown/mouseup on the handle gates whether a drag is allowed so
-        // clicks on buttons/inputs inside the item never accidentally start a drag.
-        item.setAttribute("draggable", "false");
-        let _readyToDrag = false;
-        handle.addEventListener("mousedown", () => {
-          _readyToDrag = true;
-          item.setAttribute("draggable", "true");
-        });
-        const clearDraggable = () => {
-          _readyToDrag = false;
-          item.setAttribute("draggable", "false");
-        };
-        handle.addEventListener("mouseup", clearDraggable);
-
-        item.addEventListener("dragstart", (e) => {
-          if (!_readyToDrag) { e.preventDefault(); return; }
-          _ccDragSrc = item;
+        handle.addEventListener("dragstart", (e) => {
+          dragSrc = item;
           e.dataTransfer.effectAllowed = "move";
           e.dataTransfer.setData("text/plain", "");
           setTimeout(() => { item.style.opacity = "0.4"; }, 0);
         });
 
-        item.addEventListener("dragend", () => {
-          clearDraggable();
-          if (_ccDragSrc) _ccDragSrc.style.opacity = "";
-          _ccDragSrc = null;
+        handle.addEventListener("dragend", () => {
+          if (dragSrc) dragSrc.style.opacity = "";
+          dragSrc = null;
           list.querySelectorAll(".js-cc-check-item").forEach((i) => i.classList.remove("cc-drag-over"));
         });
       }
@@ -6243,21 +6166,17 @@
           });
         }
 
-        // Inject drag handles on any items that don't have one yet
+        // Inject drag handles
         list.querySelectorAll(".js-cc-check-item").forEach((item) => {
           attachDragHandle(item, list);
         });
-
-        // Only attach list-level listeners once
-        if (list.dataset.dragListening === "true") return;
-        list.dataset.dragListening = "true";
 
         list.addEventListener("dragover", (e) => {
           e.preventDefault();
           e.dataTransfer.dropEffect = "move";
           const target = e.target.closest(".js-cc-check-item");
           list.querySelectorAll(".js-cc-check-item").forEach((i) => i.classList.remove("cc-drag-over"));
-          if (target && target !== _ccDragSrc) target.classList.add("cc-drag-over");
+          if (target && target !== dragSrc) target.classList.add("cc-drag-over");
         });
 
         list.addEventListener("dragleave", (e) => {
@@ -6270,15 +6189,15 @@
           e.preventDefault();
           const target = e.target.closest(".js-cc-check-item");
           list.querySelectorAll(".js-cc-check-item").forEach((i) => i.classList.remove("cc-drag-over"));
-          if (!_ccDragSrc || !target || _ccDragSrc === target || !list.contains(_ccDragSrc)) return;
+          if (!dragSrc || !target || dragSrc === target || !list.contains(dragSrc)) return;
           const rect = target.getBoundingClientRect();
           if (e.clientY < rect.top + rect.height / 2) {
-            list.insertBefore(_ccDragSrc, target);
+            list.insertBefore(dragSrc, target);
           } else {
-            list.insertBefore(_ccDragSrc, target.nextSibling);
+            list.insertBefore(dragSrc, target.nextSibling);
           }
-          _ccDragSrc.style.opacity = "";
-          _ccDragSrc = null;
+          dragSrc.style.opacity = "";
+          dragSrc = null;
           const items = Array.from(list.querySelectorAll(".js-cc-check-item[data-check-id]"));
           savedOrders[cardId] = items.map((i) => i.getAttribute("data-check-id"));
           localStorage.setItem(CC_ORDER_STORAGE_KEY, JSON.stringify(savedOrders));
@@ -6991,11 +6910,16 @@
       loadHotelCheckinData();
       renderHotelCheckinGrid();
 
-      // Always refresh hotel markers so stale markers are cleared when data changes
-      // (e.g. after a cloud pull that removes hotels). Each refresh fn guards internally.
-      refreshHotelMarkersOnAllMaps();
-      refreshDayRouteLines();
-      refreshRouteMap();
+      // Restore any previously saved hotel markers
+      const hasSavedCoords = HOTEL_STAY_DEFS.some((def) => {
+        const saved = hotelCheckinData[def.id] || {};
+        return saved.lat && saved.lng;
+      });
+      if (hasSavedCoords) {
+        refreshHotelMarkersOnAllMaps();
+        refreshDayRouteLines();
+        refreshRouteMap();
+      }
 
       renderHotelCheckInOutBanners();
     }
@@ -7055,14 +6979,6 @@
       "mathewmit@gmail.com",
     ];
 
-    // Only these emails may push data to Firestore; everyone else is read-only.
-    const WRITER_EMAILS = [
-      "endermathewwong@gmail.com",
-      "mathewmit@gmail.com",
-    ];
-
-    let _currentUserIsWriter = false;
-
     // ── Firebase init ─────────────────────────────────────────────────────────
     const firebaseConfig = {
       apiKey: "AIzaSyCsRqCldapy-gt4LoaAip5-MKxyC4m797M",
@@ -7105,13 +7021,15 @@
       actcCurrencyPrefs:    "ukTripCostCurrencyPref"
     };
 
-    // Auto-stamp LOCAL_LAST_CHANGE_KEY whenever any synced key is written to localStorage
+    // Auto-stamp LOCAL_LAST_CHANGE_KEY whenever any synced key is written to localStorage.
+    // Suppressed while applyFirestoreData is running (re-rendering cloud data is not a local change).
     const LOCAL_LAST_CHANGE_KEY = "ukTripLastLocalChange";
     const _syncedLsKeys = new Set(Object.values(STORAGE_KEY_MAP));
     const _origSetItem = localStorage.setItem.bind(localStorage);
+    let _applyingCloudData = false;
     localStorage.setItem = (key, value) => {
       _origSetItem(key, value);
-      if (_syncedLsKeys.has(key)) _origSetItem(LOCAL_LAST_CHANGE_KEY, String(Date.now()));
+      if (!_applyingCloudData && _syncedLsKeys.has(key)) _origSetItem(LOCAL_LAST_CHANGE_KEY, String(Date.now()));
     };
 
     // ── Firestore document reference ──────────────────────────────────────────
@@ -7137,49 +7055,6 @@
       return new Date(ts).toLocaleString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
     }
 
-    // ── Timestamp debug bar ───────────────────────────────────────────────────
-    let _cachedCloudTs = 0; // updated whenever we read Firestore
-
-    function updateTsBar() {
-      const bar = document.getElementById("cc-ts-bar");
-      if (!bar) return;
-
-      const localChangeTs = parseInt(localStorage.getItem(LOCAL_LAST_CHANGE_KEY) || "0");
-      const localSyncTs   = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY)   || "0");
-      const cloudTs       = _cachedCloudTs;
-
-      const fmt = (ts) => {
-        if (!ts) return '<span class="cc-ts-stale">never</span>';
-        const rel = fmtTs(ts);
-        const abs = new Date(ts).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
-        return `<span title="epoch: ${ts}">${rel} (${abs})</span>`;
-      };
-
-      const cloudLabel = cloudTs
-        ? fmt(cloudTs)
-        : '<span class="cc-ts-stale">not fetched yet — click Sync</span>';
-
-      const staleness = (cloudTs && localSyncTs && cloudTs > localSyncTs + 10000)
-        ? ' <span class="cc-ts-stale">⚠ local may be behind cloud</span>'
-        : '';
-
-      bar.style.display = "flex";
-      bar.innerHTML =
-        `<span><strong>Local changed:</strong> ${fmt(localChangeTs)}</span>` +
-        `<span><strong>Last synced:</strong> ${fmt(localSyncTs)}</span>` +
-        `<span><strong>Cloud updated:</strong> ${cloudLabel}${staleness}</span>`;
-    }
-
-    function refreshTsBarFromSnap(snap) {
-      if (snap && snap.exists && snap.exists()) {
-        _cachedCloudTs = snap.data()._lastUpdated || 0;
-      }
-      updateTsBar();
-    }
-
-    setInterval(updateTsBar, 5000);
-    updateTsBar(); // show immediately on module load
-
     // ── Status helper (works from module scope) ───────────────────────────────
     function setStatus(msg, isError) {
       const el = document.getElementById("cc-backup-status");
@@ -7202,22 +7077,13 @@
         payload._lastUpdated = Date.now();
         await setDoc(tripDocRef, payload, { merge: true });
         localStorage.setItem(LOCAL_LAST_SAVE_KEY, String(payload._lastUpdated));
-        _cachedCloudTs = payload._lastUpdated;
-        updateTsBar();
       } catch (err) {
         console.warn("[Firebase] saveAllToFirestore error:", err);
       }
     }
 
-    // ── Smart sync ────────────────────────────────────────────────────────────
-    // Writer (Mathew): pushes local data to Firestore.
-    // Reader (everyone else): pulls latest from Firestore — cannot push.
+    // ── Smart sync: compare timestamps before pushing ─────────────────────────
     async function smartSync() {
-      if (!_currentUserIsWriter) {
-        await loadFromCloud();
-        return;
-      }
-
       const syncBtn = document.getElementById("cc-sync-cloud");
       const statusRow = document.getElementById("cc-sync-status-row");
       const timestampsEl = document.getElementById("cc-sync-timestamps");
@@ -7225,15 +7091,33 @@
       if (syncBtn) { syncBtn.classList.add("is-syncing"); syncBtn.textContent = "☁️ Checking…"; }
 
       try {
-        // Writer is the sole person who can push — always push immediately, no cloud-newer check needed.
-        await saveAllToFirestore();
+        const snap = await getDoc(tripDocRef);
+        const cloudTs = snap.exists() ? (snap.data()._lastUpdated || 0) : 0;
+        const localChangeTs = parseInt(localStorage.getItem(LOCAL_LAST_CHANGE_KEY) || "0");
+        const localSyncTs   = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY)   || "0");
+        const localTs = Math.max(localChangeTs, localSyncTs);
+
         if (syncBtn) { syncBtn.classList.remove("is-syncing"); syncBtn.textContent = "☁️ Sync to Cloud"; }
-        if (statusRow) statusRow.style.display = "none";
-        setStatus("✓ Synced to cloud!", false);
-        setTimeout(() => setStatus(""), 3000);
+
+        if (cloudTs > localTs + 60000) {
+          // Cloud is newer — warn before overwriting
+          if (timestampsEl) {
+            timestampsEl.innerHTML =
+              `⚠️ <strong>Cloud is newer than your local data.</strong>&nbsp;&nbsp;` +
+              `Cloud: <strong>${fmtTs(cloudTs)}</strong>&nbsp;&nbsp;·&nbsp;&nbsp;` +
+              `Local last synced: <strong>${localTs ? fmtTs(localTs) : "never"}</strong>`;
+          }
+          if (statusRow) statusRow.style.display = "flex";
+        } else {
+          // Local is same or newer — safe to push
+          await saveAllToFirestore();
+          if (statusRow) statusRow.style.display = "none";
+          setStatus("✓ Synced to cloud!", false);
+          setTimeout(() => setStatus(""), 3000);
+        }
       } catch (err) {
         if (syncBtn) { syncBtn.classList.remove("is-syncing"); syncBtn.textContent = "☁️ Sync to Cloud"; }
-        setStatus("Sync failed. Try again.", true);
+        setStatus("Sync check failed. Try again.", true);
         console.warn("[Firebase] smartSync error:", err);
       }
     }
@@ -7252,7 +7136,6 @@
 
       if (snap.exists()) {
         _snapshotIgnoreNext = true;
-        _cachedCloudTs = snap.data()._lastUpdated || 0;
         try {
           applyFirestoreData(snap.data());
         } catch (uiErr) {
@@ -7263,7 +7146,6 @@
         } catch (_) {}
       }
 
-      updateTsBar();
       setStatus("✓ Loaded latest data from cloud!", false);
       setTimeout(() => setStatus(""), 3000);
     }
@@ -7273,6 +7155,8 @@
 
     function applyFirestoreData(data) {
       if (!data) return;
+      _applyingCloudData = true;
+      try {
 
       // 1. Write Firestore data to localStorage — use _origSetItem to avoid
       //    triggering the LOCAL_LAST_CHANGE_KEY auto-stamp (cloud data is not a local change)
@@ -7325,7 +7209,8 @@
       try { if (typeof initializeHotelCheckIns === "function") initializeHotelCheckIns(); } catch (_) {}
       try { if (typeof renderBudgetPie === "function") renderBudgetPie(); } catch (_) {}
       try { if (typeof updateFlightTotal === "function") updateFlightTotal(); } catch (_) {}
-      updateTsBar();
+
+      } finally { _applyingCloudData = false; }
     }
 
     // ── UI helpers ────────────────────────────────────────────────────────────
@@ -7357,12 +7242,9 @@
       signoutBtn.style.display = "none";
     }
 
-    function setUserStatusBar(email, isWriter) {
+    function setUserStatusBar(email) {
       if (!userStatus) return;
-      const roleBadge = isWriter
-        ? `<span style="font-size:0.7rem;background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;border-radius:4px;padding:1px 6px;font-weight:700;">Writer</span>`
-        : `<span style="font-size:0.7rem;background:#e0e7ff;color:#3730a3;border:1px solid #a5b4fc;border-radius:4px;padding:1px 6px;font-weight:700;">Reader</span>`;
-      userStatus.innerHTML = `<span style="opacity:0.75">Signed in as <strong>${email}</strong></span> ${roleBadge} <button id="fb-main-signout" style="font-size:0.75rem;padding:3px 10px;background:none;border:1px solid #aaa;border-radius:5px;cursor:pointer;color:#445061;">Sign out</button>`;
+      userStatus.innerHTML = `<span style="opacity:0.75">Signed in as <strong>${email}</strong></span> <button id="fb-main-signout" style="font-size:0.75rem;padding:3px 10px;background:none;border:1px solid #aaa;border-radius:5px;cursor:pointer;color:#445061;">Sign out</button>`;
       const mainSignoutBtn = document.getElementById("fb-main-signout");
       if (mainSignoutBtn) {
         mainSignoutBtn.addEventListener("click", () => signOut(auth));
@@ -7406,62 +7288,49 @@
       }
 
       // Allowed — hide overlay, show user in toolbar
-      _currentUserIsWriter = WRITER_EMAILS.includes(email);
       hideOverlay();
-      setUserStatusBar(email, _currentUserIsWriter);
+      setUserStatusBar(email);
 
-      // Adjust UI for role
-      const syncBtn = document.getElementById("cc-sync-cloud");
-      const pushAnywayBtn = document.getElementById("cc-sync-push-anyway");
-      if (!_currentUserIsWriter) {
-        if (syncBtn) syncBtn.textContent = "⬇️ Pull Latest";
-        if (pushAnywayBtn) pushAnywayBtn.style.display = "none";
-      } else {
-        if (syncBtn) syncBtn.textContent = "☁️ Sync to Cloud";
-        if (pushAnywayBtn) pushAnywayBtn.style.display = "";
-      }
-
-      // On sign-in:
-      //   Writer: NEVER auto-pull — writer is the source of truth. Their local data wins.
-      //           They push explicitly via "Sync to Cloud".
-      //   Reader: pull from cloud if cloud is newer.
+      // Smart load: compare local-change timestamp vs cloud timestamp before overwriting
       try {
         const snap = await getDoc(tripDocRef);
         const cloudTs = snap.exists() ? (snap.data()._lastUpdated || 0) : 0;
-        const localSyncTs = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY) || "0");
+        const localChangeTs = parseInt(localStorage.getItem(LOCAL_LAST_CHANGE_KEY) || "0");
+        const localSyncTs   = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY) || "0");
+        const localTs = Math.max(localChangeTs, localSyncTs);
 
-        if (snap.exists()) _cachedCloudTs = cloudTs;
-
-        if (!_currentUserIsWriter && snap.exists() && cloudTs > localSyncTs) {
+        if (!snap.exists() || localTs === 0) {
+          // No cloud data yet, or first ever load — load cloud if it exists
+          if (snap.exists()) { _snapshotIgnoreNext = true; applyFirestoreData(snap.data()); localStorage.setItem(LOCAL_LAST_SAVE_KEY, String(cloudTs)); }
+        } else if (localTs > cloudTs + 10000) {
+          // Local is newer (user made changes after last cloud sync) — push local up
+          setStatus("Local data is newer — pushing to cloud…", false);
+          await saveAllToFirestore();
+          setStatus("✓ Auto-saved local changes to cloud.", false);
+          setTimeout(() => setStatus(""), 3000);
+        } else if (cloudTs > localTs + 10000) {
+          // Cloud is meaningfully newer (another user synced) — load from cloud
           _snapshotIgnoreNext = true;
           applyFirestoreData(snap.data());
           localStorage.setItem(LOCAL_LAST_SAVE_KEY, String(cloudTs));
-        } else {
-          updateTsBar();
         }
+        // else: within 10s of each other — treat as in sync, no action needed
       } catch (err) {
         console.warn("[Firebase] initial getDoc error:", err);
-        updateTsBar();
       }
 
-      // Subscribe to real-time updates
+      // Subscribe to real-time updates — only apply if cloud is meaningfully newer than local
       if (_unsubSnapshot) _unsubSnapshot();
       _unsubSnapshot = onSnapshot(tripDocRef, (snap) => {
         if (_snapshotIgnoreNext) { _snapshotIgnoreNext = false; return; }
         if (!snap.exists()) return;
-        // Always cache the cloud timestamp for the debug bar
-        _cachedCloudTs = snap.data()._lastUpdated || 0;
-        // Writer: never apply incoming snapshots — their local data is the source of truth.
-        if (_currentUserIsWriter) { updateTsBar(); return; }
-        const cloudTs = _cachedCloudTs;
+        const cloudTs = snap.data()._lastUpdated || 0;
         const localChangeTs = parseInt(localStorage.getItem(LOCAL_LAST_CHANGE_KEY) || "0");
         const localSyncTs   = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY)   || "0");
         const localTs = Math.max(localChangeTs, localSyncTs);
         if (cloudTs > localTs + 10000) {
-          // Cloud is genuinely newer (writer synced) — apply it
+          // Cloud is genuinely newer (another user synced) — apply it
           applyFirestoreData(snap.data());
-        } else {
-          updateTsBar();
         }
       }, (err) => {
         console.warn("[Firebase] onSnapshot error:", err);
@@ -7469,11 +7338,9 @@
     });
 
     // ── Expose functions to the non-module script ─────────────────────────────
-    // _fbSaveAll is intentionally gated: only fires for the writer account.
-    window._fbSaveAll             = () => { if (_currentUserIsWriter) debouncedSave(); };
-    window._fbSmartSync           = smartSync;
-    window._fbLoadFromCloud       = loadFromCloud;
-    window._fbApplyFirestoreData  = applyFirestoreData;
+    window._fbSaveAll       = debouncedSave;
+    window._fbSmartSync     = smartSync;
+    window._fbLoadFromCloud = loadFromCloud;
 
   </script>
 
