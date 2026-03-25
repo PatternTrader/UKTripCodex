@@ -5747,6 +5747,14 @@
         const list = card?.querySelector(".cc-checklist");
         if (!(card instanceof HTMLElement) || !(list instanceof HTMLElement)) return;
         const savedItems = Array.isArray(commandCustomItems[cardId]) ? commandCustomItems[cardId] : [];
+        const savedIds = new Set(savedItems.map((i) => i?.id).filter(Boolean));
+
+        // Remove custom DOM items that are no longer in the saved list (e.g. after a cloud pull)
+        list.querySelectorAll(`.js-cc-check-item[data-check-id^="custom-"]`).forEach((el) => {
+          const elId = el.getAttribute("data-check-id");
+          if (elId && !savedIds.has(elId)) el.remove();
+        });
+
         savedItems.forEach((item) => {
           if (!item || typeof item.id !== "string" || typeof item.text !== "string") return;
           if (!list.querySelector(`.js-cc-check-item[data-check-id="${item.id}"]`)) {
