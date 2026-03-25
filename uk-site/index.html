@@ -7120,33 +7120,15 @@
       if (syncBtn) { syncBtn.classList.add("is-syncing"); syncBtn.textContent = "☁️ Checking…"; }
 
       try {
-        const snap = await getDoc(tripDocRef);
-        const cloudTs = snap.exists() ? (snap.data()._lastUpdated || 0) : 0;
-        const localChangeTs = parseInt(localStorage.getItem(LOCAL_LAST_CHANGE_KEY) || "0");
-        const localSyncTs   = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY)   || "0");
-        const localTs = Math.max(localChangeTs, localSyncTs);
-
+        // Writer is the sole person who can push — always push immediately, no cloud-newer check needed.
+        await saveAllToFirestore();
         if (syncBtn) { syncBtn.classList.remove("is-syncing"); syncBtn.textContent = "☁️ Sync to Cloud"; }
-
-        if (cloudTs > localTs + 60000) {
-          // Cloud is newer — warn before overwriting
-          if (timestampsEl) {
-            timestampsEl.innerHTML =
-              `⚠️ <strong>Cloud is newer than your local data.</strong>&nbsp;&nbsp;` +
-              `Cloud: <strong>${fmtTs(cloudTs)}</strong>&nbsp;&nbsp;·&nbsp;&nbsp;` +
-              `Local last synced: <strong>${localTs ? fmtTs(localTs) : "never"}</strong>`;
-          }
-          if (statusRow) statusRow.style.display = "flex";
-        } else {
-          // Local is same or newer — safe to push
-          await saveAllToFirestore();
-          if (statusRow) statusRow.style.display = "none";
-          setStatus("✓ Synced to cloud!", false);
-          setTimeout(() => setStatus(""), 3000);
-        }
+        if (statusRow) statusRow.style.display = "none";
+        setStatus("✓ Synced to cloud!", false);
+        setTimeout(() => setStatus(""), 3000);
       } catch (err) {
         if (syncBtn) { syncBtn.classList.remove("is-syncing"); syncBtn.textContent = "☁️ Sync to Cloud"; }
-        setStatus("Sync check failed. Try again.", true);
+        setStatus("Sync failed. Try again.", true);
         console.warn("[Firebase] smartSync error:", err);
       }
     }
