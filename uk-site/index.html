@@ -7446,9 +7446,10 @@
 
     // ── Expose functions to the non-module script ─────────────────────────────
     // _fbSaveAll is intentionally gated: only fires for the writer account.
-    window._fbSaveAll       = () => { if (_currentUserIsWriter) debouncedSave(); };
-    window._fbSmartSync     = smartSync;
-    window._fbLoadFromCloud = loadFromCloud;
+    window._fbSaveAll             = () => { if (_currentUserIsWriter) debouncedSave(); };
+    window._fbSmartSync           = smartSync;
+    window._fbLoadFromCloud       = loadFromCloud;
+    window._fbApplyFirestoreData  = applyFirestoreData;
 
   </script>
 
