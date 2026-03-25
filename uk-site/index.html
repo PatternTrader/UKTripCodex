@@ -6995,6 +6995,14 @@
       "mathewmit@gmail.com",
     ];
 
+    // Only these emails may push data to Firestore; everyone else is read-only.
+    const WRITER_EMAILS = [
+      "endermathewwong@gmail.com",
+      "mathewmit@gmail.com",
+    ];
+
+    let _currentUserIsWriter = false;
+
     // ── Firebase init ─────────────────────────────────────────────────────────
     const firebaseConfig = {
       apiKey: "AIzaSyCsRqCldapy-gt4LoaAip5-MKxyC4m797M",
@@ -7096,8 +7104,15 @@
       }
     }
 
-    // ── Smart sync: compare timestamps before pushing ─────────────────────────
+    // ── Smart sync ────────────────────────────────────────────────────────────
+    // Writer (Mathew): pushes local data to Firestore.
+    // Reader (everyone else): pulls latest from Firestore — cannot push.
     async function smartSync() {
+      if (!_currentUserIsWriter) {
+        await loadFromCloud();
+        return;
+      }
+
       const syncBtn = document.getElementById("cc-sync-cloud");
       const statusRow = document.getElementById("cc-sync-status-row");
       const timestampsEl = document.getElementById("cc-sync-timestamps");
@@ -7252,9 +7267,12 @@
       signoutBtn.style.display = "none";
     }
 
-    function setUserStatusBar(email) {
+    function setUserStatusBar(email, isWriter) {
       if (!userStatus) return;
-      userStatus.innerHTML = `<span style="opacity:0.75">Signed in as <strong>${email}</strong></span> <button id="fb-main-signout" style="font-size:0.75rem;padding:3px 10px;background:none;border:1px solid #aaa;border-radius:5px;cursor:pointer;color:#445061;">Sign out</button>`;
+      const roleBadge = isWriter
+        ? `<span style="font-size:0.7rem;background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;border-radius:4px;padding:1px 6px;font-weight:700;">Writer</span>`
+        : `<span style="font-size:0.7rem;background:#e0e7ff;color:#3730a3;border:1px solid #a5b4fc;border-radius:4px;padding:1px 6px;font-weight:700;">Reader</span>`;
+      userStatus.innerHTML = `<span style="opacity:0.75">Signed in as <strong>${email}</strong></span> ${roleBadge} <button id="fb-main-signout" style="font-size:0.75rem;padding:3px 10px;background:none;border:1px solid #aaa;border-radius:5px;cursor:pointer;color:#445061;">Sign out</button>`;
       const mainSignoutBtn = document.getElementById("fb-main-signout");
       if (mainSignoutBtn) {
         mainSignoutBtn.addEventListener("click", () => signOut(auth));
@@ -7298,33 +7316,33 @@
       }
 
       // Allowed — hide overlay, show user in toolbar
+      _currentUserIsWriter = WRITER_EMAILS.includes(email);
       hideOverlay();
-      setUserStatusBar(email);
+      setUserStatusBar(email, _currentUserIsWriter);
 
-      // Smart load: compare local-change timestamp vs cloud timestamp before overwriting
+      // Adjust UI for role
+      const syncBtn = document.getElementById("cc-sync-cloud");
+      const pushAnywayBtn = document.getElementById("cc-sync-push-anyway");
+      if (!_currentUserIsWriter) {
+        if (syncBtn) syncBtn.textContent = "⬇️ Pull Latest";
+        if (pushAnywayBtn) pushAnywayBtn.style.display = "none";
+      } else {
+        if (syncBtn) syncBtn.textContent = "☁️ Sync to Cloud";
+        if (pushAnywayBtn) pushAnywayBtn.style.display = "";
+      }
+
+      // On sign-in: always pull from cloud if it is newer — NEVER auto-push.
+      // Pushing is only done via the "Sync to Cloud" button (writer only).
       try {
         const snap = await getDoc(tripDocRef);
         const cloudTs = snap.exists() ? (snap.data()._lastUpdated || 0) : 0;
-        const localChangeTs = parseInt(localStorage.getItem(LOCAL_LAST_CHANGE_KEY) || "0");
-        const localSyncTs   = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY) || "0");
-        const localTs = Math.max(localChangeTs, localSyncTs);
+        const localSyncTs = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY) || "0");
 
-        if (!snap.exists() || localTs === 0) {
-          // No cloud data yet, or first ever load — load cloud if it exists
-          if (snap.exists()) { _snapshotIgnoreNext = true; applyFirestoreData(snap.data()); localStorage.setItem(LOCAL_LAST_SAVE_KEY, String(cloudTs)); }
-        } else if (localTs > cloudTs + 10000) {
-          // Local is newer (user made changes after last cloud sync) — push local up
-          setStatus("Local data is newer — pushing to cloud…", false);
-          await saveAllToFirestore();
-          setStatus("✓ Auto-saved local changes to cloud.", false);
-          setTimeout(() => setStatus(""), 3000);
-        } else if (cloudTs > localTs + 10000) {
-          // Cloud is meaningfully newer (another user synced) — load from cloud
+        if (snap.exists() && cloudTs > localSyncTs) {
           _snapshotIgnoreNext = true;
           applyFirestoreData(snap.data());
           localStorage.setItem(LOCAL_LAST_SAVE_KEY, String(cloudTs));
         }
-        // else: within 10s of each other — treat as in sync, no action needed
       } catch (err) {
         console.warn("[Firebase] initial getDoc error:", err);
       }
@@ -7348,7 +7366,8 @@
     });
 
     // ── Expose functions to the non-module script ─────────────────────────────
-    window._fbSaveAll       = debouncedSave;
+    // _fbSaveAll is intentionally gated: only fires for the writer account.
+    window._fbSaveAll       = () => { if (_currentUserIsWriter) debouncedSave(); };
     window._fbSmartSync     = smartSync;
     window._fbLoadFromCloud = loadFromCloud;
 
