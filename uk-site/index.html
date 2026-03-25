@@ -5876,11 +5876,11 @@
       if (!(canvas instanceof HTMLCanvasElement) || !legendEl) return;
 
       const SLICES = [
-        { card: "flight",  label: "Flights",   color: "#f97316" },
-        { card: "hotel",   label: "Hotels",    color: "#4ade80" },
-        { card: "booking", label: "Scotland Tour (incl. Lodging)", color: "#facc15" },
-        { card: "review",  label: "Points of Interest", color: "#fb923c" },
-        { card: "food",    label: "Food & Souvenirs",   color: "#34d399" }
+        { card: "flight",  label: "Flights",                       display: ["Flights"],               color: "#ef4444" },
+        { card: "hotel",   label: "Hotels",                        display: ["Hotels"],                color: "#3b82f6" },
+        { card: "booking", label: "Scotland Tour (incl. Lodging)", display: ["Scotland", "Tour"],      color: "#facc15" },
+        { card: "review",  label: "Points of Interest",            display: ["Points of", "Interest"], color: "#a855f7" },
+        { card: "food",    label: "Food & Souvenirs",              display: ["Food &", "Souvenirs"],   color: "#22c55e" }
       ];
 
       const values = SLICES.map((s) => {
@@ -5925,12 +5925,10 @@
       ctx.fillStyle = "#fff";
       ctx.fill();
 
-      // Slice labels
+      // Slice labels — % + pre-wrapped short display label
       const labelR = (W / 2 - 6) * 0.65;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillStyle = "#000";
-      ctx.font = "bold 13px sans-serif";
       sliceAngles.forEach((a, i) => {
         if (!a || values[i] <= 0) return;
         const pct = Math.round((values[i] / total) * 100);
@@ -5938,10 +5936,24 @@
         const midAngle = a.start + a.sweep / 2;
         const x = W / 2 + labelR * Math.cos(midAngle);
         const y = H / 2 + labelR * Math.sin(midAngle);
-        ctx.font = "bold 13px sans-serif";
-        ctx.fillText(pct + "%", x, y - 7);
-        ctx.font = "11px sans-serif";
-        ctx.fillText(SLICES[i].label, x, y + 8);
+        ctx.fillStyle = "#fff";
+        if (pct >= 12) {
+          // Large slice: % on top + 1–2 short label lines below, all centred as a group
+          const dispLines = SLICES[i].display;
+          const lh = 11; // line-height
+          const totalLines = 1 + dispLines.length;
+          const blockH = (totalLines - 1) * lh;
+          ctx.font = "bold 12px sans-serif";
+          ctx.fillText(pct + "%", x, y - blockH / 2);
+          ctx.font = "9px sans-serif";
+          dispLines.forEach((line, li) => {
+            ctx.fillText(line, x, y - blockH / 2 + (li + 1) * lh);
+          });
+        } else {
+          // Smaller slice: percentage only
+          ctx.font = "bold 12px sans-serif";
+          ctx.fillText(pct + "%", x, y);
+        }
       });
 
       // Legend — sorted greatest to least
