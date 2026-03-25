@@ -1485,7 +1485,7 @@
     flex: 0 0 auto;
     user-select: none;
     line-height: 1;
-    padding: 1px 0;
+    padding: 2px 6px;
     touch-action: none;
   }
   .cc-drag-handle:active { cursor: grabbing; }
@@ -4278,7 +4278,7 @@
       }
 
       const rows = orderedRows.map(({ rowKey, type, itemKey, entryId, day, date, poi, plannedTime, category, researchedCost, paymentMethod, usd, gbp }) => `
-        <tr class="js-unified-row" data-row-key="${rowKey}" data-row-type="${type}" ${type === "itinerary" ? `data-item-key="${itemKey}"` : `data-entry-id="${entryId}"`} draggable="true">
+        <tr class="js-unified-row" data-row-key="${rowKey}" data-row-type="${type}" ${type === "itinerary" ? `data-item-key="${itemKey}"` : `data-entry-id="${entryId}"`}>
           <td style="width:30px;text-align:center;padding:4px"><span class="actc-drag-handle" title="Drag to reorder">⠿</span></td>
           <td style="width:34px;text-align:center;padding:2px"><button type="button" class="actc-star-btn js-actc-star" data-row-key="${rowKey}" aria-pressed="false" title="Star to include in Grand Total">★</button></td>
           <td style="width:52px"><input class="actc-cell js-unified-field" data-row-key="${rowKey}" data-field="day" value="${escapeHtml(day)}" placeholder="Day 1"></td>
@@ -4465,11 +4465,18 @@
         });
       });
 
-      // Drag-and-drop
+      // Drag-and-drop — gate draggable on mousedown of handle so inputs in the
+      // row don't accidentally start a drag when the user clicks to type.
       let dragSrc = null;
       container.querySelectorAll(".js-unified-row").forEach((row) => {
-        row.addEventListener("dragstart", (e) => { dragSrc = row.dataset.rowKey; row.classList.add("actc-row-dragging"); e.dataTransfer.effectAllowed = "move"; });
-        row.addEventListener("dragend", () => row.classList.remove("actc-row-dragging"));
+        row.setAttribute("draggable", "false");
+        const hdl = row.querySelector(".actc-drag-handle");
+        if (hdl) {
+          hdl.addEventListener("mousedown", () => row.setAttribute("draggable", "true"));
+          hdl.addEventListener("mouseup",   () => row.setAttribute("draggable", "false"));
+        }
+        row.addEventListener("dragstart", (e) => { dragSrc = row.dataset.rowKey; row.classList.add("actc-row-dragging"); e.dataTransfer.effectAllowed = "move"; e.dataTransfer.setData("text/plain", ""); });
+        row.addEventListener("dragend", () => { row.setAttribute("draggable", "false"); row.classList.remove("actc-row-dragging"); });
         row.addEventListener("dragover", (e) => { e.preventDefault(); row.classList.add("actc-row-dragover"); });
         row.addEventListener("dragleave", () => row.classList.remove("actc-row-dragover"));
         row.addEventListener("drop", (e) => {
@@ -6186,19 +6193,35 @@
         if (item.querySelector(".cc-drag-handle")) return;
         const handle = document.createElement("span");
         handle.className = "cc-drag-handle";
-        handle.setAttribute("draggable", "true");
         handle.setAttribute("aria-hidden", "true");
         handle.textContent = "\u2807";
         item.insertBefore(handle, item.firstChild);
 
-        handle.addEventListener("dragstart", (e) => {
+        // draggable lives on the item so the whole row is the drag surface;
+        // mousedown/mouseup on the handle gates whether a drag is allowed so
+        // clicks on buttons/inputs inside the item never accidentally start a drag.
+        item.setAttribute("draggable", "false");
+        let _readyToDrag = false;
+        handle.addEventListener("mousedown", () => {
+          _readyToDrag = true;
+          item.setAttribute("draggable", "true");
+        });
+        const clearDraggable = () => {
+          _readyToDrag = false;
+          item.setAttribute("draggable", "false");
+        };
+        handle.addEventListener("mouseup", clearDraggable);
+
+        item.addEventListener("dragstart", (e) => {
+          if (!_readyToDrag) { e.preventDefault(); return; }
           _ccDragSrc = item;
           e.dataTransfer.effectAllowed = "move";
           e.dataTransfer.setData("text/plain", "");
           setTimeout(() => { item.style.opacity = "0.4"; }, 0);
         });
 
-        handle.addEventListener("dragend", () => {
+        item.addEventListener("dragend", () => {
+          clearDraggable();
           if (_ccDragSrc) _ccDragSrc.style.opacity = "";
           _ccDragSrc = null;
           list.querySelectorAll(".js-cc-check-item").forEach((i) => i.classList.remove("cc-drag-over"));
