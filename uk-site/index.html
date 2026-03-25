@@ -1051,6 +1051,21 @@
   }
 
   /* Smart-sync warning row */
+  .cc-ts-bar {
+    display: flex;
+    gap: 18px;
+    padding: 5px 14px;
+    background: #f0f4f8;
+    border: 1px solid #d1d8e0;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    font-size: 0.74rem;
+    color: #5d6978;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .cc-ts-bar strong { color: #334155; }
+  .cc-ts-bar .cc-ts-stale { color: #b45309; font-weight: 600; }
   .cc-sync-status-row {
     display: none;
     align-items: center;
@@ -1907,6 +1922,7 @@
             <button class="cc-sync-action-btn cc-sync-action-btn--cancel" id="cc-sync-cancel">✕ Cancel</button>
           </div>
         </div>
+        <div class="cc-ts-bar" id="cc-ts-bar" style="display:none;"></div>
       </div>
       <div class="budget-pie-wrap">
         <h3 class="budget-pie-title">Budget Breakdown</h3>
@@ -7077,6 +7093,48 @@
       return new Date(ts).toLocaleString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
     }
 
+    // ── Timestamp debug bar ───────────────────────────────────────────────────
+    let _cachedCloudTs = 0; // updated whenever we read Firestore
+
+    function updateTsBar() {
+      const bar = document.getElementById("cc-ts-bar");
+      if (!bar) return;
+
+      const localChangeTs = parseInt(localStorage.getItem(LOCAL_LAST_CHANGE_KEY) || "0");
+      const localSyncTs   = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY)   || "0");
+      const cloudTs       = _cachedCloudTs;
+
+      const fmt = (ts) => {
+        if (!ts) return '<span class="cc-ts-stale">never</span>';
+        const rel = fmtTs(ts);
+        const abs = new Date(ts).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+        return `<span title="epoch: ${ts}">${rel} (${abs})</span>`;
+      };
+
+      const cloudLabel = cloudTs
+        ? fmt(cloudTs)
+        : '<span class="cc-ts-stale">not fetched yet — click Sync</span>';
+
+      const staleness = (cloudTs && localSyncTs && cloudTs > localSyncTs + 10000)
+        ? ' <span class="cc-ts-stale">⚠ local may be behind cloud</span>'
+        : '';
+
+      bar.style.display = "flex";
+      bar.innerHTML =
+        `<span><strong>Local changed:</strong> ${fmt(localChangeTs)}</span>` +
+        `<span><strong>Last synced:</strong> ${fmt(localSyncTs)}</span>` +
+        `<span><strong>Cloud updated:</strong> ${cloudLabel}${staleness}</span>`;
+    }
+
+    function refreshTsBarFromSnap(snap) {
+      if (snap && snap.exists && snap.exists()) {
+        _cachedCloudTs = snap.data()._lastUpdated || 0;
+      }
+      updateTsBar();
+    }
+
+    setInterval(updateTsBar, 5000);
+
     // ── Status helper (works from module scope) ───────────────────────────────
     function setStatus(msg, isError) {
       const el = document.getElementById("cc-backup-status");
@@ -7099,6 +7157,8 @@
         payload._lastUpdated = Date.now();
         await setDoc(tripDocRef, payload, { merge: true });
         localStorage.setItem(LOCAL_LAST_SAVE_KEY, String(payload._lastUpdated));
+        _cachedCloudTs = payload._lastUpdated;
+        updateTsBar();
       } catch (err) {
         console.warn("[Firebase] saveAllToFirestore error:", err);
       }
@@ -7147,6 +7207,7 @@
 
       if (snap.exists()) {
         _snapshotIgnoreNext = true;
+        _cachedCloudTs = snap.data()._lastUpdated || 0;
         try {
           applyFirestoreData(snap.data());
         } catch (uiErr) {
@@ -7157,6 +7218,7 @@
         } catch (_) {}
       }
 
+      updateTsBar();
       setStatus("✓ Loaded latest data from cloud!", false);
       setTimeout(() => setStatus(""), 3000);
     }
@@ -7218,6 +7280,7 @@
       try { if (typeof initializeHotelCheckIns === "function") initializeHotelCheckIns(); } catch (_) {}
       try { if (typeof renderBudgetPie === "function") renderBudgetPie(); } catch (_) {}
       try { if (typeof updateFlightTotal === "function") updateFlightTotal(); } catch (_) {}
+      updateTsBar();
     }
 
     // ── UI helpers ────────────────────────────────────────────────────────────
@@ -7322,13 +7385,18 @@
         const cloudTs = snap.exists() ? (snap.data()._lastUpdated || 0) : 0;
         const localSyncTs = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY) || "0");
 
+        if (snap.exists()) _cachedCloudTs = cloudTs;
+
         if (!_currentUserIsWriter && snap.exists() && cloudTs > localSyncTs) {
           _snapshotIgnoreNext = true;
           applyFirestoreData(snap.data());
           localStorage.setItem(LOCAL_LAST_SAVE_KEY, String(cloudTs));
+        } else {
+          updateTsBar();
         }
       } catch (err) {
         console.warn("[Firebase] initial getDoc error:", err);
+        updateTsBar();
       }
 
       // Subscribe to real-time updates
@@ -7336,15 +7404,19 @@
       _unsubSnapshot = onSnapshot(tripDocRef, (snap) => {
         if (_snapshotIgnoreNext) { _snapshotIgnoreNext = false; return; }
         if (!snap.exists()) return;
+        // Always cache the cloud timestamp for the debug bar
+        _cachedCloudTs = snap.data()._lastUpdated || 0;
         // Writer: never apply incoming snapshots — their local data is the source of truth.
-        if (_currentUserIsWriter) return;
-        const cloudTs = snap.data()._lastUpdated || 0;
+        if (_currentUserIsWriter) { updateTsBar(); return; }
+        const cloudTs = _cachedCloudTs;
         const localChangeTs = parseInt(localStorage.getItem(LOCAL_LAST_CHANGE_KEY) || "0");
         const localSyncTs   = parseInt(localStorage.getItem(LOCAL_LAST_SAVE_KEY)   || "0");
         const localTs = Math.max(localChangeTs, localSyncTs);
         if (cloudTs > localTs + 10000) {
           // Cloud is genuinely newer (writer synced) — apply it
           applyFirestoreData(snap.data());
+        } else {
+          updateTsBar();
         }
       }, (err) => {
         console.warn("[Firebase] onSnapshot error:", err);
